@@ -1,0 +1,32 @@
+{
+  "name": "atlasTHREE.JSDemo",
+  "main": "index.html",
+  "homepage": "https://github.com/stity/spl-brain-atlas",
+  "authors": [
+    "Valentin Demeusy <valentin.demeusy@gmail.com>"
+  ],
+  "description": "atlas viewer using three.js and the new json atlas format",
+  "moduleType": [
+    "es6"
+  ],
+  "keywords": [
+    "three.js",
+    "atlas"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "adapt-strap": "^2.4.12",
+    "angular-animate": "1.5.0",
+    "bootstrap": "^3.3.6"
+  },
+  "resolutions": {
+    "angular": "~1.4.4"
+  }
+}

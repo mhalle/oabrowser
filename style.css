@@ -1,0 +1,43 @@
+#rendererFrame {
+    background-color: #000000;
+    width: 76vw; 
+    height: 100vh; 
+    float:left;
+}
+
+#structureList {
+    width: 22vw; 
+    height: 78vh; 
+    float:right;
+    padding-right: 10px;
+    overflow: auto;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.name-cell {
+    text-align: left;
+}
+
+.tinyText {
+    font-size: 0.8em;
+}
+
+#logoBox {
+    height: 20vh;
+    float: right;
+    width: 22vw;
+    text-align: center;
+}
+
+#logoBox.img {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.ad-tree-browser-container.tree-bordered {
+    border: 0;
+}

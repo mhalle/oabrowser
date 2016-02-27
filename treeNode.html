@@ -1,0 +1,7 @@
+<div>
+    <span class="name-cell pull-left">{{ item.name }}</span>
+    <span class="pull-right margin-right-lg">
+        <span ng-if="item.mesh.visible" ng-click="item.mesh.visible=false" class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        <span ng-if="!item.mesh.visible" ng-click="item.mesh.visible=true" class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+    </span>
+</div>
