@@ -14,6 +14,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         loadedFile,
         numberOfFilesToLoad,
         vtkStructures,
+        mouse,
+        raycaster,
         meshesList = [];
 
 
@@ -197,6 +199,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         scene.add( camera );
 
         mouse = new THREE.Vector2();
+        raycaster = new THREE.Raycaster();
 
         // light
 
