@@ -13,7 +13,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         loader,
         loadedFile,
         numberOfFilesToLoad,
-        vtkStructures;
+        vtkStructures,
+        meshesList = [];
 
 
     //this function enables us to create a scope and then keep the right item in the callback
@@ -54,6 +55,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 
             var mesh = new THREE.Mesh( geometry, material );
+            meshesList.push(mesh);
             item.mesh = mesh;
             loadedFile++;
 
@@ -166,6 +168,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         //
 
         window.addEventListener( 'resize', onWindowResize, false );
+        
+        container.addEventListener('mousedown', onSceneMouseDown, false);
 
         animate();
 
@@ -230,6 +234,20 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         renderer.render( scene, camera );
 
         stats.update();
+
+    }
+
+    function onSceneMouseDown( event ) {
+
+        event.preventDefault();
+
+        mouse.x = ( event.clientX / container.clientWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / container.clientHeight ) * 2 + 1;
+
+        raycaster.setFromCamera( mouse, camera );
+
+        var intersects = raycaster.intersectObjects( meshesList );
+        console.log(intersects);
 
     }
 
