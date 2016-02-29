@@ -168,7 +168,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         //
 
         window.addEventListener( 'resize', onWindowResize, false );
-        
+
         container.addEventListener('mousedown', onSceneMouseDown, false);
 
         animate();
@@ -195,6 +195,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         scene = new THREE.Scene();
 
         scene.add( camera );
+
+        mouse = new THREE.Vector2();
 
         // light
 
