@@ -57,8 +57,11 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 
             var mesh = new THREE.Mesh( geometry, material );
+            //TODO : retrieve name from annotation object if annotation use a reference
+            mesh.name = item.annotation && item.annotation.name || '';
             meshesList.push(mesh);
             item.mesh = mesh;
+            scene.add(mesh);
             loadedFile++;
 
             //signal to the modal
@@ -80,7 +83,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         };
         if (item['@type']==='group') {
             treeObject.children = item.members.map(getTreeObjectFromUuid).filter(x => x.mesh !== undefined);
-            treeObject.mesh = new THREE.Group();
+            treeObject.mesh = new HierarchyGroup();
             for (var i = 0; i< treeObject.children.length; i++) {
                 try {
                     treeObject.mesh.add(treeObject.children[i].mesh);
@@ -98,11 +101,6 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         var hierarchyTree = {
             children : rootGroups.map(group => getTreeObjectFromUuid(group['@id']))
         };
-
-        for(var i = 0; i<hierarchyTree.children.length; i++) {
-            scene.add(hierarchyTree.children[i].mesh);
-        }
-
 
         var listContainer = document.getElementById('structureList');
         var treeDirective = document.getElementById('treeListDirective');
