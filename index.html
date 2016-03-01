@@ -24,6 +24,7 @@
 
         <!--- local files -->
         <link rel="stylesheet" type="text/css" href="style.css" />
+        <script src="angularInit.js"></script>
         <script src="insertTreeDirective.js"></script>
         <script src="modalController.js"></script>
 
@@ -53,8 +54,8 @@
                 <a href="https://www.github.com/mhalle/spl-brain-atlas" target=_blank>Source</a>
             </span>
         </div>
-        <div  insert-tree id="structureList">
-        </div>
+        <div  insert-tree id="structureList"></div>
+        <div insert-breadcrumbs id="breadcrumbsList"></div>
 
         <script type="text/ng-template" id="treeListDirective">
             <ad-tree-browser class="ad-border-default"

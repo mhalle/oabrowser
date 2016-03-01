@@ -84,6 +84,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         if (item['@type']==='group') {
             treeObject.children = item.members.map(getTreeObjectFromUuid).filter(x => x.mesh !== undefined);
             treeObject.mesh = new HierarchyGroup();
+            treeObject.mesh.name = treeObject.name;
             for (var i = 0; i< treeObject.children.length; i++) {
                 try {
                     treeObject.mesh.add(treeObject.children[i].mesh);
@@ -239,6 +240,22 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         stats.update();
 
     }
+    
+    function getAllTheHierarchyPaths (object) {
+        var result = [];
+        function addParents (object, path) {
+            if (object.hierarchyParents.length === 0) {
+                result.push(object.name+path);
+                return path;
+            }
+            for (var i = 0; i < object.hierarchyParents.length; i++) {
+                var parent = object.hierarchyParents[i];
+                addParents(parent, '//'+object.name+path)
+            }
+        }
+        addParents(object, '');
+        return result.map(s => s.split('//'));
+    }
 
     function onSceneMouseDown( event ) {
 
@@ -250,7 +267,12 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         raycaster.setFromCamera( mouse, camera );
 
         var intersects = raycaster.intersectObjects( meshesList );
-        console.log(intersects);
+        console.log(intersects[0].object.hierarchyParents.map(x => x.name));
+        var paths = getAllTheHierarchyPaths(intersects[0].object);
+        console.log(paths);
+        
+        angular.element(document.body).scope().$root.$broadcast('insertBreadcrumbs', paths)
+        
 
     }
 

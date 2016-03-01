@@ -1,4 +1,4 @@
-var app = angular.module('atlasDemo', [ 'ngSanitize', 'adaptv.adaptStrap', 'ui.bootstrap' ]);
+
 angular.module('atlasDemo').directive( 'insertTree', function ( $compile ) {
     return {
         restrict: 'A',

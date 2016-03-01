@@ -1,0 +1,3 @@
+<ol ng-repeat="arr in data.breadcrumbs" class="breadcrumb">
+  <li ng-repeat="name in arr" ng-class="{active : $last}"><a ng-if="!$last" href="#">{{name}}</a><span ng-if="$last">{{name}}</span></li>
+</ol>

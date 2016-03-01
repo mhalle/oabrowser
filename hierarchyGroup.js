@@ -1,5 +1,6 @@
 function HierarchyGroup () {
     this.children =[];
+    this.hierarchyParents = [];
     
     Object.defineProperty(this, "visible",{
         get : function () {

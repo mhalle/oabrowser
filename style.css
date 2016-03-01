@@ -7,12 +7,18 @@
 
 #structureList {
     width: 22vw; 
-    height: 78vh; 
+    height: 56vh; 
     float:right;
     padding-right: 10px;
     overflow: auto;
 }
 
+#breadcrumbsList {
+    width: 22vw;
+    height: 20vh;
+    float: right;
+    overflow: auto;
+}
 body, html {
     margin: 0;
     padding: 0;
