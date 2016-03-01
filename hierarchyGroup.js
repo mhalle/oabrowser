@@ -6,7 +6,7 @@ function HierarchyGroup () {
             return this.children.some(x=>x.visible);
         },
         set : function (value) {
-            this.children.forEach(x => x.visible = true);
+            this.children.forEach(x => x.visible = value);
         }
     });
 }
