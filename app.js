@@ -240,7 +240,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         stats.update();
 
     }
-    
+
     function getAllTheHierarchyPaths (object) {
         var result = [];
         function addParents (object, path) {
@@ -267,12 +267,13 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         raycaster.setFromCamera( mouse, camera );
 
         var intersects = raycaster.intersectObjects( meshesList );
-        console.log(intersects[0].object.hierarchyParents.map(x => x.name));
-        var paths = getAllTheHierarchyPaths(intersects[0].object);
-        console.log(paths);
-        
+
+        var paths = [[]];
+        if (intersects.length > 0) {
+            paths = getAllTheHierarchyPaths(intersects[0].object);
+        }
         angular.element(document.body).scope().$root.$broadcast('insertBreadcrumbs', paths)
-        
+
 
     }
 
