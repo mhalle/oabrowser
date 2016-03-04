@@ -208,6 +208,29 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         camera.add( dirLight );
         camera.add( dirLight.target );
 
+        //add arrow helper to help with orientation
+        var dir = new THREE.Vector3( 1, 0, 0 );
+        var origin = new THREE.Vector3( 150, 0, 0 );
+        var length = 30;
+        var hex = 0xff0000;
+        var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+        scene.add( arrowHelper );
+
+        var dir = new THREE.Vector3( 0, 1, 0 );
+        var origin = new THREE.Vector3( 0, 160, 0 );
+        var length = 30;
+        var hex = 0x00ff00;
+        var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+        scene.add( arrowHelper );
+
+        var dir = new THREE.Vector3( 0, 0, 1);
+        var origin = new THREE.Vector3( 0, 0, 110 );
+        var length = 30;
+        var hex = 0x0000ff;
+        var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+        scene.add( arrowHelper );
+
+
         //fetch atlas structure
         jQuery.ajax({
             dataType: "json",
