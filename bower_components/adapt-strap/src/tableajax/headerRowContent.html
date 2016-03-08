@@ -1,0 +1,28 @@
+<th class="ad-select-cell" ng-if="attrs.rowExpandTemplate">
+  <i></i>
+</th>
+<th class="ad-select-cell"
+    ng-if="attrs.selectedItems && items.allItems">
+    <input type="checkbox"
+           class="ad-cursor-pointer"
+           ng-if="!attrs.enableColumnSearch"
+           ng-click="adStrapUtils.addRemoveItemsFromList(items.allItems, selectedItems)"
+           ng-checked="adStrapUtils.itemsExistInList(items.allItems, selectedItems)">
+</th>
+<th data-ng-repeat="definition in visibleColumnDefinition"
+    ng-click="sortByColumn(definition)"
+    ng-class="{'ad-cursor-pointer': definition.sortKey}"
+    ng-style="{'width': definition.width}">
+  <ng-include src="'tableajax/sortIcons.html'" ng-if="!attrs.snugSortIcons"></ng-include>
+  <div class="ad-display-inline-block"
+       ng-if="definition.columnHeaderTemplate"
+       ad-compile-template="definition.columnHeaderTemplate"></div>
+  <div class="ad-display-inline-block"
+       ng-if="definition.columnHeaderTemplateUrl">
+    <ng-include src="definition.columnHeaderTemplateUrl"></ng-include>
+  </div>
+  <div class="ad-display-inline-block"
+       ng-if="definition.columnHeaderDisplayName"
+       ng-bind="definition.columnHeaderDisplayName"></div>
+  <ng-include src="'tableajax/sortIcons.html'" ng-if="attrs.snugSortIcons"></ng-include>
+</th>

@@ -1,0 +1,27 @@
+<td class="ad-select-cell ad-cursor-pointer table-lite-col-{{definition.columnHeaderDisplayName ? definition.columnHeaderDisplayName : $index}}"
+    ng-if="attrs.rowExpandTemplate"
+    ng-click="toggle($event, $index, item)">
+    <i ng-class="iconClasses.expand" ng-if="!adStrapUtils.itemExistsInList($index, localConfig.expandedItems)"></i>
+    <i ng-class="iconClasses.collapse" ng-if="adStrapUtils.itemExistsInList($index, localConfig.expandedItems)"></i>
+</td>
+<td class="ad-select-cell ad-drag-handle table-lite-col-{{definition.columnHeaderDisplayName ? definition.columnHeaderDisplayName : $index}}" ng-if="attrs.draggable" >
+    <i ng-class="iconClasses.draggable"></i>
+</td>
+<td class="ad-select-cell table-lite-col-{{definition.columnHeaderDisplayName ? definition.columnHeaderDisplayName : $index}}" ng-if="attrs.selectedItems">
+    <input type="checkbox"
+           class="ad-cursor-pointer"
+           ng-checked="adStrapUtils.itemExistsInList(item, selectedItems)"
+           ng-click="adStrapUtils.addRemoveItemFromList(item, selectedItems)">
+</td>
+<td data-ng-repeat="definition in visibleColumnDefinition"
+    ng-style="{'width': definition.width}" class="table-lite-col-{{definition.columnHeaderDisplayName ? definition.columnHeaderDisplayName : $index}}">
+    <div ng-if="definition.templateUrl">
+        <ng-include src="definition.templateUrl"></ng-include>
+    </div>
+    <div ng-if="definition.template">
+        <span ad-compile-template="definition.template"></span>
+    </div>
+    <div ng-if="!definition.templateUrl && !definition.template">
+        {{ adStrapUtils.applyFilter(adStrapUtils.getObjectProperty(item, definition.displayProperty), definition.cellFilter) }}
+    </div>
+</td>

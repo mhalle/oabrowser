@@ -1,0 +1,54 @@
+<div class="row ad-table-pagination-container">
+  <div class="col-md-8 col-sm-8">
+    <ul ng-class="attrs.paginationBtnGroupClasses || 'pagination pagination-sm'">
+      <li>
+        <a class="ad-cursor-pointer" ng-click="loadPage(1)"
+           ng-disabled="items.paging.currentPage == 1" title="First Page"
+           aria-label="First Page">
+          <i ng-class="iconClasses.firstPage"></i>
+        </a>
+      </li>
+
+      <li>
+        <a class="ad-cursor-pointer" ng-click="loadPreviousPage()"
+           ng-disabled="items.paging.currentPage == 1" title="Previous Page"
+           aria-label="Previous Page">
+          <i ng-class="iconClasses.previousPage"></i>
+        </a>
+      </li>
+
+      <li ng-repeat="page in localConfig.pagingArray"
+          ng-class="{active: items.paging.currentPage == page}">
+        <a class="ad-cursor-pointer"
+           ng-click="loadPage(page)">
+          {{ page }}
+        </a>
+      </li>
+
+      <li>
+        <a class="ad-cursor-pointer" ng-click="loadNextPage()"
+           ng-disabled="items.paging.currentPage == items.paging.totalPages"
+           title="Next Page" aria-label="Next Page">
+          <i ng-class="iconClasses.nextPage"></i>
+        </a>
+      </li>
+
+      <li>
+        <a class="ad-cursor-pointer" ng-click="loadLastPage()"
+           ng-disabled="items.paging.currentPage == items.paging.totalPages"
+           title="Last Page" aria-label="Last Page">
+          <i ng-class="iconClasses.lastPage"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-4 col-sm-4 text-right">
+    <ul ng-class="attrs.paginationBtnGroupClasses || 'pagination pagination-sm'">
+      <li ng-repeat="size in items.paging.pageSizes"
+          ng-class="{active: items.paging.pageSize == size}">
+        <a class="ad-cursor-pointer" ng-click="pageSizeChanged(size)">{{ size }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

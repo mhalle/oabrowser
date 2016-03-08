@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+  - "4.2"
+
+before_script:
+  - npm install -gq bower codeclimate-test-reporter
+  - bower install --dev --config.interactive=0
+  - gulp --version
+  - bower --version
+
+script:
+  - gulp validate:fail
+  - gulp dist:unsafe
+  - sleep 10
+  - gulp unit:travis
+  - gulp e2e_sauce
+
+after_script:
+  - cat coverage/*/lcov.info | codeclimate
+
+addons:
+  code_climate:
+    repo_token: 90c20f7102c1594756c4ea3462c0603bea217cf25c16d57accea4a03348c2465

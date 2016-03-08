@@ -1,0 +1,19 @@
+// ========== global loading indicator ========== //
+.ad-loading-overlay-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: @body-bg;
+  .wrapper {
+    display: table;
+    height: 100%;
+    width: 100%;
+    .loading-indicator {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+    }
+  }
+}

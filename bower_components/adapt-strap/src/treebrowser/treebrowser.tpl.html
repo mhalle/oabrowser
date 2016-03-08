@@ -1,0 +1,25 @@
+<div class="ad-tree-browser-container"
+     ng-class="{'tree-bordered': attrs.bordered}">
+    <div data-level="0" class="tree-view">
+        <div class="tree">
+            <div>
+                <div class="tree-level tree-header-level border"
+                     ng-if="attrs.nodeHeaderUrl">
+                    <div class="content"
+                         ng-style="{'padding-left': (attrs.childrenPadding || 15) + 'px'}">
+                        <div class="content-holder">
+                            <div></div>
+                            <div class="node-content ad-user-select-none"
+                                 ng-include="attrs.nodeHeaderUrl"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tree-level tree-top-level border"
+                     ng-init="level = 1"
+                     ng-repeat="item in treeRoot[attrs.childNode]">
+                    <ad-tree-browser-node template-url="attrs.nodeTemplateUrl"></ad-tree-browser-node>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

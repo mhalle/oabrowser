@@ -1,0 +1,27 @@
+.ad-infinite-list-container {
+    .dropdown-menu {
+        overflow: auto;
+        li a[role="menuitem"]{
+            .ad-text-overflow;
+        }
+    }
+    .dropdown-menu.with-dropdown-header {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin-top: 0;
+    }
+    .dropdown-header {
+        background-color: @dropdown-bg;
+        border: 1px solid @dropdown-fallback-border; // IE8 fallback
+        border: 1px solid @dropdown-border;
+        border-bottom: none;
+        border-radius: @border-radius-base;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        .box-shadow(0 6px 12px rgba(0,0,0,.175));
+        min-width: 160px;
+        padding: 5px;
+        box-sizing: border-box;
+        margin: 2px 0 0; // override default ul
+    }
+}

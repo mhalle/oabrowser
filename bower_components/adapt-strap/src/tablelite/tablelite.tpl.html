@@ -1,0 +1,25 @@
+<div class="ad-table-lite-container" ng-if="items.allItems.length || !attrs.itemsNotFoundMessage || attrs.enableColumnSearch">
+  <table class="ad-sticky-table {{ attrs.tableClasses || tableClasses }}"
+         ng-if="attrs.tableMaxHeight || attrs.tableFixedHeight"
+         ng-class="{'ad-fixed-layout': (attrs.tableMaxHeight || attrs.tableFixedHeight)}">
+    <thead>
+      <tr class="ad-user-select-none" ng-include="'tablelite/headerRowContent.html'"></tr>
+      <tr class="ad-user-select-none" ng-if="attrs.enableColumnSearch" ng-include="'tablelite/headerRowFilterContent.html'"></tr>
+    </thead>
+  </table>
+  <div class="ad-table-container" ng-style="{'max-height': attrs.tableMaxHeight, 'height': attrs.tableFixedHeight}">
+    <table class="{{ attrs.tableClasses || tableClasses }}"
+           ng-class="{'ad-fixed-layout': (attrs.tableMaxHeight || attrs.tableFixedHeight)}">
+      <thead>
+        <tr class="ad-user-select-none" ng-if="!(attrs.tableMaxHeight || attrs.tableFixedHeight)" ng-include="'tablelite/headerRowContent.html'"></tr>
+        <tr class="ad-user-select-none" ng-if="!(attrs.tableMaxHeight || attrs.tableFixedHeight) && attrs.enableColumnSearch" ng-include="'tablelite/headerRowFilterContent.html'"></tr>
+      </thead>
+      <tbody ng-if="!localConfig.draggable" ng-include="'tablelite/defaultRow.html'"></tbody>
+      <tbody ng-if="localConfig.draggable" ng-include="'tablelite/draggableRow.html'"></tbody>
+    </table>
+  </div>
+  <ng-include src="'tablelite/pagination.html'"></ng-include>
+</div>
+<div ng-if="!localConfig.localData.length && attrs.itemsNotFoundMessage && !attrs.enableColumnSearch">
+  <div class="alert alert-info" role="alert">{{ attrs.itemsNotFoundMessage }}</div>
+</div>

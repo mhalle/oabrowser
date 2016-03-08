@@ -1,0 +1,11 @@
+<div class="ad-loading-overlay-container"
+     ng-class="containerClasses"
+     ng-style="{'z-index': zIndex || '1000','position': position || 'absolute'}"
+     ng-show="loading">
+    <div class="wrapper">
+        <div class="loading-indicator">
+            <ad-loading-icon loading-icon-size="{{ loadingIconSize }}"
+                             loading-icon-class="{{ loadingIconClass }}"></ad-loading-icon>
+        </div>
+    </div>
+</div>

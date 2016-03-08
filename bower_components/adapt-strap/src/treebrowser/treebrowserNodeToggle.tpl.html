@@ -1,0 +1,11 @@
+<div class="toggle" ng-class="{'custom-toggle': attrs.customToggle}">
+    <i ng-if="!item._ad_expanded && hasChildren(item) && !item._ad_loading"
+       ng-class="iconClasses.expand"
+       ng-click="toggle($event,item)"></i>
+    <i ng-if="item._ad_expanded && !item._ad_loading"
+       ng-class="iconClasses.collapse"
+       ng-click="toggle($event,item)"></i>
+            <span ng-if="item._ad_loading">
+                <i ng-class="iconClasses.loadingSpinner"></i>
+            </span>
+</div>

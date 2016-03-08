@@ -1,0 +1,132 @@
+// ========== display ========== //
+.ad-display-inline-block {
+  display: inline-block;
+}
+// ========== layout ========== //
+.ad-fixed-layout {
+  table-layout: fixed;
+}
+// ========== margins ========== //
+.ad-margin-none {
+  margin: 0;
+}
+
+.ad-margin-top-none {
+  margin-top: 0;
+}
+
+.ad-margin-left-none {
+  margin-left: 0;
+}
+
+.ad-margin-bottom-none {
+  margin-bottom: 0;
+}
+
+.ad-margin-right-none {
+  margin-right: 0;
+}
+
+.ad-padding-none {
+  padding: 0;
+}
+
+.ad-padding-top-none {
+  padding-top: 0;
+}
+
+.ad-padding-left-none {
+  padding-left: 0;
+}
+
+.ad-padding-bottom-none {
+  padding-bottom: 0;
+}
+
+.ad-padding-right-none {
+  padding-right: 0;
+}
+
+// ========== cursor ========== //
+.ad-cursor-pointer {
+  cursor: pointer;
+}
+
+// ========== user select ========== //
+.ad-user-select-none {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+// ========== text overflow ========== //
+.ad-text-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// ========== spinner ========== //
+.ad-spin {
+  -webkit-animation: spin 2s infinite linear;
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+
+// ========= dragdrop ========== //
+[ad-drag=true] {
+  &.ad-draggable {
+    cursor: move;
+    [ad-prevent-drag] {
+      cursor: default;
+    }
+  }
+
+  &> .ad-drag-handle {
+    cursor: move;
+  }
+
+  &.ad-dragging {
+    opacity: 0.5;
+  }
+}
+
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
