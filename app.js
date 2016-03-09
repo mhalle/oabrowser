@@ -152,7 +152,6 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
         // renderer
 
-        container = document.getElementById('rendererFrame');
         camera.aspect = container.clientWidth / container.clientHeight;
         camera.updateProjectionMatrix();
 
@@ -179,10 +178,12 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
     function init() {
 
+        container = document.getElementById('rendererFrame');
+
         camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 1e10 );
         camera.position.z = 300;
 
-        controls = new THREE.TrackballControls( camera );
+        controls = new THREE.TrackballControls( camera, container );
 
         controls.rotateSpeed = 10.0;
         controls.zoomSpeed = 5;
