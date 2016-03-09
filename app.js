@@ -301,7 +301,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         mouse.y = - ( event.clientY / container.clientHeight ) * 2 + 1;
 
         clearTimeout(pickupTimeout);
-        pickupTimeout = setTimeout(displayPickup,1000);
+        pickupTimeout = setTimeout(displayPickup,10);
 
 
     }
