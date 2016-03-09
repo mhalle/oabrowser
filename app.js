@@ -16,7 +16,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         vtkStructures,
         mouse,
         raycaster,
-        meshesList = [];
+        meshesList = [],
+        pickupTimeout = setTimeout(function () {},0);
 
 
     //this function enables us to create a scope and then keep the right item in the callback
@@ -170,7 +171,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
         window.addEventListener( 'resize', onWindowResize, false );
 
-        container.addEventListener('mousedown', onSceneMouseDown, false);
+        container.addEventListener('mousemove', onSceneMouseMove, false);
 
         animate();
 
@@ -280,12 +281,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         return result.map(s => s.split('//'));
     }
 
-    function onSceneMouseDown( event ) {
-
-        event.preventDefault();
-
-        mouse.x = ( event.clientX / container.clientWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / container.clientHeight ) * 2 + 1;
+    function displayPickup () {
 
         raycaster.setFromCamera( mouse, camera );
 
@@ -295,7 +291,17 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         if (intersects.length > 0) {
             paths = getAllTheHierarchyPaths(intersects[0].object);
         }
-        angular.element(document.body).scope().$root.$broadcast('insertBreadcrumbs', paths)
+        angular.element(document.body).scope().$root.$broadcast('insertBreadcrumbs', paths);
+
+    }
+
+    function onSceneMouseMove( event ) {
+
+        mouse.x = ( event.clientX / container.clientWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / container.clientHeight ) * 2 + 1;
+
+        clearTimeout(pickupTimeout);
+        pickupTimeout = setTimeout(displayPickup,1000);
 
 
     }
