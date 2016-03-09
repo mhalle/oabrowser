@@ -28,6 +28,7 @@
         <script src="insertTreeDirective.js"></script>
         <script src="insertBreadcrumbs.js"></script>
         <script src="modalController.js"></script>
+        <script src="headerController.js"></script>
 
         <!--- three.js files -->
         <script src="three.min.js"></script>
@@ -41,14 +42,11 @@
 
         <div id="rendererFrame"></div>
 
-        <div id="logoBox">
+        <div id="logoBox" ng-controller="HeaderCtrl">
             <img src="logo_spl.gif" width="60px" height="48px"><br> 
-            <span>The SPL/NAC Brain Atlas</span><br>
+            <span>{{data.title}}</span><br>
             <span class="tinyText">
-                <a href="http://www.spl.harvard.edu/publications/item/view/2037" target=_blank>More information</a>
-            </span><br>
-            <span class="tinyText">
-                <a href="https://www.github.com/mhalle/spl-brain-atlas" target=_blank>Source</a>
+                <a ng-href="data.source" href="http://www.spl.harvard.edu/publications/item/view/2037" target=_blank>Source</a>
             </span>
         </div>
         <div  insert-tree id="structureList"></div>

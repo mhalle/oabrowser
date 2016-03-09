@@ -118,6 +118,12 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
     function dealWithAtlasStructure (data) {
         atlasStructure = data;
+
+        var header = atlasStructure.find(x=>x['@type']==='header');
+        if (header) {
+            angular.element(document.body).scope().$root.$broadcast('header',header);
+        }
+
         var vtkDatasources = data.filter(function (object) { 
             return object['@type']==='datasource' && /\.vtk$/.test(object.source);
         });
