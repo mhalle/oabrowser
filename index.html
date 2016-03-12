@@ -33,14 +33,20 @@
         <!--- three.js files -->
         <script src="three.min.js"></script>
         <script src="TrackballControls.js"></script>
+        <script src="js/Volume.js"></script>
+        <script src="js/VolumeSlice.js"></script>
+        <script src="js/loaders/NRRDLoader.js"></script>
         <script src="VTKLoader.js"></script>
         <script src="Detector.js"></script>
         <script src="stats.min.js"></script>
+        <script src="js/libs/zlib_and_gzip.min.js"></script>
+        <script src="js/libs/dat.gui.min.js"></script>
     </head>
 
     <body ng-app="atlasDemo">
 
         <div id="rendererFrame"></div>
+        <div id="inset"></div>
 
         <div id="logoBox" ng-controller="HeaderCtrl">
             <img src="logo_spl.gif" width="60px" height="48px"><br> 

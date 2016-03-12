@@ -47,3 +47,15 @@ body, html {
 .ad-tree-browser-container.tree-bordered {
     border: 0;
 }
+#inset  {
+    width: 150px;
+    height: 150px;
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0px;
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    z-index: 100;
+}

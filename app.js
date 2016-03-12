@@ -17,7 +17,13 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         mouse,
         raycaster,
         meshesList = [],
-        pickupTimeout = setTimeout(function () {},0);
+        pickupTimeout = setTimeout(function () {},0),
+        gui,
+        container2,
+        renderer2,
+        camera2,
+        axes2,
+        scene2;
 
 
     //this function enables us to create a scope and then keep the right item in the callback
@@ -217,29 +223,6 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         camera.add( dirLight );
         camera.add( dirLight.target );
 
-        //add arrow helper to help with orientation
-        var dir = new THREE.Vector3( 1, 0, 0 );
-        var origin = new THREE.Vector3( 150, 0, 0 );
-        var length = 30;
-        var hex = 0xff0000;
-        var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
-        scene.add( arrowHelper );
-
-        var dir = new THREE.Vector3( 0, 1, 0 );
-        var origin = new THREE.Vector3( 0, 160, 0 );
-        var length = 30;
-        var hex = 0x00ff00;
-        var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
-        scene.add( arrowHelper );
-
-        var dir = new THREE.Vector3( 0, 0, 1);
-        var origin = new THREE.Vector3( 0, 0, 110 );
-        var length = 30;
-        var hex = 0x0000ff;
-        var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
-        scene.add( arrowHelper );
-
-
         //fetch atlas structure
         jQuery.ajax({
             dataType: "json",
@@ -247,6 +230,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
             async: true,
             success: dealWithAtlasStructure
         });
+
+        setupInset();
 
 
     }
@@ -267,7 +252,15 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         requestAnimationFrame( animate );
 
         controls.update();
+
+        //copy position of the camera into inset
+        camera2.position.copy( camera.position );
+        camera2.position.sub( controls.target );
+        camera2.position.setLength( 300 );
+        camera2.lookAt( scene2.position );
+
         renderer.render( scene, camera );
+        renderer2.render( scene2, camera2);
 
         stats.update();
 
@@ -312,6 +305,31 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         pickupTimeout = setTimeout(displayPickup,globalViewerParameters.timeoutDelayPickup);
 
 
+    }
+
+    function setupInset () {
+        var insetWidth = 150,
+            insetHeight = 150;
+        container2 = document.getElementById('inset');
+        container2.width = insetWidth;
+        container2.height = insetHeight;
+
+        // renderer
+        renderer2 = new THREE.WebGLRenderer({alpha : true});
+        renderer2.setClearColor( 0x000000, 0 );
+        renderer2.setSize( insetWidth, insetHeight );
+        container2.appendChild( renderer2.domElement );
+
+        // scene
+        scene2 = new THREE.Scene();
+
+        // camera
+        camera2 = new THREE.PerspectiveCamera( 50, insetWidth / insetHeight, 1, 1000 );
+        camera2.up = camera.up; // important!
+
+        // axes
+        axes2 = new THREE.AxisHelper( 100 );
+        scene2.add( axes2 );
     }
 
     init();
