@@ -99,7 +99,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     }
 
     function createHierarchy () {
-        var rootGroups = atlasStructure.filter(x => x['@type']==='group' && x.root);
+        var header = atlasStructure.find(x => x['@type']==='header');
+        var rootGroups = atlasStructure.filter(x => x['@type']==='group' && header.roots.indexOf(x['@id']));
         var hierarchyTree = {
             children : rootGroups.map(group => getTreeObjectFromUuid(group['@id']))
         };
