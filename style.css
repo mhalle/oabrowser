@@ -62,3 +62,10 @@ body, html {
 .dg {
     z-index: 10 !important;
 }
+
+#gui-container {
+    position: absolute;
+    top: 50px;
+    left: 5px;
+    z-index: 100;
+}

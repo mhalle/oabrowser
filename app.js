@@ -242,7 +242,9 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
             success: dealWithAtlasStructure
         });
 
-        gui = new dat.GUI();
+        gui = new dat.GUI({autoPlace : false});
+        var guiContainer = document.getElementById('gui-container');
+        guiContainer.appendChild(gui.domElement);
 
         setupInset();
 
