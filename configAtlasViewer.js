@@ -3,5 +3,6 @@
 
 window.globalViewerParameters = {
     atlasStructurePath : "",
-    timeoutDelayPickup : 25
+    timeoutDelayPickup : 25,
+    cubeHelper : true
 }

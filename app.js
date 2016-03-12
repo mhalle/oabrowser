@@ -23,7 +23,9 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         renderer2,
         camera2,
         axes2,
-        scene2;
+        scene2,
+        nrrdLoader,
+        header;
 
 
     //this function enables us to create a scope and then keep the right item in the callback
@@ -105,7 +107,6 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     }
 
     function createHierarchy () {
-        var header = atlasStructure.find(x => x['@type']==='header');
         var rootGroups = atlasStructure.filter(x => x['@type']==='group' && header.roots.indexOf(x['@id']));
         var hierarchyTree = {
             children : rootGroups.map(group => getTreeObjectFromUuid(group['@id']))
@@ -126,7 +127,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     function dealWithAtlasStructure (data) {
         atlasStructure = data;
 
-        var header = atlasStructure.find(x=>x['@type']==='header');
+        header = atlasStructure.find(x=>x['@type']==='header');
         if (header) {
             angular.element(document.body).scope().$root.$broadcast('headerData',header);
         }
@@ -162,6 +163,16 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
             loadVTKFile(i);
         }
 
+        //load background
+        nrrdLoader = new THREE.NRRDLoader();
+        if (typeof header.backgroudImages === "string") {
+            loadBackground(header.backgroudImages);
+        }
+        else if (typeof header.backgroudImages === "array") {
+            for (var i = 0; i < header.backgroudImages.length; i++) {
+                loadBackground(header.backgroudImages[i]);
+            }
+        }
 
         // renderer
 
@@ -230,6 +241,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
             async: true,
             success: dealWithAtlasStructure
         });
+
+        gui = new dat.GUI();
 
         setupInset();
 
@@ -330,6 +343,73 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         // axes
         axes2 = new THREE.AxisHelper( 100 );
         scene2.add( axes2 );
+    }
+
+    function loadBackground (nrrdFileLocation) {
+
+        nrrdLoader.load( nrrdFileLocation, function ( volume ) {
+            var geometry,
+                canvas,
+                canvasMap,
+                material,
+                plane,
+                sliceZ,
+                sliceY,
+                sliceX;
+            var time = Date.now();
+
+            if (window.globalViewerParameters.cubeHelper) {
+                //box helper to see the extend of the volume
+                var geometry = new THREE.BoxGeometry( volume.xLength, volume.yLength, volume.zLength );
+                var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+                var cube = new THREE.Mesh( geometry, material );
+                cube.visible = false;
+                var box = new THREE.BoxHelper( cube );
+                scene.add( box );
+                box.applyMatrix(volume.matrix);
+                scene.add( cube );
+            }
+
+            //z plane
+
+            var indexZ = 0;
+            sliceZ = volume.extractSlice('z',Math.floor(volume.RASDimensions[2]/2));
+            console.debug(sliceZ);
+            scene.add( sliceZ.mesh );
+
+            //y plane
+            var indexY = 0;
+            sliceY = volume.extractSlice('y',Math.floor(volume.RASDimensions[1]/2));
+            console.debug(sliceY);
+            scene.add( sliceY.mesh );
+
+            //x plane
+            var indexX = 0;
+            sliceX = volume.extractSlice('x',Math.floor(volume.RASDimensions[0]/2));
+            console.debug(sliceX);
+            scene.add( sliceX.mesh );
+
+            console.log('generating slices in ' +(Date.now()-time)+ ' ms');
+
+            gui.add( sliceX, "index", 0, volume.RASDimensions[0], 1 ).name( "indexX" ).onChange( function () {sliceX.repaint.call(sliceX);} );
+            gui.add( sliceY, "index", 0, volume.RASDimensions[1], 1 ).name( "indexY" ).onChange( function () {sliceY.repaint.call(sliceY);} );
+            gui.add( sliceZ, "index", 0, volume.RASDimensions[2], 1 ).name( "indexZ" ).onChange( function () {sliceZ.repaint.call(sliceZ);} );
+
+            gui.add( volume, "lowerThreshold", volume.min, volume.max, 1).name( "Lower Threshold").onChange( function () {
+                volume.repaintAllSlices();
+            });
+            gui.add( volume, "upperThreshold", volume.min, volume.max, 1).name( "Upper Threshold").onChange( function () {
+                volume.repaintAllSlices();
+            });
+            gui.add( volume, "windowLow", volume.min, volume.max, 1).name( "Window Low").onChange( function () {
+                volume.repaintAllSlices();
+            });
+            gui.add( volume, "windowHigh", volume.min, volume.max, 1).name( "Window High").onChange( function () {
+                volume.repaintAllSlices();
+            });
+
+        } );
+
     }
 
     init();
