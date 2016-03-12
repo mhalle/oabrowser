@@ -165,12 +165,12 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
         //load background
         nrrdLoader = new THREE.NRRDLoader();
-        if (typeof header.backgroudImages === "string") {
-            loadBackground(header.backgroudImages);
+        if (typeof header.backgroundImages === "string") {
+            loadBackground(header.backgroundImages);
         }
-        else if (typeof header.backgroudImages === "array") {
-            for (var i = 0; i < header.backgroudImages.length; i++) {
-                loadBackground(header.backgroudImages[i]);
+        else if (typeof header.backgroundImages === "array") {
+            for (var i = 0; i < header.backgroundImages.length; i++) {
+                loadBackground(header.backgroundImages[i]);
             }
         }
 
