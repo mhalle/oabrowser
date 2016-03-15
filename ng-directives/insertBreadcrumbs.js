@@ -3,7 +3,7 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', function () {
     return {
         restrict: 'A',
         scope: {},
-        templateUrl : "templates/breadcrumbs.html",
+        templateUrl : "ng-templates/breadcrumbs.html",
         controller: function ( $scope, $element, $rootScope ) {
             $scope.data = {
                     breadcrumbs : []
