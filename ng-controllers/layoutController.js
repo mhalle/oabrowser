@@ -7,7 +7,7 @@ angular.module('atlasDemo').controller('LayoutController', function($scope, $tim
     $scope.layout = {
         bottom: true,
         rightSide: true,
-        leftSide: false
+        leftSide: true
     };
 
 
