@@ -5,9 +5,9 @@ angular.module('atlasDemo').controller('LayoutController', function($scope, $tim
 
 
     $scope.layout = {
-        bottom: true,
-        rightSide: true,
-        leftSide: true
+        bottom: false,
+        rightSide: false,
+        leftSide: false
     };
 
 
@@ -22,20 +22,6 @@ angular.module('atlasDemo').controller('LayoutController', function($scope, $tim
     $scope.open = function(which) {
         $scope.layout[which] = false;
     }
-
-    $scope.$on('ui.layout.loaded', function(evt, id){
-        if (id === null) {
-            $timeout(function(){
-                $scope.cloak = false;
-            }, 500)
-        } else {
-            $timeout(function(){
-                $scope.layout.one = true;
-                $scope.layout.top = true;
-            });
-        }
-
-    });
 
     $scope.$on('ui.layout.toggle', function(){
 
