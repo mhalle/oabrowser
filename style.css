@@ -1,22 +1,14 @@
 #rendererFrame {
     background-color: #000000;
-    width: 76vw; 
-    height: 100vh; 
-    float:left;
 }
 
 #structureList {
-    width: 22vw; 
-    height: 56vh; 
-    float:right;
+    width: 100%;
     padding-right: 10px;
     overflow: auto;
 }
 
 #breadcrumbsList {
-    width: 22vw;
-    height: 20vh;
-    float: right;
     overflow: auto;
 }
 body, html {
@@ -33,9 +25,8 @@ body, html {
 }
 
 #logoBox {
-    height: 20vh;
-    float: right;
-    width: 22vw;
+    height: 100px;
+    width: 100%;
     text-align: center;
 }
 
