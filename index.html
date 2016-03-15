@@ -4,7 +4,6 @@
         <title>Atlas Viewer</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <link type="text/css" rel="stylesheet" href="style.css" /> 
 
         <!-- dependencies -->
         <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -13,7 +12,7 @@
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
         <script src="bower_components/angular-animate/angular-animate.min.js"></script>
-        <script src="ui-bootstrap-tpls-1.1.2.min.js"></script>
+        <script src="libs/ui-bootstrap-tpls-1.1.2.min.js"></script>
 
         <!-- adapt-strap -->
         <script src="bower_components/adapt-strap/dist/adapt-strap.min.js"></script>
@@ -25,39 +24,70 @@
         <!--- local files -->
         <link rel="stylesheet" type="text/css" href="style.css" />
         <script src="angularInit.js"></script>
-        <script src="insertTreeDirective.js"></script>
-        <script src="insertBreadcrumbs.js"></script>
-        <script src="modalController.js"></script>
-        <script src="headerController.js"></script>
+        <script src="ng-directives/insertTreeDirective.js"></script>
+        <script src="ng-directives/insertBreadcrumbs.js"></script>
+        <script src="ng-controllers/layoutController.js"></script>
+        <script src="ng-controllers/modalController.js"></script>
+        <script src="ng-controllers/headerController.js"></script>
 
         <!--- three.js files -->
-        <script src="three.min.js"></script>
-        <script src="TrackballControls.js"></script>
-        <script src="Volume.js"></script>
-        <script src="VolumeSlice.js"></script>
-        <script src="NRRDLoader.js"></script>
-        <script src="VTKLoader.js"></script>
-        <script src="Detector.js"></script>
-        <script src="stats.min.js"></script>
-        <script src="zlib_and_gzip.min.js"></script>
-        <script src="dat.gui.min.js"></script>
+        <script src="libs/ui-layout.js"></script>
+        <link rel="stylesheet" href="libs/ui-layout.css">
+        <script src="libs/three.min.js"></script>
+        <script src="libs/TrackballControls.js"></script>
+        <script src="libs/Volume.js"></script>
+        <script src="libs/VolumeSlice.js"></script>
+        <script src="libs/NRRDLoader.js"></script>
+        <script src="libs/VTKLoader.js"></script>
+        <script src="libs/Detector.js"></script>
+        <script src="libs/stats.min.js"></script>
+        <script src="libs/zlib_and_gzip.min.js"></script>
+        <script src="libs/dat.gui.min.js"></script>
     </head>
 
-    <body ng-app="atlasDemo">
+    <body ng-app="atlasDemo" ng-controller="LayoutController">
 
-        <div id="rendererFrame"></div>
-        <div id="inset"></div>
-        <div id="gui-container"></div>
 
-        <div id="logoBox" ng-controller="HeaderCtrl">
-            <img src="logo_spl.gif" width="60px" height="48px"><br> 
-            <span>{{data.title}}</span><br>
-            <span class="tinyText">
-                <a ng-href="{{data.source}}" href="http://github.com/stity" target=_blank>Source</a>
-            </span>
+        <div ui-layout="{flow: 'row'}" ui-layout-loaded>
+            <div ui-layout-container>
+                <div ui-layout="config" >
+                    <div id="leftSideContainer" ui-layout-container size="100px" max-size="50%" min-size="100px" collapsed="layout.leftSide">
+                        <div ui-layout="{flow: 'row'}">
+                            <div ui-layout-container>One-One</div>
+                            <div ui-layout-container>One-Two</div>
+                            <div ui-layout-container>One-Three</div>
+                        </div>
+                    </div>
+                    <div id="rendererFrame" ui-layout-container="center">
+                        <div id="inset"></div>
+                        <div id="gui-container"></div>
+                    </div>
+                    <div id="rightSideContainer" ui-layout-container min-size="100px" size="" collapsed="layout.rightSide">
+                        <!--- LOGO BOX ---->
+                        <div id="logoBox" ng-controller="HeaderCtrl">
+                            <img src="logo_spl.gif" width="60px" height="48px"><br>
+                            <span>{{data.title}}</span><br>
+                            <span class="tinyText">
+                                <a ng-href="{{data.source}}" href="http://github.com/stity" target=_blank>Source</a>
+                            </span>
+                        </div>
+
+                        <!--- HIERARCHY ----->
+                        <div  insert-tree id="structureList"></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="bottomContainer" ui-layout-container collapsed="layout.bottom" size="50px">
+                <div insert-breadcrumbs id="breadcrumbsList"></div>
+            </div>
         </div>
-        <div  insert-tree id="structureList"></div>
-        <div insert-breadcrumbs id="breadcrumbsList"></div>
+
+
+
+
+
 
         <script type="text/ng-template" id="treeListDirective">
             <ad-tree-browser class="ad-border-default"
@@ -67,32 +97,11 @@
                              child-node="children"
                              children-padding="15"
                              bordered="true"
-                             node-template-url="treeNode.html">
+                             node-template-url="ng-templates/treeNode.html">
             </ad-tree-browser>
         </script>
 
-        <div ng-controller="ModalDemoCtrl">
-            <script type="text/ng-template" id="modalContent.html">
-                <div class="modal-header">
-                    <h3 class="modal-title">Please wait while the files are loading</h3>
-                </div>
-                <div class="modal-body">
-                    <span ng-class="{'text-success' : loadingVTK||loadingHierarchy||done}">Loading the JSON atlas structure</span>
-                    <span ng-if="loadingVTK||loadingHierarchy||done" class="glyphicon glyphicon-ok" aria-hidden="true"></span><br/>
-                    <span ng-class="{'text-success' : loadingHierarchy||done}">Loading the models </span>
-                    <span ng-if="loadingHierarchy||done" class="glyphicon glyphicon-ok" aria-hidden="true"></span><br/>
-                    <div ng-if="loadingVTK">
-                        <uib-progressbar class="progress-striped active" max="numberOfVTKFiles" value="loadedVTKFiles"><span style="color:white; white-space:nowrap;">{{loadedVTKFiles}} / {{numberOfVTKFiles}}</span></uib-progressbar>
-                    </div>
-                    <span ng-class="{'text-success' : done}">Creating the hierarchy tree</span>
-                    <span ng-if="done" class="glyphicon glyphicon-ok" aria-hidden="true"></span><br/>
-                    <span ng-if="done" class="text-success">Done !</span>
-                </div>
-                <div class="modal-footer">
-                    <button ng-if="done" class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-                </div>
-            </script>
-        </div>
+        <div ng-controller="ModalDemoCtrl"></div>
 
         <script src="../configAtlasViewer.js"></script>
         <script src="hierarchyGroup.js"></script>

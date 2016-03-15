@@ -2,7 +2,7 @@ angular.module('atlasDemo').controller('ModalDemoCtrl', function ($scope, $uibMo
 
     var modalInstance = $uibModal.open({
         animation: true,
-        templateUrl: 'modalContent.html',
+        templateUrl: 'ng-templates/modalContent.html',
         controller: 'ModalInstanceCtrl',
         resolve: {}
     });
@@ -26,19 +26,19 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
     $scope.loadingJSON = true;
     $scope.loadingVTK = false;
     $scope.loadingHierarchy = false;
-    
+
     $scope.loadedVTKFiles = 0;
     $scope.numberOfVTKFiles = 1;
-    
+
     $scope.done = false;
-    
+
     $rootScope.$on('modal.JSONLoaded', function (event, numberOfVTKFiles) {
         $scope.loadingJSON = false;
         $scope.loadingVTK = true;
         $scope.numberOfVTKFiles = numberOfVTKFiles;
         $scope.$apply();
     });
-    
+
     $rootScope.$on('modal.fileLoaded', function () {
         console.log('file ++');
         $scope.loadedVTKFiles++;
@@ -48,13 +48,13 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
         }
         $scope.$apply();
     });
-    
+
     $rootScope.$on('modal.hierarchyLoaded', function () {
         $scope.loadingHierarchy = false;
         $scope.done = true;
         $scope.$apply();
     });
-    
+
     $scope.ok = function () {
         $uibModalInstance.close(true);
     };

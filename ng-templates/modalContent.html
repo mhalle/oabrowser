@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h3 class="modal-title">Please wait while the files are loading</h3>
+</div>
+<div class="modal-body">
+    <span ng-class="{'text-success' : loadingVTK||loadingHierarchy||done}">Loading the JSON atlas structure</span>
+    <span ng-if="loadingVTK||loadingHierarchy||done" class="glyphicon glyphicon-ok" aria-hidden="true"></span><br/>
+    <span ng-class="{'text-success' : loadingHierarchy||done}">Loading the models </span>
+    <span ng-if="loadingHierarchy||done" class="glyphicon glyphicon-ok" aria-hidden="true"></span><br/>
+    <div ng-if="loadingVTK">
+        <uib-progressbar class="progress-striped active" max="numberOfVTKFiles" value="loadedVTKFiles"><span style="color:white; white-space:nowrap;">{{loadedVTKFiles}} / {{numberOfVTKFiles}}</span></uib-progressbar>
+    </div>
+    <span ng-class="{'text-success' : done}">Creating the hierarchy tree</span>
+    <span ng-if="done" class="glyphicon glyphicon-ok" aria-hidden="true"></span><br/>
+    <span ng-if="done" class="text-success">Done !</span>
+</div>
+<div class="modal-footer">
+    <button ng-if="done" class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+</div>
