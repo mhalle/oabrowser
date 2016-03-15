@@ -18,6 +18,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         raycaster,
         meshesList = [],
         pickupTimeout = setTimeout(function () {},0),
+        resizeTimeout = setTimeout(function () {},0),
         gui,
         container2,
         renderer2,
@@ -193,6 +194,11 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         //
 
         window.addEventListener( 'resize', onWindowResize, false );
+        angular.element(document.body).scope().$on('ui.layout.resize', function () {
+            clearInterval(resizeTimeout);
+            console.log('set resize timeout');
+            resizeTimeout = setTimeout(onWindowResize, 500);
+        });
 
         container.addEventListener('mousemove', onSceneMouseMove, false);
 

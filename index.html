@@ -51,18 +51,19 @@
         <div ui-layout="{flow: 'row'}" ui-layout-loaded>
             <div ui-layout-container>
                 <div ui-layout="config" >
-                    <div id="leftSideContainer" ui-layout-container size="100px" max-size="50%" min-size="100px" collapsed="layout.leftSide">
+                    <div id="leftSideContainer" ui-layout-container size="100px" collapsed="layout.leftSide">
                         <div ui-layout="{flow: 'row'}">
                             <div ui-layout-container>One-One</div>
                             <div ui-layout-container>One-Two</div>
                             <div ui-layout-container>One-Three</div>
                         </div>
                     </div>
-                    <div id="rendererFrame" ui-layout-container="center">
+                    <div id="CenterContainer" ui-layout-container="center">
+                        <div id="rendererFrame"></div>
                         <div id="inset"></div>
                         <div id="gui-container"></div>
                     </div>
-                    <div id="rightSideContainer" ui-layout-container min-size="100px" size="" collapsed="layout.rightSide">
+                    <div id="rightSideContainer" ui-layout-container collapsed="layout.rightSide">
                         <!--- LOGO BOX ---->
                         <div id="logoBox" ng-controller="HeaderCtrl">
                             <img src="logo_spl.gif" width="60px" height="48px"><br>

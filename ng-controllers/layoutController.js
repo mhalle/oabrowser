@@ -24,7 +24,6 @@ angular.module('atlasDemo').controller('LayoutController', function($scope, $tim
     }
 
     $scope.$on('ui.layout.loaded', function(evt, id){
-        console.error('loaded', typeof id, id)
         if (id === null) {
             $timeout(function(){
                 $scope.cloak = false;
@@ -41,4 +40,5 @@ angular.module('atlasDemo').controller('LayoutController', function($scope, $tim
     $scope.$on('ui.layout.toggle', function(){
 
     });
+
 });
