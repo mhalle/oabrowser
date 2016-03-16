@@ -184,7 +184,7 @@ THREE.VolumeSlice.prototype = {
 
 		this.mesh.material.map.needsUpdate = true;
 
-        this.listeners[repaint].map( listener => listener.callback.call(listener.context));
+        this.listeners.repaint.map( listener => listener.callback.call(listener.context));
 
 	},
 
@@ -231,7 +231,7 @@ THREE.VolumeSlice.prototype = {
      */
     onRepaint : function (context, callback) {
 
-        this.listeners['repaint'].push({callback : callback, context : context});
+        this.listeners.repaint.push({callback : callback, context : context});
 
     }
 
