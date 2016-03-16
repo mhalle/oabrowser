@@ -398,7 +398,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
             var indexX = 0;
             sliceX = volume.extractSlice('x',Math.floor(volume.RASDimensions[0]/2));
             console.debug(sliceX);
-            rootScope.$broadcast('insertSlice', {sliceId : 'sagittal', slice : sliceZ});
+            rootScope.$broadcast('insertSlice', {sliceId : 'sagittal', slice : sliceX});
             scene.add( sliceX.mesh );
 
             console.log('generating slices in ' +(Date.now()-time)+ ' ms');
