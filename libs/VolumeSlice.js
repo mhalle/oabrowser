@@ -37,6 +37,14 @@ THREE.VolumeSlice = function( volume, index, axis ) {
      */
 	this.axis = axis || 'z';
 
+
+	/**
+     * @member {Object} listeners store all the listeners to the events of this slice
+     */
+    this.listeners = {
+        repaint : []
+    }
+
 	/**
 	 * @member {HTMLCanvasElement} canvas The final canvas used for the texture
 	 */
@@ -84,12 +92,6 @@ THREE.VolumeSlice = function( volume, index, axis ) {
      * @returns {Number} the index corresponding to the voxel in volume.data of the given position in the slice
      */
 
-	/**
-     * @member {Object} listeners store all the listeners to the events of this slice
-     */
-    this.listeners = {
-        repaint : []
-    }
 
 
 }
