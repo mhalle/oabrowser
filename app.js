@@ -363,7 +363,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
                 plane,
                 sliceZ,
                 sliceY,
-                sliceX;
+                sliceX,
+                rootScope = angular.element(document.body).scope().$root;
             var time = Date.now();
 
             if (window.globalViewerParameters.cubeHelper) {
@@ -383,18 +384,21 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
             var indexZ = 0;
             sliceZ = volume.extractSlice('z',Math.floor(volume.RASDimensions[2]/2));
             console.debug(sliceZ);
+            rootScope.$broadcast('insertSlice', {sliceId : 'axial', slice : sliceZ});
             scene.add( sliceZ.mesh );
 
             //y plane
             var indexY = 0;
             sliceY = volume.extractSlice('y',Math.floor(volume.RASDimensions[1]/2));
             console.debug(sliceY);
+            rootScope.$broadcast('insertSlice', {sliceId : 'corronal', slice : sliceY});
             scene.add( sliceY.mesh );
 
             //x plane
             var indexX = 0;
             sliceX = volume.extractSlice('x',Math.floor(volume.RASDimensions[0]/2));
             console.debug(sliceX);
+            rootScope.$broadcast('insertSlice', {sliceId : 'sagittal', slice : sliceZ});
             scene.add( sliceX.mesh );
 
             console.log('generating slices in ' +(Date.now()-time)+ ' ms');
