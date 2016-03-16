@@ -19,7 +19,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 }
             });
 
-            angular.element(document.body).scope().$on('ui.layout.resize', $scope.repaint);
+            //set timeout to wait for the scope to be created
+            setTimeout( function () {
+                angular.element(document.body).scope().$on('ui.layout.resize', $scope.repaint);
+            }, 1000);
 
             $scope.repaint = function () {
 
