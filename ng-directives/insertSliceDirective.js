@@ -15,6 +15,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     var canvas = document.createElement('canvas');
                     $element.append(canvas);
                     $scope.canvas = canvas;
+                    $scope.slice.onRepaint(null, $scope.repaint);
                     $scope.repaint();
                 }
             });

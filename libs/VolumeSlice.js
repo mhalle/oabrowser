@@ -84,6 +84,13 @@ THREE.VolumeSlice = function( volume, index, axis ) {
      * @returns {Number} the index corresponding to the voxel in volume.data of the given position in the slice
      */
 
+	/**
+     * @member {Object} listeners store all the listeners to the events of this slice
+     */
+    this.listeners = {
+        repaint : [];
+    }
+
 
 }
 
@@ -177,10 +184,12 @@ THREE.VolumeSlice.prototype = {
 
 		this.mesh.material.map.needsUpdate = true;
 
+        this.listeners[repaint].map( listener => listener.callback.call(listener.context));
+
 	},
 
 	/**
-     * @member {Function} Refresh the geometry according to axis and index
+     * @member {Function} updateGeometry Refresh the geometry according to axis and index
      * @see THREE.Volume.extractPerpendicularPlane
      * @memberof THREE.VolumeSlice
      */
@@ -212,6 +221,18 @@ THREE.VolumeSlice.prototype = {
 
 		this.geometryNeedsUpdate = false;
 
-	}
+	},
+
+    /**
+     * @member {Function} onRepaint add  a listener to the list of listeners
+     * @param {Object} context
+     * @param {Function} listener
+     * @memberof THREE.VolumeSlice
+     */
+    onRepaint : function (context, callback) {
+
+        this.listeners['repaint'].push({callback : callback, context : context});
+
+    }
 
 }
