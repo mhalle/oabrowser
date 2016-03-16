@@ -88,7 +88,7 @@ THREE.VolumeSlice = function( volume, index, axis ) {
      * @member {Object} listeners store all the listeners to the events of this slice
      */
     this.listeners = {
-        repaint : [];
+        repaint : []
     }
 
 
