@@ -25,11 +25,11 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
                 if ($scope.canvas) {
                     var canvas = $scope.canvas;
-                    canvas.width = $element.width;
-                    canvas.height = $element.height;
+                    canvas.width = $element.width();
+                    canvas.height = $element.height();
 
                     var image = $scope.slice.canvas;
-                    var ctx = canvas.getContext('2D');
+                    var ctx = canvas.getContext('2d');
 
                     var zoom = Math.min(canvas.width/image.width, canvas.height/image.height);
 
