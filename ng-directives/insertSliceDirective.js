@@ -10,7 +10,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 //we are expecting data to hold two properties :
                 //      - sliceId which identify in which directive you want to insert the slice
                 //      - slice the actual slice object
-                if ($scope.sliceId === data.sliceId || $element.attr('sliceid')=== date.sliceId) {
+                if ($scope.sliceId === data.sliceId || $element.attr('sliceid')=== data.sliceId) {
                     $scope.slice = data.slice;
                     var canvas = document.createElement('canvas');
                     $element.append(canvas);
