@@ -71,6 +71,11 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
 
     mainApp.on('modal.backgroundProgress', function (event) {
         var backgroundObject = $scope.backgroundFiles.find(o => o.filename === event.filename);
+        if (!backgroundObject) {
+            backgroundObject = {
+                filename : event.filename
+            };
+        }
         backgroundObject.progress = event.progress;
         $scope.$apply();
     });
