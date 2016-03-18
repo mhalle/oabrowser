@@ -2,7 +2,7 @@ if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
 }
 
-angular.module('atlasViewer').run(function (mainApp) {
+angular.module('atlasDemo').run(function (mainApp) {
 
     var container,
         stats,
