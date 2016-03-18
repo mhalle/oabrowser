@@ -310,6 +310,7 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
                 paths = getAllTheHierarchyPaths(intersects[0].object);
             }
             mainApp.emit('insertBreadcrumbs', paths);
+            needPickupUpdate = false;
         }
 
     }
