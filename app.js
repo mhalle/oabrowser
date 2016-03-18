@@ -359,7 +359,7 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
 
         var onProgress = function ( xhr ) {
             if ( xhr.lengthComputable ) {
-                var percentComplete = xhr.loaded / xhr.total * 100;
+                var percentComplete = Math.round(xhr.loaded / xhr.total * 100);
                 mainApp.emit('modal.backgroundProgress', {filename : nrrdFileLocation, progress : percentComplete});
             }
         };
