@@ -3,7 +3,7 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
     var mainApp = mainAppProvider.$get();
     var selectedObjects = [],
         selectedHierarchy = null,
-        highlightMeshColor = THREE.Color('rgb(255,239,0)').getHex(),
+        highlightMeshColor = (new THREE.Color('rgb(255,239,0)')).getHex(),
         singleton = {};
 
     function _select (object) {
