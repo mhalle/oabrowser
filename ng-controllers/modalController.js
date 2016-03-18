@@ -77,8 +77,10 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
             };
             $scope.push(backgroundObject);
         }
-        backgroundObject.progress = event.progress;
-        $scope.$apply();
+        if (backgroundObject.progress !== event.progress) {
+            backgroundObject.progress = event.progress;
+            $scope.$apply();
+        }
     });
 
     $scope.ok = function () {
