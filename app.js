@@ -357,11 +357,22 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
 
     function loadBackground(nrrdFileLocation) {
 
+        var onProgress = function ( xhr ) {
+            if ( xhr.lengthComputable ) {
+                var percentComplete = xhr.loaded / xhr.total * 100;
+                mainApp.emit('modal.backgroundProgress', {filename : nrrdFileLocation, progress : percentComplete});
+            }
+        };
+
+        mainApp.emit('modal.backgroundStart', nrrdFileLocation);
+
         nrrdLoader.load( nrrdFileLocation, function ( volume ) {
             var sliceZ,
                 sliceY,
                 sliceX;
             var time = Date.now();
+
+            mainApp.emit('modal.backgroundLoaded', nrrdFileLocation);
 
             if (window.globalViewerParameters.cubeHelper) {
                 //box helper to see the extend of the volume
@@ -413,7 +424,7 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
                 volume.repaintAllSlices();
             });
 
-        } );
+        }, onProgress );
 
     }
 

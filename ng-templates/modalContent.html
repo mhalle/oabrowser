@@ -12,7 +12,21 @@
     <span ng-class="{'text-success' : done}">Creating the hierarchy tree</span>
     <span ng-if="done" class="glyphicon glyphicon-ok" aria-hidden="true"></span><br/>
     <span ng-if="done" class="text-success">Done !</span>
+    <div ng-repeat="item in backgroundFiles">
+        <div ng-if="item.progress < 100">
+            Loading {{item.filename}} : <br>
+            <uib-progressbar class="progress-striped active" min="0" max="100" value="item.progress"><span style="color:white; white-space:nowrap;">{{item.progress}} %</span></uib-progressbar>
+        </div>
+        <div ng-if="item.progress === 100">
+            {{item.filename}} loaded
+            <span ng-if="done" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        </div>
+    </div>
 </div>
 <div class="modal-footer">
+    <span ng-if="done && !backgroundDone" class="bg-warning">
+        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+        You can start interacting with the app without the background loaded, it will appear when ready
+    </span>
     <button ng-if="done" class="btn btn-primary" type="button" ng-click="ok()">OK</button>
 </div>
