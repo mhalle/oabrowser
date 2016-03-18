@@ -1,4 +1,4 @@
-angular.module('atlasDemo').controller('LayoutController', function($scope) {
+angular.module('atlasDemo').controller('LayoutController', function($scope, mainApp) {
     $scope.config = {
         flow: 'column'
     };
@@ -11,20 +11,24 @@ angular.module('atlasDemo').controller('LayoutController', function($scope) {
     };
 
 
-    $scope.toggle = function(which) {
+    $scope.toggle = function (which) {
         $scope.layout[which] = !$scope.layout[which];
     };
 
-    $scope.close = function(which) {
+    $scope.close = function (which) {
         $scope.layout[which] = true;
     };
 
-    $scope.open = function(which) {
+    $scope.open = function (which) {
         $scope.layout[which] = false;
     };
 
-    $scope.$on('ui.layout.toggle', function(){
+    $scope.$on('ui.layout.toggle', function () {
+        mainApp.emit('ui.layout.toggle', $scope);
+    });
 
+    $scope.$on('ui.layout.resize', function () {
+        mainApp.emit('ui.layout.resize', $scope);
     });
 
 });

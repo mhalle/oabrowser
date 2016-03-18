@@ -3,10 +3,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
     return {
         restrict: 'A',
         scope: { sliceId : '=sliceid' },
-        controller: function ( $scope, $element, $rootScope ) {
+        controller: function ( $scope, $element, mainApp ) {
 
 
-            $rootScope.$on('insertSlice', function (event, data) {
+            mainApp.on('insertSlice', function (data) {
                 //we are expecting data to hold two properties :
                 //      - sliceId which identify in which directive you want to insert the slice
                 //      - slice the actual slice object
@@ -22,7 +22,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
             //set timeout to wait for the scope to be created
             setTimeout( function () {
-                angular.element(document.body).scope().$on('ui.layout.resize', $scope.repaint);
+                mainApp.on('ui.layout.resize', $scope.repaint);
             }, 1000);
 
             $scope.repaint = function () {

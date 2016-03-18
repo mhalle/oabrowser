@@ -14,7 +14,7 @@ angular.module('atlasDemo').controller('ModalDemoCtrl', function ($scope, $uibMo
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $uibModal service used above.
 
-angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, $rootScope) {
+angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, $rootScope, mainApp) {
 
     $scope.loadingJSON = true;
     $scope.loadingVTK = false;
@@ -25,14 +25,14 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
 
     $scope.done = false;
 
-    $rootScope.$on('modal.JSONLoaded', function (event, numberOfVTKFiles) {
+    mainApp.on('modal.JSONLoaded', function (numberOfVTKFiles) {
         $scope.loadingJSON = false;
         $scope.loadingVTK = true;
         $scope.numberOfVTKFiles = numberOfVTKFiles;
         $scope.$apply();
     });
 
-    $rootScope.$on('modal.fileLoaded', function () {
+    mainApp.on('modal.fileLoaded', function () {
         console.log('file ++');
         $scope.loadedVTKFiles++;
         if ($scope.loadedVTKFiles === $scope.numberOfVTKFiles) {
@@ -42,7 +42,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
         $scope.$apply();
     });
 
-    $rootScope.$on('modal.hierarchyLoaded', function () {
+    mainApp.on('modal.hierarchyLoaded', function () {
         $scope.loadingHierarchy = false;
         $scope.done = true;
         $scope.$apply();

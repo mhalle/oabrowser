@@ -4,11 +4,11 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', function () {
         restrict: 'A',
         scope: {},
         templateUrl : "ng-templates/breadcrumbs.html",
-        controller: function ( $scope, $element, $rootScope ) {
+        controller: function ( $scope, $element, mainApp ) {
             $scope.data = {
                     breadcrumbs : []
                 };
-            $rootScope.$on('insertBreadcrumbs', function (event, breadcrumbs) {
+            mainApp.on('insertBreadcrumbs', function (breadcrumbs) {
                 $scope.data = {
                     breadcrumbs : breadcrumbs
                 };

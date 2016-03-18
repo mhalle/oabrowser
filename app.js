@@ -1,13 +1,14 @@
-if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+if (!Detector.webgl) {
+    Detector.addGetWebGLMessage();
+}
 
-//IIFE to preserve global scope
-(function () {
+angular.module('atlasViewer').run(function (mainApp) {
 
-    var container, 
+    var container,
         stats,
-        camera, 
-        controls, 
-        scene, 
+        camera,
+        controls,
+        scene,
         renderer,
         atlasStructure,
         loader,
@@ -17,8 +18,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         mouse,
         raycaster,
         meshesList = [],
-        pickupTimeout = setTimeout(function () {},0),
-        resizeTimeout = setTimeout(function () {},0),
+        pickupTimeout = setTimeout(function () {}, 0),
+        resizeTimeout = setTimeout(function () {}, 0),
         gui,
         container2,
         renderer2,
@@ -30,9 +31,9 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 
     //this function enables us to create a scope and then keep the right item in the callback
-    function loadVTKFile (i) {
+    function loadVTKFile(i) {
         var file = vtkStructures[i].sourceSelector.dataSourceObject.source;
-        loader.load( file, function ( geometry ) {
+        loader.load(file, function (geometry) {
 
             var item = vtkStructures[i];
 
@@ -43,19 +44,15 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
                 rgb = rgb.map(Number);
             }
             else {
-                console.log(JSON.stringify(item,null,4));
-                rgb = [0,0,0,0];
+                rgb = [0, 0, 0, 0];
             }
 
             var material = new THREE.MeshLambertMaterial({
-                wireframe : false, 
-                morphTargets : false, 
-                side : THREE.DoubleSide, 
-                color : rgb[1]*256*256+rgb[2]*256+rgb[3]
+                wireframe : false,
+                morphTargets : false,
+                side : THREE.DoubleSide,
+                color : rgb[1] * 256 * 256 + rgb[2] * 256 + rgb[3]
             });
-
-            console.log(rgb[1]*256*256+rgb[2]*256+rgb[3]);
-
 
             material.opacity = item.renderOptions.opacity || rgb[4] || 1.0;
             material.visible = true;
@@ -66,7 +63,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
             }
 
 
-            var mesh = new THREE.Mesh( geometry, material );
+            var mesh = new THREE.Mesh(geometry, material);
             //TODO : retrieve name from annotation object if annotation use a reference
             mesh.name = item.annotation && item.annotation.name || '';
             meshesList.push(mesh);
@@ -75,17 +72,17 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
             loadedFile++;
 
             //signal to the modal
-            angular.element(document.body).scope().$root.$broadcast('modal.fileLoaded');
+            mainApp.emit('modal.fileLoaded');
 
             if (loadedFile === numberOfFilesToLoad) {
                 //put it in an immediate timeout to give the browser the opportunity to refresh the modal
-                setTimeout(createHierarchy,0);
+                setTimeout(createHierarchy, 0);
             }
 
         });
     }
 
-    function getTreeObjectFromUuid (uuid) {
+    function getTreeObjectFromUuid(uuid) {
         var item = atlasStructure.find(x=>x['@id']===uuid);
         var treeObject = {
             name : item.annotation.name,
@@ -107,30 +104,27 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         return treeObject;
     }
 
-    function createHierarchy () {
+    function createHierarchy() {
         var rootGroups = atlasStructure.filter(x => x['@type']==='group' && header.roots.indexOf(x['@id']) !== -1);
         var hierarchyTree = {
             children : rootGroups.map(group => getTreeObjectFromUuid(group['@id']))
         };
 
-        var listContainer = document.getElementById('structureList');
-        var treeDirective = document.getElementById('treeListDirective');
-
-        angular.element(document.body).scope().$root.$broadcast('insertTree',hierarchyTree);
+        mainApp.emit('insertTree',hierarchyTree);
 
         //send a signal to the modal
-        angular.element(document.body).scope().$root.$broadcast('modal.hierarchyLoaded', vtkStructures.length);
+        mainApp.emit('modal.hierarchyLoaded', vtkStructures.length);
 
 
-        console.log('end controller');
     }
 
-    function dealWithAtlasStructure (data) {
+    function dealWithAtlasStructure(data) {
+        var i;
         atlasStructure = data;
 
         header = atlasStructure.find(x=>x['@type']==='header');
         if (header) {
-            angular.element(document.body).scope().$root.$broadcast('headerData',header);
+            mainApp.emit('headerData',header);
         }
 
         var vtkDatasources = data.filter(function (object) { 
@@ -138,7 +132,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         });
         var vtkDatasourcesId = vtkDatasources.map(source => source["@id"]);
         vtkStructures = [];
-        for(var i=0; i<atlasStructure.length; i++) {
+        for(i=0; i<atlasStructure.length; i++) {
             var item = atlasStructure[i];
             if (item['@type']==='structure') {
                 var dataSourceIndex = vtkDatasourcesId.indexOf(item.sourceSelector.dataSource);
@@ -157,10 +151,10 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         numberOfFilesToLoad = vtkStructures.length;
 
         //send the modal a signal to give the number of vtk files to load
-        angular.element(document.body).scope().$root.$broadcast('modal.JSONLoaded', numberOfFilesToLoad);
+        mainApp.emit('modal.JSONLoaded', numberOfFilesToLoad);
 
 
-        for (var i = 0; i<vtkStructures.length; i++) {
+        for (i = 0; i<vtkStructures.length; i++) {
             loadVTKFile(i);
         }
 
@@ -169,8 +163,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         if (typeof header.backgroundImages === "string") {
             loadBackground(header.backgroundImages);
         }
-        else if (typeof header.backgroundImages === "array") {
-            for (var i = 0; i < header.backgroundImages.length; i++) {
+        else if (typeof header.backgroundImages === "object") {
+            for (i = 0; i < header.backgroundImages.length; i++) {
                 loadBackground(header.backgroundImages[i]);
             }
         }
@@ -194,7 +188,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         //
 
         window.addEventListener( 'resize', onWindowResize, false );
-        angular.element(document.body).scope().$on('ui.layout.resize', function () {
+        mainApp.on('ui.layout.resize', function () {
             clearInterval(resizeTimeout);
             console.log('set resize timeout');
             resizeTimeout = setTimeout(onWindowResize, 500);
@@ -287,7 +281,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
     }
 
-    function getAllTheHierarchyPaths (object) {
+    function getAllTheHierarchyPaths(object) {
         var result = [];
         function addParents (object, path) {
             if (object.hierarchyParents.length === 0) {
@@ -296,14 +290,14 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
             }
             for (var i = 0; i < object.hierarchyParents.length; i++) {
                 var parent = object.hierarchyParents[i];
-                addParents(parent, '//'+object.name+path)
+                addParents(parent, '//'+object.name+path);
             }
         }
         addParents(object, '');
         return result.map(s => s.split('//'));
     }
 
-    function displayPickup () {
+    function displayPickup() {
 
         raycaster.setFromCamera( mouse, camera );
 
@@ -313,22 +307,22 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         if (intersects.length > 0) {
             paths = getAllTheHierarchyPaths(intersects[0].object);
         }
-        angular.element(document.body).scope().$root.$broadcast('insertBreadcrumbs', paths);
+        mainApp.emit('insertBreadcrumbs', paths);
 
     }
 
-    function onSceneMouseMove( event ) {
+    function onSceneMouseMove(event) {
 
         mouse.x = ( event.clientX / container.clientWidth ) * 2 - 1;
         mouse.y = - ( event.clientY / container.clientHeight ) * 2 + 1;
 
         clearTimeout(pickupTimeout);
-        pickupTimeout = setTimeout(displayPickup,globalViewerParameters.timeoutDelayPickup);
+        pickupTimeout = setTimeout(displayPickup, mainApp.globalParameters.timeoutDelayPickup);
 
 
     }
 
-    function setupInset () {
+    function setupInset() {
         var insetWidth = 150,
             insetHeight = 150;
         container2 = document.getElementById('inset');
@@ -353,18 +347,12 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         scene2.add( axes2 );
     }
 
-    function loadBackground (nrrdFileLocation) {
+    function loadBackground(nrrdFileLocation) {
 
         nrrdLoader.load( nrrdFileLocation, function ( volume ) {
-            var geometry,
-                canvas,
-                canvasMap,
-                material,
-                plane,
-                sliceZ,
+            var sliceZ,
                 sliceY,
-                sliceX,
-                rootScope = angular.element(document.body).scope().$root;
+                sliceX;
             var time = Date.now();
 
             if (window.globalViewerParameters.cubeHelper) {
@@ -381,24 +369,21 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
             //z plane
 
-            var indexZ = 0;
             sliceZ = volume.extractSlice('z',Math.floor(volume.RASDimensions[2]/2));
             console.debug(sliceZ);
-            rootScope.$broadcast('insertSlice', {sliceId : 'axial', slice : sliceZ});
+            mainApp.emit('insertSlice', {sliceId : 'axial', slice : sliceZ});
             scene.add( sliceZ.mesh );
 
             //y plane
-            var indexY = 0;
             sliceY = volume.extractSlice('y',Math.floor(volume.RASDimensions[1]/2));
             console.debug(sliceY);
-            rootScope.$broadcast('insertSlice', {sliceId : 'corronal', slice : sliceY});
+            mainApp.emit('insertSlice', {sliceId : 'corronal', slice : sliceY});
             scene.add( sliceY.mesh );
 
             //x plane
-            var indexX = 0;
             sliceX = volume.extractSlice('x',Math.floor(volume.RASDimensions[0]/2));
             console.debug(sliceX);
-            rootScope.$broadcast('insertSlice', {sliceId : 'sagittal', slice : sliceX});
+            mainApp.emit('insertSlice', {sliceId : 'sagittal', slice : sliceX});
             scene.add( sliceX.mesh );
 
             console.log('generating slices in ' +(Date.now()-time)+ ' ms');
@@ -426,4 +411,4 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
     init();
 
-})();
+});
