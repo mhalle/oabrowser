@@ -316,8 +316,10 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
 
     function onSceneMouseMove(event) {
 
-        mouse.x = ( event.clientX / container.clientWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / container.clientHeight ) * 2 + 1;
+        //compute offset due to container position
+        var offset = $(container).offset();
+        mouse.x = ( (event.clientX-offset.left) / container.clientWidth ) * 2 - 1;
+        mouse.y = - ( (event.clientY-offset.top) / container.clientHeight ) * 2 + 1;
 
         needPickupUpdate = true;
 
