@@ -48,7 +48,7 @@ angular.module('atlasDemo').provider("mainApp", function () {
             singleton.createEvent(eventName);
         }
 
-        for (i = 0; i < listeners[eventName]; i++) {
+        for (i = 0; i < listeners[eventName].length; i++) {
 
             listener = listeners[eventName][i];
             listener.callback.call(listener.context || null, event);
