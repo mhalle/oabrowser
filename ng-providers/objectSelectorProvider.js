@@ -1,5 +1,6 @@
-angular.module('atlasDemo').provider('objectSelector', ['mainApp', function (mainApp) {
+angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', function (mainAppProvider) {
 
+    var mainApp = mainAppProvider.$get();
     var selectedObjects = [],
         selectedHierarchy = null,
         highlightMeshColor = THREE.Color('rgb(255,239,0)').getHex(),
