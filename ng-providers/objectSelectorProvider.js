@@ -18,7 +18,7 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
 
             for (var i = 0; i < object.children.length; i++) {
 
-                select(object.children[i]);
+                _select(object.children[i]);
 
             }
 
