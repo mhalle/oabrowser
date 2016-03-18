@@ -18,8 +18,8 @@ angular.module('atlasViewer').run(function (mainApp) {
         mouse,
         raycaster,
         meshesList = [],
-        pickupTimeout = setTimeout(function () {}, 0),
-        resizeTimeout = setTimeout(function () {}, 0),
+        needPickupUpdate,
+        resizeTimeout = setTimeout(function () {}),
         gui,
         container2,
         renderer2,
@@ -189,7 +189,7 @@ angular.module('atlasViewer').run(function (mainApp) {
 
         window.addEventListener( 'resize', onWindowResize, false );
         mainApp.on('ui.layout.resize', function () {
-            clearInterval(resizeTimeout);
+            clearTimeout(resizeTimeout);
             console.log('set resize timeout');
             resizeTimeout = setTimeout(onWindowResize, 500);
         });
@@ -278,6 +278,7 @@ angular.module('atlasViewer').run(function (mainApp) {
         renderer2.render( scene2, camera2);
 
         stats.update();
+        displayPickup();
 
     }
 
@@ -298,16 +299,18 @@ angular.module('atlasViewer').run(function (mainApp) {
     }
 
     function displayPickup() {
+        if (needPickupUpdate) {
 
-        raycaster.setFromCamera( mouse, camera );
+            raycaster.setFromCamera( mouse, camera );
 
-        var intersects = raycaster.intersectObjects( meshesList );
+            var intersects = raycaster.intersectObjects( meshesList );
 
-        var paths = [[]];
-        if (intersects.length > 0) {
-            paths = getAllTheHierarchyPaths(intersects[0].object);
+            var paths = [[]];
+            if (intersects.length > 0) {
+                paths = getAllTheHierarchyPaths(intersects[0].object);
+            }
+            mainApp.emit('insertBreadcrumbs', paths);
         }
-        mainApp.emit('insertBreadcrumbs', paths);
 
     }
 
@@ -316,8 +319,7 @@ angular.module('atlasViewer').run(function (mainApp) {
         mouse.x = ( event.clientX / container.clientWidth ) * 2 - 1;
         mouse.y = - ( event.clientY / container.clientHeight ) * 2 + 1;
 
-        clearTimeout(pickupTimeout);
-        pickupTimeout = setTimeout(displayPickup, mainApp.globalParameters.timeoutDelayPickup);
+        needPickupUpdate = true;
 
 
     }

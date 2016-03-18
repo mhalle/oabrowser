@@ -1,28 +1,9 @@
 angular.module('atlasDemo').provider("mainApp", function () {
 
-    var seletedObject = null,
-        selectedHierarchy = null,
-        singleton = {
+    var singleton = {
             globalParameters : window.globalViewerParameters
         },
         listeners = {};
-
-    Object.defineProperty(singleton, 'selectedObject', {
-        get :  function () {
-            return seletedObject;
-        },
-        set : function (value) {
-            seletedObject = value;
-        }
-    });
-    Object.defineProperty(singleton, 'selectedHierarchy', {
-        get :  function () {
-            return selectedHierarchy;
-        },
-        set : function (value) {
-            selectedHierarchy = value;
-        }
-    });
 
     singleton.createEvent = function (eventName) {
 
