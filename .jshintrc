@@ -78,6 +78,7 @@
         "dat" : false,
         "Stats" : false,
         "jQuery" : false,
+        "$" : false,
         "HierarchyGroup" : false
     }
 }
