@@ -92,7 +92,6 @@ THREE.Volume = function( xLength, yLength, zLength, type, arrayBuffer ) {
 			case 'uint64' :
 			case 'uint64_t' :
 				throw 'Error in THREE.Volume constructor : this type is not supported in JavaScript';
-				break;
 			case 'Float32' :
 			case 'float32' :
 			case 'float' :
@@ -148,7 +147,7 @@ THREE.Volume = function( xLength, yLength, zLength, type, arrayBuffer ) {
 			lowerThreshold = value;
 			this.sliceList.forEach( function( slice ) {
 
-				slice.geometryNeedsUpdate = true
+				slice.geometryNeedsUpdate = true;
 
 			} );
 
@@ -188,7 +187,7 @@ THREE.Volume = function( xLength, yLength, zLength, type, arrayBuffer ) {
 	 * @member {Array} RASDimensions This array holds the dimensions of the volume in the RAS space
 	 */
 
-}
+};
 
 THREE.Volume.prototype = {
 
@@ -317,7 +316,6 @@ THREE.Volume.prototype = {
 				planeMatrix.setPosition( new THREE.Vector3( 0, RASIndex - positionOffset, 0 ) );
 				break;
 			case 'z' :
-			default :
 				axisInIJK.set( 0, 0, 1 );
 				firstDirection.set( 1, 0, 0 );
 				secondDirection.set( 0, - 1, 0 );
@@ -328,6 +326,9 @@ THREE.Volume.prototype = {
 				positionOffset = ( volume.RASDimensions[ 2 ] - 1 ) / 2;
 				planeMatrix.setPosition( new THREE.Vector3( 0, 0, RASIndex - positionOffset ) );
 				break;
+
+			default :
+                throw 'wrong axis';
 		}
 
 		firstDirection.applyMatrix4( volume.inverseMatrix ).normalize();
@@ -358,10 +359,9 @@ THREE.Volume.prototype = {
 
 		} );
 		var argumentsWithInversion = [ 'volume.xLength-1-', 'volume.yLength-1-', 'volume.zLength-1-' ];
-		var arguments = [ 'i', 'j', 'k' ];
 		var argArray = [ iDirection, jDirection, kDirection ].map( function( direction, n ) {
 
-			return ( direction.dot( base[ n ] ) > 0 ? '' : argumentsWithInversion[ n ] ) + ( direction === axisInIJK ? 'IJKIndex' : direction.argVar )
+			return ( direction.dot( base[ n ] ) > 0 ? '' : argumentsWithInversion[ n ] ) + ( direction === axisInIJK ? 'IJKIndex' : direction.argVar );
 
 		} );
 		var argString = argArray.join( ',' );
@@ -375,7 +375,7 @@ THREE.Volume.prototype = {
 			matrix : planeMatrix,
 			planeWidth : planeWidth,
 			planeHeight : planeHeight
-		}
+		};
 
 	},
 
@@ -445,4 +445,4 @@ THREE.Volume.prototype = {
 
 	}
 
-}
+};

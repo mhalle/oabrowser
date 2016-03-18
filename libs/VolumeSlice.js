@@ -43,7 +43,7 @@ THREE.VolumeSlice = function( volume, index, axis ) {
      */
     this.listeners = {
         repaint : []
-    }
+    };
 
 	/**
 	 * @member {HTMLCanvasElement} canvas The final canvas used for the texture
@@ -94,7 +94,7 @@ THREE.VolumeSlice = function( volume, index, axis ) {
 
 
 
-}
+};
 
 THREE.VolumeSlice.prototype = {
 
@@ -116,8 +116,6 @@ THREE.VolumeSlice.prototype = {
 		jLength = this.jLength,
 		sliceAccess = this.sliceAccess,
 		volume = this.volume,
-		axis = this.axis,
-		index = this.index,
 		canvas = this.canvasBuffer,
 		ctx = this.ctxBuffer;
 
@@ -134,12 +132,13 @@ THREE.VolumeSlice.prototype = {
 		// manipulate some pixel elements
 		var pixelCount = 0;
 
+        var i,j;
 		if ( volume.dataType === 'label' ) {
 
 			//this part is currently useless but will be used when colortables will be handled
-			for ( var j = 0; j < jLength; j ++ ) {
+			for ( j = 0; j < jLength; j ++ ) {
 
-				for ( var i = 0; i < iLength; i ++ ) {
+				for ( i = 0; i < iLength; i ++ ) {
 
 					var label = volumeData[ sliceAccess( i, j ) ];
 					label = label >= this.colorMap.length ? ( label % this.colorMap.length ) + 1 : label;
@@ -157,9 +156,9 @@ THREE.VolumeSlice.prototype = {
 		}
 		else {
 
-			for ( var j = 0; j < jLength; j ++ ) {
+			for ( j = 0; j < jLength; j ++ ) {
 
-				for ( var i = 0; i < iLength; i ++ ) {
+				for ( i = 0; i < iLength; i ++ ) {
 
 					var value = volumeData[ sliceAccess( i, j ) ];
 					var alpha = 0xff;
@@ -237,4 +236,4 @@ THREE.VolumeSlice.prototype = {
 
     }
 
-}
+};

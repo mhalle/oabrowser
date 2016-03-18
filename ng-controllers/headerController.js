@@ -3,7 +3,7 @@ angular.module('atlasDemo').controller('HeaderCtrl', function ($scope, $rootScop
     $scope.data = {
         title : "",
         source : "#"
-    }
+    };
 
     $rootScope.$on('headerData', function (event, header) {
         $scope.data.title = header.name;

@@ -1,19 +1,12 @@
-angular.module('atlasDemo').controller('ModalDemoCtrl', function ($scope, $uibModal, $log) {
+angular.module('atlasDemo').controller('ModalDemoCtrl', function ($scope, $uibModal) {
 
-    var modalInstance = $uibModal.open({
+    $uibModal.open({
         animation: true,
         templateUrl: 'ng-templates/modalContent.html',
         controller: 'ModalInstanceCtrl',
         resolve: {}
     });
 
-    /*
-    modalInstance.result.then(function (selectedItem) {
-        $scope.selected = selectedItem;
-    }, function () {
-        $log.info('Modal dismissed at: ' + new Date());
-    });
-    */
 
 
 });

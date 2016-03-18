@@ -1,4 +1,4 @@
-angular.module('atlasDemo').controller('LayoutController', function($scope, $timeout) {
+angular.module('atlasDemo').controller('LayoutController', function($scope) {
     $scope.config = {
         flow: 'column'
     };
@@ -21,7 +21,7 @@ angular.module('atlasDemo').controller('LayoutController', function($scope, $tim
 
     $scope.open = function(which) {
         $scope.layout[which] = false;
-    }
+    };
 
     $scope.$on('ui.layout.toggle', function(){
 
