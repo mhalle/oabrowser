@@ -75,6 +75,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
             backgroundObject = {
                 filename : event.filename
             };
+            $scope.push(backgroundObject);
         }
         backgroundObject.progress = event.progress;
         $scope.$apply();
