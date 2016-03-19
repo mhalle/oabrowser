@@ -51,7 +51,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     } else if ($scope.sliceId === 'sagittal') {
 
                         ctx.rotate(Math.PI/2);
-                        ctx.scale(-1,1);
+                        ctx.scale(1,-1);
 
                     }
 
