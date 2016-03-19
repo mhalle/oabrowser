@@ -396,7 +396,7 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
             //y plane
             sliceY = volume.extractSlice('y',Math.floor(volume.RASDimensions[1]/2));
             console.debug(sliceY);
-            mainApp.emit('insertSlice', {sliceId : 'corronal', slice : sliceY});
+            mainApp.emit('insertSlice', {sliceId : 'coronal', slice : sliceY});
             scene.add( sliceY.mesh );
 
             //x plane
@@ -407,9 +407,9 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
 
             console.log('generating slices in ' +(Date.now()-time)+ ' ms');
 
-            gui.add( sliceX, "index", 0, volume.RASDimensions[0], 1 ).name( "indexX" ).onChange( function () {sliceX.repaint.call(sliceX);} );
-            gui.add( sliceY, "index", 0, volume.RASDimensions[1], 1 ).name( "indexY" ).onChange( function () {sliceY.repaint.call(sliceY);} );
-            gui.add( sliceZ, "index", 0, volume.RASDimensions[2], 1 ).name( "indexZ" ).onChange( function () {sliceZ.repaint.call(sliceZ);} );
+            gui.add( sliceX, "index", 0, volume.RASDimensions[0], 1 ).name( "index Sagittal" ).onChange( function () {sliceX.repaint.call(sliceX);} );
+            gui.add( sliceY, "index", 0, volume.RASDimensions[1], 1 ).name( "index Coronal" ).onChange( function () {sliceY.repaint.call(sliceY);} );
+            gui.add( sliceZ, "index", 0, volume.RASDimensions[2], 1 ).name( "index Axial" ).onChange( function () {sliceZ.repaint.call(sliceZ);} );
 
             var visibilityController = {},
                 visible = true;
