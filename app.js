@@ -436,7 +436,7 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
             gui.add( volume, "level", volume.min, volume.max, 1).name( "Level").onChange( function () {
                 volume.repaintAllSlices();
             });
-            gui.add( volume, "window", volume.min, volume.max, 1).name( "Window").onChange( function () {
+            gui.add( volume, "window", 0, volume.max-volume.min, 1).name( "Window").onChange( function () {
                 volume.repaintAllSlices();
             });
 
