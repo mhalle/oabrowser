@@ -418,9 +418,9 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
                     return visible;
                 },
                 set : function (value) {
-                    sliceX.visible = value;
-                    sliceY.visible = value;
-                    sliceZ.visible = value;
+                    sliceX.mesh.visible = value;
+                    sliceY.mesh.visible = value;
+                    sliceZ.mesh.visible = value;
                     visible = value;
                 }
             });
