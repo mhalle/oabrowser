@@ -187,6 +187,34 @@ THREE.Volume = function( xLength, yLength, zLength, type, arrayBuffer ) {
 	 * @member {Array} RASDimensions This array holds the dimensions of the volume in the RAS space
 	 */
 
+    var volume = this;
+    /**
+	 * @member {Number} window Difference between windowHigh and windowLow
+	 */
+    Object.defineProperty(this, 'window', {
+        get : function () {
+            return volume.windowHigh-volume.windowLow;
+        },
+        set : function (value) {
+            var level = (volume.windowHigh+volume.windowLow)/2;
+            volume.windowHigh = level + value/2;
+            volume.windowLow = level - value/2;
+        }
+    });
+    /**
+	 * @member {Number} leval Mean of windowHigh and windowLow
+	 */
+    Object.defineProperty(this, 'level', {
+        get : function () {
+            return (volume.windowHigh+volume.windowLow)/2;
+        },
+        set : function (value) {
+            var level = (volume.windowHigh+volume.windowLow)/2;
+            volume.windowHigh += value-level;
+            volume.windowLow += value-level;
+        }
+    });
+
 };
 
 THREE.Volume.prototype = {

@@ -417,10 +417,10 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
             gui.add( volume, "upperThreshold", volume.min, volume.max, 1).name( "Upper Threshold").onChange( function () {
                 volume.repaintAllSlices();
             });
-            gui.add( volume, "windowLow", volume.min, volume.max, 1).name( "Window Low").onChange( function () {
+            gui.add( volume, "level", volume.min, volume.max, 1).name( "Level").onChange( function () {
                 volume.repaintAllSlices();
             });
-            gui.add( volume, "windowHigh", volume.min, volume.max, 1).name( "Window High").onChange( function () {
+            gui.add( volume, "window", volume.min, volume.max, 1).name( "Window").onChange( function () {
                 volume.repaintAllSlices();
             });
 
