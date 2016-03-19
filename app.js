@@ -441,7 +441,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
                 volume.repaintAllSlices();
             });
 
-            gui.add( objectSelector, 'highlightMeshColor').name('Selection Color');
+            gui.addColor( objectSelector, 'highlightMeshColor').name('Selection Color');
 
         }, onProgress );
 
