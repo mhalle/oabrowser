@@ -185,15 +185,15 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
         stats.domElement.style.top = '0px';
         container.appendChild( stats.domElement );
 
-        //
-
-        window.addEventListener( 'resize', onWindowResize);
-        mainApp.on('ui.layout.resize', function () {
+        function setResizeTimeout () {
             clearTimeout(resizeTimeout);
             console.log('set resize timeout');
-            resizeTimeout = setTimeout(onWindowResize, 500);
-        });
-        mainApp.on('ui.layout.resize', onWindowResize);
+            resizeTimeout = setTimeout(onWindowResize, 100);
+        }
+
+        window.addEventListener( 'resize', setResizeTimeout);
+        mainApp.on('ui.layout.resize', setResizeTimeout);
+        mainApp.on('ui.layout.resize', setResizeTimeout);
 
         container.addEventListener('mousemove', onSceneMouseMove, false);
 
