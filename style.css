@@ -55,6 +55,9 @@ body, html {
 .dg {
     z-index: 10 !important;
 }
+.dg * {
+    box-sizing: content-box;
+}
 
 #gui-container {
     position: absolute;
