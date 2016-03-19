@@ -411,6 +411,22 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
             gui.add( sliceY, "index", 0, volume.RASDimensions[1], 1 ).name( "indexY" ).onChange( function () {sliceY.repaint.call(sliceY);} );
             gui.add( sliceZ, "index", 0, volume.RASDimensions[2], 1 ).name( "indexZ" ).onChange( function () {sliceZ.repaint.call(sliceZ);} );
 
+            var visibilityController = {},
+                visible = true;
+            Object.defineProperty(visibilityController, 'visible', {
+                get : function () {
+                    return visible;
+                },
+                set : function (value) {
+                    sliceX.visible = value;
+                    sliceY.visible = value;
+                    sliceZ.visible = value;
+                    visible = value;
+                }
+            });
+
+            gui.add(visibilityController, 'visible').name('Slices visible');
+
             gui.add( volume, "lowerThreshold", volume.min, volume.max, 1).name( "Lower Threshold").onChange( function () {
                 volume.repaintAllSlices();
             });
