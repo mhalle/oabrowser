@@ -39,7 +39,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     var zoom = Math.min(canvas.width/image.width, canvas.height/image.height);
 
                     ctx.save();
-                    ctx.translate(canvas.width/2 canvas.height/2);
+                    ctx.translate(canvas.width/2, canvas.height/2);
                     if ($scope.sliceId === 'axial') {
 
                         ctx.scale(-1,1);
@@ -50,7 +50,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
                     } else if ($scope.sliceId === 'sagittal') {
 
-                        ctx.rotate(Math.PI/2)
+                        ctx.rotate(Math.PI/2);
                         ctx.scale(-1,1);
 
                     }
