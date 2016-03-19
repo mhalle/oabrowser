@@ -10,7 +10,9 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
 
         if (object instanceof THREE.Object3D) {
 
-            object.originalColor = object.material.color.getHex();
+            if (!object.originalColor) {
+                object.originalColor = object.material.color.getHex();
+            }
             object.material.color.setHex(highlightMeshColor);
 
         }
@@ -128,6 +130,21 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
         }
     });
 
+    function updateSelectedMeshesColor () {
+        for (var i = 0; i < selectedObjects.length; i++) {
+            _select(selectedObjects[i]);
+        }
+    }
+
+    Object.defineProperty(singleton, 'highlightMeshColor', {
+        get : function () {
+            return '#'+highlightMeshColor.toString(16);
+        },
+        set : function (stringColor) {
+            highlightMeshColor = parseInt(stringColor.substr(1),16);
+            updateSelectedMeshesColor();
+        }
+    });
 
     this.$get = function () {
         return singleton;

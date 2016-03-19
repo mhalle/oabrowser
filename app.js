@@ -2,7 +2,7 @@ if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
 }
 
-angular.module('atlasDemo').run(["mainApp", function (mainApp) {
+angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp, objectSelector) {
 
     var container,
         stats,
@@ -187,12 +187,13 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
 
         //
 
-        window.addEventListener( 'resize', onWindowResize, false );
+        window.addEventListener( 'resize', onWindowResize);
         mainApp.on('ui.layout.resize', function () {
             clearTimeout(resizeTimeout);
             console.log('set resize timeout');
             resizeTimeout = setTimeout(onWindowResize, 500);
         });
+        mainApp.on('ui.layout.resize', onWindowResize);
 
         container.addEventListener('mousemove', onSceneMouseMove, false);
 
@@ -439,6 +440,8 @@ angular.module('atlasDemo').run(["mainApp", function (mainApp) {
             gui.add( volume, "window", 0, volume.max-volume.min, 1).name( "Window").onChange( function () {
                 volume.repaintAllSlices();
             });
+
+            gui.add( objectSelector, 'highlightMeshColor').name('Selection Color');
 
         }, onProgress );
 
