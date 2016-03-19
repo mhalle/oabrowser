@@ -54,14 +54,14 @@
         <div ui-layout="{flow: 'row'}" ui-layout-loaded>
             <div ui-layout-container>
                 <div ui-layout="config" >
-                    <div id="leftSideContainer" ui-layout-container size="100px" collapsed="layout.leftSide" size="15%">
+                    <div id="leftSideContainer" ui-layout-container collapsed="layout.leftSide" size="20%">
                         <div ui-layout="{flow: 'row'}">
                             <div ui-layout-container><div insert-slice sliceid="axial" class="slice-container"></div></div>
                             <div ui-layout-container><div insert-slice sliceid="coronal" class="slice-container"></div></div>
                             <div ui-layout-container><div insert-slice sliceid="sagittal" class="slice-container"></div></div>
                         </div>
                     </div>
-                    <div id="centerContainer" ui-layout-container="center">
+                    <div id="centerContainer" ui-layout-container>
                         <div id="rendererFrame"></div>
                         <div id="inset"></div>
                         <div id="gui-container"></div>
