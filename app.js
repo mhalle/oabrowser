@@ -283,21 +283,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
     }
 
-    function getAllTheHierarchyPaths(object) {
-        var result = [];
-        function addParents (object, path) {
-            if (object.hierarchyParents.length === 0) {
-                result.push(object.name+path);
-                return path;
-            }
-            for (var i = 0; i < object.hierarchyParents.length; i++) {
-                var parent = object.hierarchyParents[i];
-                addParents(parent, '//'+object.name+path);
-            }
-        }
-        addParents(object, '');
-        return result.map(s => s.split('//'));
-    }
+
 
     function displayPickup() {
         if (needPickupUpdate) {
@@ -306,11 +292,11 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
             var intersects = raycaster.intersectObjects( meshesList );
 
-            var paths = [[]];
+            var object = null;
             if (intersects.length > 0) {
-                paths = getAllTheHierarchyPaths(intersects[0].object);
+                object = intersects[0].object;
             }
-            mainApp.emit('insertBreadcrumbs', paths);
+            mainApp.emit('mouseOverObject', object);
             needPickupUpdate = false;
         }
 

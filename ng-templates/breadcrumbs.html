@@ -1,3 +1,5 @@
 <ol ng-repeat="arr in data.breadcrumbs track by $index" class="breadcrumb">
-  <li ng-repeat="name in arr track by $index" ng-class="{active : $last}"><a ng-if="!$last" href="#">{{name}}</a><span ng-if="$last">{{name}}</span></li>
+  <li ng-repeat="object in arr track by $index" ng-class="{active : $last}">
+      <a ng-if="!$last" href="#" ng-click="select(object)">{{object.name}}</a><span ng-if="$last">{{object.name}}</span>
+    </li>
 </ol>

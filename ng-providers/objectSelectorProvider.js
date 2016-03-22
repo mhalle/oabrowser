@@ -59,6 +59,7 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
         clearSelection();
         _select(object);
         selectedObjects = [object];
+        mainApp.emit('objectSelected', object);
 
     }
 
@@ -68,6 +69,7 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
             _unselect(selectedObjects[i]);
         }
         selectedObjects = [];
+        mainApp.emit('selectionCleared');
 
     }
 
@@ -76,6 +78,7 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
         if (!object.selected) {
             _select(object);
             selectedObjects.push(object);
+            mainApp.emit('objectAddedToSelection', selectedObjects);
         }
 
     }
@@ -89,6 +92,7 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
 
                 selectedObjects.splice(index,1);
                 _unselect(object);
+                mainApp.emit('objectRemovedFromSelection', selectedObjects);
 
             }
         }
