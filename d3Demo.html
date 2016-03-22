@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <script type="text/javascript" src="libs/d3.js"></script>
+        <script type="text/javascript" src="libs/d3.layout.js"></script>
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+        <style type="text/css">
+            body {
+                overflow: hidden;
+                margin: 0;
+                font-size: 14px;
+                font-family: "Helvetica Neue", Helvetica;
+            }
+
+
+            a:link, a:visited {
+                color: #000;
+                text-decoration: none;
+            }
+
+            a:hover {
+                color: #666;
+            }
+
+            .node circle {
+                cursor: pointer;
+                fill: #fff;
+                stroke: steelblue;
+                stroke-width: 1.5px;
+            }
+
+            .node text {
+                font-size: 11px;
+            }
+
+            path.link {
+                fill: none;
+                stroke: #ccc;
+                stroke-width: 1.5px;
+            }
+
+            text {
+                font-family: "GLYPHICONS Halflings";
+            }
+
+        </style>
+    </head>
+    <body>
+        <svg style="width:100vw;height:100vh;" id="treeViz">
+            <symbol id="eye-open" viewBox="-100 200 1400 800">
+                <path d="M-61 600l26 40q6 10 20 30t49 63.5t74.5 85.5t97 90t116.5 83.5t132.5 59t145.5 23.5t145.5 -23.5t132.5 -59t116.5 -83.5t97 -90t74.5 -85.5t49 -63.5t20 -30l26 -40l-26 -40q-6 -10 -20 -30t-49 -63.5t-74.5 -85.5t-97 -90t-116.5 -83.5t-132.5 -59t-145.5 -23.5 t-145.5 23.5t-132.5 59t-116.5 83.5t-97 90t-74.5 85.5t-49 63.5t-20 30zM120 600q7 -10 40.5 -58t56 -78.5t68 -77.5t87.5 -75t103 -49.5t125 -21.5t123.5 20t100.5 45.5t85.5 71.5t66.5 75.5t58 81.5t47 66q-1 1 -28.5 37.5t-42 55t-43.5 53t-57.5 63.5t-58.5 54 q49 -74 49 -163q0 -124 -88 -212t-212 -88t-212 88t-88 212q0 85 46 158q-102 -87 -226 -258zM377 656q49 -124 154 -191l105 105q-37 24 -75 72t-57 84l-20 36z" />
+            </symbol>
+        </svg>
+        <script type="text/javascript">
+
+
+            var m = [20, 120, 20, 120],
+                vis = d3.select("#treeViz"),
+                w = 1280 - m[1] - m[3],
+                h = 800 - m[0] - m[2],
+                i = 0,
+                root;
+
+            vis = vis.append("svg:g").attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+            var tree = d3.layout.tree()
+            .size([h, w])
+            .children(function (d) {
+                return d.open === true ? d.children : null;
+            });
+
+            var diagonal = d3.svg.diagonal()
+            .projection(function(d) { return [d.y, d.x]; });
+
+
+            d3.json("d3data.json", function(json) {
+                root = json;
+                root.x0 = h / 2;
+                root.y0 = 0;
+
+                function toggleAll(d) {
+                    if (d.children) {
+                        d.children.forEach(toggleAll);
+                        toggle(d);
+                    }
+                }
+
+                // Initialize the display to show a few nodes.
+                root.children.forEach(toggleAll);
+                toggle(root.children[1]);
+                toggle(root.children[1].children[2]);
+                toggle(root.children[9]);
+                toggle(root.children[9].children[0]);
+
+                update(root);
+            });
+
+            function update(source) {
+                var duration = d3.event && d3.event.altKey ? 5000 : 500;
+
+                // Compute the new tree layout.
+                var nodes = tree(root).reverse();
+
+                // Normalize for fixed-depth.
+                nodes.forEach(function(d) {
+                    d.y = d.depth * 180;
+                    d.name = d.data.name;
+                    //d.children = d.data.children;
+                    d.leaf = !d.data.children;
+                    d.open = d.data.open;
+                    d.id = d.data.id || (d.data.id = ++i);
+                });
+
+                // Update the nodes…
+                var node = vis.selectAll("g.node")
+                .data(nodes, function(d) { return d.id; });
+
+                // Enter any new nodes at the parent's previous position.
+                var nodeEnter = node.enter().append("svg:g")
+                .attr("class", "node")
+                .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; });
+
+                nodeEnter.append("svg:circle")
+                    .attr("r", 1e-6)
+                    .style("fill", function(d) { return d.open ? "lightsteelblue" : "#fff"; })
+                    .on("click", function(d) { toggle(d); update(d); });
+
+                nodeEnter.append("svg:text")
+                    .attr("x", function(d) { return d.open ? -25 : 25; })
+                    .attr("dy", ".35em")
+                    .attr("text-anchor", function(d) { return d.open ? "end" : "start"; })
+                    .text(function(d) { return d.name; })
+                    .style("fill-opacity", 1e-6);
+
+                nodeEnter.append("svg:use")
+                    .attr('xlink:href','#eye-open')
+                    .attr('width', 15)
+                    .attr('height', 15)
+                    .attr('x', function(d) { return d.open ? -25 : 10; })
+                    .attr('transform', 'scale(1,-1)')
+                    .attr('y', "-.5em")
+                    .on('click',function (d) {console.log(d.data);});
+
+                // Transition nodes to their new position.
+                var nodeUpdate = node.transition()
+                .duration(duration)
+                .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+                nodeUpdate.select("circle")
+                    .attr("r", 4.5)
+                    .style("fill", function(d) { return !d.open && !d.leaf ? "lightsteelblue" : "#fff"; });
+
+                nodeUpdate.select("text")
+                    .style("fill-opacity", 1)
+                    .attr("x", function(d) { return d.open ? -25 : 25; })
+                    .attr("text-anchor", function(d) { return d.open ? "end" : "start"; });
+                nodeUpdate.select("use")
+                    .attr('x', function(d) { return d.open ? -25 : 10; });
+
+                // Transition exiting nodes to the parent's new position.
+                var newSourceNode = nodes.find(n=>n.id === source.id) || source;
+                console.log(newSourceNode.x);
+                var nodeExit = node.exit().transition()
+                .duration(duration)
+                .attr("transform", function(d) { return "translate(" + newSourceNode.y + "," + newSourceNode.x + ")"; })
+                .remove();
+
+                nodeExit.select("circle")
+                    .attr("r", 1e-6);
+
+                nodeExit.select("text")
+                    .style("fill-opacity", 1e-6);
+
+                // Update the links…
+                var link = vis.selectAll("path.link")
+                .data(tree.links(nodes), function(d) { return d.target.id; });
+
+                // Enter any new links at the parent's previous position.
+                console.log(link.enter());
+                link.enter()
+                    .insert("svg:path", "g")
+                    .attr("class", "link")
+                    .attr("d", function(d) {
+                    var o = {x: source.x0, y: source.y0};
+                    return diagonal({source: o, target: o});
+                })
+                    .transition()
+                    .duration(duration)
+                    .attr("d", diagonal);
+
+                // Transition links to their new position.
+                link.transition()
+                    .duration(duration)
+                    .attr("d", diagonal);
+
+                // Transition exiting nodes to the parent's new position.
+                link.exit().transition()
+                    .duration(duration)
+                    .attr("d", function(d) {
+                    var o = {x: newSourceNode.x, y: newSourceNode.y};
+                    return diagonal({source: o, target: o});
+                })
+                    .remove();
+
+                //  // Stash the old positions for transition.
+                nodes.forEach(function(d) {
+                    d.x0 = d.x;
+                    d.y0 = d.y;
+                });
+            }
+
+            // Toggle children.
+            function toggle(d) {
+                if (!d.leaf) {
+                    d.open = !d.open;
+                    if (d.data) d.data.open = !d.data.open;
+                }
+            }
+
+        </script>
+    </body>
+</html>
