@@ -43,6 +43,17 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
 
             };
 
+            $scope.safeApply = function(fn) {
+                var phase = this.$root.$$phase;
+                if(phase === '$apply' || phase === '$digest') {
+                    if(fn && (typeof(fn) === 'function')) {
+                        fn();
+                    }
+                } else {
+                    this.$apply(fn);
+                }
+            };
+
             mainApp.on('mouseOverObject', function (object) {
                 if (object) {
                     var breadcrumbs = getAllTheHierarchyPaths(object);
@@ -51,26 +62,26 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
                 else {
                     $scope.data.breadcrumbs = $scope.data.selectedBreadcrumbs;
                 }
-                $scope.$apply();
+                $scope.safeApply();
             });
 
             mainApp.on('objectSelected', function (object) {
                 var selectedBreadcrumbs = getAllTheHierarchyPaths(object);
                 $scope.data.selectedBreadcrumbs = selectedBreadcrumbs;
                 $scope.data.breadcrumbs = $scope.data.selectedBreadcrumbs;
-                $scope.$apply();
+                $scope.safeApply();
             });
 
             mainApp.on('selectionCleared', function () {
                 $scope.data.selectedBreadcrumbs = [];
                 $scope.data.breadcrumbs = $scope.data.selectedBreadcrumbs;
-                $scope.$apply();
+                $scope.safeApply();
             });
 
             mainApp.on('objectRemovedFromSelection', function (selectionList) {
                 $scope.data.selectedBreadcrumbs = getPathFromSelectionList(selectionList);
                 $scope.data.breadcrumbs = $scope.data.selectedBreadcrumbs;
-                $scope.$apply();
+                $scope.safeApply();
             });
 
             mainApp.on('objectAddedToSelection', function (selectionList) {

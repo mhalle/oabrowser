@@ -28,11 +28,22 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
 
     $scope.done = false;
 
+    $scope.safeApply = function(fn) {
+        var phase = this.$root.$$phase;
+        if(phase === '$apply' || phase === '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+                fn();
+            }
+        } else {
+            this.$apply(fn);
+        }
+    };
+
     mainApp.on('modal.JSONLoaded', function (numberOfVTKFiles) {
         $scope.loadingJSON = false;
         $scope.loadingVTK = true;
         $scope.numberOfVTKFiles = numberOfVTKFiles;
-        $scope.$apply();
+        $scope.safeApply();
     });
 
     mainApp.on('modal.fileLoaded', function () {
@@ -42,13 +53,13 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
             $scope.loadingVTK = false;
             $scope.loadingHierarchy = true;
         }
-        $scope.$apply();
+        $scope.safeApply();
     });
 
     mainApp.on('modal.hierarchyLoaded', function () {
         $scope.loadingHierarchy = false;
         $scope.done = true;
-        $scope.$apply();
+        $scope.safeApply();
     });
 
     mainApp.on('modal.backgroundStart', function (filename) {
@@ -56,7 +67,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
             filename : filename,
             progress : 0
         });
-        $scope.$apply();
+        $scope.safeApply();
     });
 
     mainApp.on('modal.backgroundLoaded', function (filename) {
@@ -66,7 +77,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
         if (everyBackgroundLoadingFinished) {
             $scope.backgroundDone = true;
         }
-        $scope.$apply();
+        $scope.safeApply();
     });
 
     mainApp.on('modal.backgroundProgress', function (event) {
@@ -79,7 +90,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
         }
         if (backgroundObject.progress !== event.progress) {
             backgroundObject.progress = event.progress;
-            $scope.$apply();
+            $scope.safeApply();
         }
     });
 
