@@ -18,10 +18,19 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
                         var parent = object.hierarchyParents[i];
                         var p = addParents(parent, path.slice());
                         p.push(object);
+                        return p;
                     }
                 }
                 addParents(object, []);
                 return result;
+            }
+
+            function getPathFromSelectionList (selectionList) {
+                var r = [];
+                for (var i = 0; i < selectionList.length; i++) {
+                    r.push.apply(r, getAllTheHierarchyPaths(selectionList[i]));
+                }
+                return r;
             }
 
             $scope.data = {
@@ -48,6 +57,18 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
             mainApp.on('objectSelected', function (object) {
                 var selectedBreadcrumbs = getAllTheHierarchyPaths(object);
                 $scope.data.selectedBreadcrumbs = selectedBreadcrumbs;
+            });
+
+            mainApp.on('selectionCleared', function () {
+                $scope.data.selectedBreadcrumbs = [];
+            });
+
+            mainApp.on('objectRemovedFromSelection', function (selectionList) {
+                $scope.data.selectedBreadcrumbs = getPathFromSelectionList(selectionList);
+            });
+
+            mainApp.on('objectAddedToSelection', function (selectionList) {
+                $scope.data.selectedBreadcrumbs = getPathFromSelectionList(selectionList);
             });
         }
     };
