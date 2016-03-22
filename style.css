@@ -76,3 +76,9 @@ body, html {
     height: 100%;
     background-color: black;
 }
+.glyphicon-chevron-left,
+.glyphicon-chevron-right,
+.glyphicon-chevron-up,
+.glyphicon-chevron-down{
+  color: #aaa;
+}
