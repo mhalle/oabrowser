@@ -368,30 +368,22 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
         var fontface = "Arial";
 
-        var fontsize = 18;
+        var fontsize = 100;
 
         var borderThickness = 2;
 
-        var borderColor =  { r:0, g:0, b:0, a:1.0 };
-
-        var backgroundColor =  { r:255, g:255, b:255, a:1.0 };
-
         var canvas = document.createElement('canvas');
+        canvas.width = fontsize + 10;
+        canvas.height = fontsize + 10;
         var context = canvas.getContext('2d');
         context.font = "Bold " + fontsize + "px " + fontface;
 
-        // background color
-        context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," + backgroundColor.b + "," + backgroundColor.a + ")";
-        // border color
-        context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," + borderColor.b + "," + borderColor.a + ")";
-
-        context.lineWidth = borderThickness;
-        // 1.4 is extra height factor for text below baseline: g,j,p,q.
 
         // text color
         context.fillStyle = "rgba(0, 0, 0, 1.0)";
+        context.textAlign = 'center';
 
-        context.fillText( message, borderThickness, fontsize + borderThickness);
+        context.fillText( message, borderThickness, fontsize/2 + borderThickness);
 
         // canvas contents will be used for a texture
         var texture = new THREE.Texture(canvas);
@@ -399,8 +391,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
         var spriteMaterial = new THREE.SpriteMaterial({ map: texture, useScreenCoordinates: false });
 
-        spriteMaterial.map.offset.set( -0.5, -0.5 );
-        spriteMaterial.map.repeat.set( 2, 2 );
         var sprite = new THREE.Sprite( spriteMaterial );
         sprite.scale.set(100,50,1.0);
         return sprite;
