@@ -174,7 +174,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
         camera.aspect = container.clientWidth / container.clientHeight;
         camera.updateProjectionMatrix();
 
-        renderer = new THREE.WebGLRenderer( { antialias: false } );
+        renderer = new THREE.WebGLRenderer( { antialias: false, alpha : true } );
+        renderer.setClearColor( 0x000000, 0 );
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( container.clientWidth, container.clientHeight );
 

@@ -82,3 +82,6 @@ body, html {
 .glyphicon-chevron-down{
   color: #aaa;
 }
+#rendererFrame canvas {
+    background: linear-gradient(#657FB5, #D3E2FF);
+}
