@@ -213,7 +213,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
         container = document.getElementById('rendererFrame');
 
-        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.001, 1e8 );
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.05, 1e8 );
         camera.position.z = 300;
 
         controls = new THREE.TrackballControls( camera, container );
