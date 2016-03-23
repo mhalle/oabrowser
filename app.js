@@ -320,7 +320,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
     function setupInset() {
         var insetWidth = 150,
-            insetHeight = 150;
+            insetHeight = 150,
+            axisLength = 100;
         container2 = document.getElementById('inset');
         container2.width = insetWidth;
         container2.height = insetHeight;
@@ -339,8 +340,43 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
         camera2.up = camera.up; // important!
 
         // axes
-        axes2 = new THREE.AxisHelper( 100 );
+        axes2 = new THREE.AxisHelper( axisLength );
         scene2.add( axes2 );
+
+        //create sprites
+        var spriteA = createTextSprite('A');
+        spriteA.position.set(0, axisLength, 0);
+        scene2.add(spriteA);
+        var spriteP = createTextSprite('P');
+        spriteP.position.set(0, -axisLength, 0);
+        scene2.add(spriteP);
+        var spriteL = createTextSprite('L');
+        spriteL.position.set(-axisLength, 0, 0);
+        scene2.add(spriteL);
+        var spriteR = createTextSprite('R');
+        spriteR.position.set(axisLength, 0, 0);
+        scene2.add(spriteR);
+        var spriteI = createTextSprite('I');
+        spriteI.position.set(0, 0, -axisLength);
+        scene2.add(spriteI);
+        var spriteS = createTextSprite('S');
+        spriteS.position.set(0, 0, axisLength);
+        scene2.add(spriteS);
+    }
+
+    function createTextSprite (text) {
+        //only use the first letter of text
+        var textureCanvas = document.create('canvas');
+        textureCanvas.width = 50;
+        textureCanvas.height = 50;
+        var ctx = textureCanvas.getContext("2d");
+        ctx.font = "45px Arial";
+        ctx.fillText(text[0],10,40);
+        var texture = new THREE.Texture(textureCanvas);
+        var spriteMaterial = new THREE.SpriteMaterial( { map: texture } );
+        var sprite = new THREE.Sprite(spriteMaterial);
+        return sprite;
+
     }
 
     function loadBackground(nrrdFileLocation) {
