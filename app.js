@@ -350,10 +350,20 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
             if (intersects.length > 0) {
                 object = intersects[0].object;
                 if (event.ctrlKey) {
-                    objectSelector.addToSelection(object);
+                    if (object.selected) {
+                        objectSelector.removeFromSelection(object);
+                    }
+                    else {
+                        objectSelector.addToSelection(object);
+                    }
                 }
                 else {
-                    objectSelector.select(object);
+                    if (object.selected) {
+                        objectSelector.clearSelection();
+                    }
+                    else {
+                        objectSelector.select(object);
+                    }
                 }
             }
 
