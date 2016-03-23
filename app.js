@@ -364,33 +364,45 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
         scene2.add(spriteS);
     }
 
-    function createTextSprite (text) {
-        //only use the first letter of text
-        var fontface = 'Arial';
-        var fontsize =  200;
+    function createTextSprite (message) {
+
+        var fontface = "Arial";
+
+        var fontsize = 18;
+
+        var borderThickness = 2;
+
+        var borderColor =  { r:0, g:0, b:0, a:1.0 };
+
+        var backgroundColor =  { r:255, g:255, b:255, a:1.0 };
+
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');
-        context.font = fontsize + "px " + fontface;
+        context.font = "Bold " + fontsize + "px " + fontface;
 
-        // get size data (height depends only on font size)
-        var metrics = context.measureText(text[0]);
-        var textWidth = metrics.width;
+        // background color
+        context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + "," + backgroundColor.b + "," + backgroundColor.a + ")";
+        // border color
+        context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + "," + borderColor.b + "," + borderColor.a + ")";
+
+        context.lineWidth = borderThickness;
+        // 1.4 is extra height factor for text below baseline: g,j,p,q.
 
         // text color
-        context.fillStyle = 'rgba(0, 0, 0, 1.0)';
-        context.fillText(text[0], 0, fontsize);
+        context.fillStyle = "rgba(0, 0, 0, 1.0)";
+
+        context.fillText( message, borderThickness, fontsize + borderThickness);
 
         // canvas contents will be used for a texture
         var texture = new THREE.Texture(canvas);
-        texture.minFilter = THREE.LinearFilter;
         texture.needsUpdate = true;
 
-        var spriteMaterial = new THREE.SpriteMaterial({
-            map: texture,
-            useScreenCoordinates: false
-        });
-        var sprite = new THREE.Sprite(spriteMaterial);
-        sprite.scale.set(30, 30, 1.0);
+        var spriteMaterial = new THREE.SpriteMaterial({ map: texture, useScreenCoordinates: false });
+
+        spriteMaterial.map.offset.set( -0.5, -0.5 );
+        spriteMaterial.map.repeat.set( 2, 2 );
+        var sprite = new THREE.Sprite( spriteMaterial );
+        sprite.scale.set(100,50,1.0);
         return sprite;
 
     }
