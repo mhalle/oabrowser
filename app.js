@@ -366,15 +366,11 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
     function createTextSprite (text) {
         //only use the first letter of text
-        var textureCanvas = document.createElement('canvas');
-        textureCanvas.width = 50;
-        textureCanvas.height = 50;
-        var ctx = textureCanvas.getContext("2d");
-        ctx.font = "45px Arial";
-        ctx.fillText(text[0],10,40);
-        var texture = new THREE.Texture(textureCanvas);
-        var spriteMaterial = new THREE.SpriteMaterial( { map: texture } );
-        var sprite = new THREE.Sprite(spriteMaterial);
+        var program = function ( ctx ) {
+            ctx.font = "1px Arial";
+            ctx.fillText(text[0],0.2,0.8);
+        };
+        var sprite = new THREE.Sprite( new THREE.SpriteCanvasMaterial( { color: 0xffffff, program: program } ) );
         return sprite;
 
     }
