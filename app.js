@@ -366,7 +366,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
     function createTextSprite (text) {
         //only use the first letter of text
-        var textureCanvas = document.create('canvas');
+        var textureCanvas = document.createElement('canvas');
         textureCanvas.width = 50;
         textureCanvas.height = 50;
         var ctx = textureCanvas.getContext("2d");
