@@ -27,7 +27,10 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
         axes2,
         scene2,
         nrrdLoader,
-        header;
+        header,
+        mousedownDate,
+        mousedownPosition = new THREE.Vector2(0,0),
+        containerOffset;
 
 
     //this function enables us to create a scope and then keep the right item in the callback
@@ -198,6 +201,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
         container.addEventListener('mousemove', onSceneMouseMove, false);
 
+        container.addEventListener('mousedown', onSceneMouseDown);
+        container.addEventListener('mouseup', onSceneMouseUp);
+
         animate();
 
     }
@@ -262,6 +268,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
         controls.handleResize();
 
+        containerOffset = $(container).offset();
+
     }
 
     function animate() {
@@ -308,13 +316,47 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
         //check if we are not doing a drag (trackball controls)
         if (event.buttons === 0) {
             //compute offset due to container position
-            var offset = $(container).offset();
-            mouse.x = ( (event.clientX-offset.left) / container.clientWidth ) * 2 - 1;
-            mouse.y = - ( (event.clientY-offset.top) / container.clientHeight ) * 2 + 1;
+            mouse.x = ( (event.clientX-containerOffset.left) / container.clientWidth ) * 2 - 1;
+            mouse.y = - ( (event.clientY-containerOffset.top) / container.clientHeight ) * 2 + 1;
 
             needPickupUpdate = true;
         }
 
+
+    }
+
+    function onSceneMouseDown (event) {
+
+        mousedownPosition.x = ( (event.clientX-containerOffset.left) / container.clientWidth ) * 2 - 1;
+        mousedownPosition.y = - ( (event.clientY-containerOffset.top) / container.clientHeight ) * 2 + 1;
+        mousedownDate = Date.now();
+
+    }
+
+    function onSceneMouseUp (event) {
+        var time = Date.now();
+        var position = new THREE.Vector2(0,0);
+        position.x = ( (event.clientX-containerOffset.left) / container.clientWidth ) * 2 - 1;
+        position.y = - ( (event.clientY-containerOffset.top) / container.clientHeight ) * 2 + 1;
+
+        if (time - mousedownDate < 300 && mousedownPosition.distanceTo(position)<5) {
+
+            raycaster.setFromCamera( position, camera );
+
+            var intersects = raycaster.intersectObjects( meshesList );
+
+            var object = null;
+            if (intersects.length > 0) {
+                object = intersects[0].object;
+                if (event.ctrlKey) {
+                    objectSelector.addToSelection(object);
+                }
+                else {
+                    objectSelector.select(object);
+                }
+            }
+
+        }
 
     }
 
