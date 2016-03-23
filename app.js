@@ -203,6 +203,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
         container.addEventListener('mousedown', onSceneMouseDown);
         container.addEventListener('mouseup', onSceneMouseUp);
+        containerOffset = $(container).offset();
 
         animate();
 
