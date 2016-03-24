@@ -361,7 +361,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
                     }
                 }
                 else if (event.altKey && sliceX && sliceY && sliceZ) {
-                    var point = object.point;
+                    var point = intersects[0].point;
                     var offset = sliceX.volume.RASDimensions;
                     sliceX.index = point.x + offset[0];
                     sliceX.repaint();
