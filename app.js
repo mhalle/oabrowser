@@ -30,7 +30,10 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
         header,
         mousedownDate,
         mousedownPosition = new THREE.Vector2(0,0),
-        containerOffset;
+        containerOffset,
+        sliceZ = null,
+        sliceY = null,
+        sliceX = null;
 
 
     //this function enables us to create a scope and then keep the right item in the callback
@@ -357,6 +360,16 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
                         objectSelector.addToSelection(object);
                     }
                 }
+                else if (event.altKey && sliceX && sliceY && sliceZ) {
+                    var point = object.point;
+                    var offset = sliceX.volume.RASDimensions;
+                    sliceX.index = point.x + offset[0];
+                    sliceX.repaint();
+                    sliceY.index = point.y + offset[1];
+                    sliceY.repaint();
+                    sliceZ.index = point.z + offset[2];
+                    sliceZ.repaint();
+                }
                 else {
                     if (object.selected) {
                         objectSelector.clearSelection();
@@ -460,9 +473,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
         mainApp.emit('modal.backgroundStart', nrrdFileLocation);
 
         nrrdLoader.load( nrrdFileLocation, function ( volume ) {
-            var sliceZ,
-                sliceY,
-                sliceX;
             var time = Date.now();
 
             mainApp.emit('modal.backgroundLoaded', nrrdFileLocation);
