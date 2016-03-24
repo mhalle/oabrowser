@@ -510,9 +510,10 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
             console.log('generating slices in ' +(Date.now()-time)+ ' ms');
 
-            gui.add( sliceX, "index", 0, volume.RASDimensions[0], 1 ).name( "index Sagittal" ).onChange( function () {sliceX.repaint.call(sliceX);} );
-            gui.add( sliceY, "index", 0, volume.RASDimensions[1], 1 ).name( "index Coronal" ).onChange( function () {sliceY.repaint.call(sliceY);} );
-            gui.add( sliceZ, "index", 0, volume.RASDimensions[2], 1 ).name( "index Axial" ).onChange( function () {sliceZ.repaint.call(sliceZ);} );
+            //be careful with .listen, checks for change are made every frame
+            gui.add( sliceX, "index", 0, volume.RASDimensions[0], 1 ).name( "index Sagittal" ).onChange( function () {sliceX.repaint.call(sliceX);} ).listen();
+            gui.add( sliceY, "index", 0, volume.RASDimensions[1], 1 ).name( "index Coronal" ).onChange( function () {sliceY.repaint.call(sliceY);} ).listen();
+            gui.add( sliceZ, "index", 0, volume.RASDimensions[2], 1 ).name( "index Axial" ).onChange( function () {sliceZ.repaint.call(sliceZ);} ).listen();
 
             var visibilityController = {},
                 visible = true;
