@@ -29,7 +29,7 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
             function getPathFromSelectionList (selectionList) {
                 var r = [];
                 for (var i = 0; i < selectionList.length; i++) {
-                    r.push.apply(r, getAllTheHierarchyPaths(selectionList[i]));
+                    r.push.apply(r, getAllTheHierarchyPaths(selectionList[i].mesh));
                 }
                 return r;
             }
@@ -57,7 +57,7 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
 
             mainApp.on('mouseOverObject', function (object) {
                 if (object) {
-                    var breadcrumbs = getAllTheHierarchyPaths(object);
+                    var breadcrumbs = getAllTheHierarchyPaths(object.mesh);
                     $scope.data.breadcrumbs = breadcrumbs;
                 }
                 else {
@@ -67,7 +67,7 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
             });
 
             mainApp.on('objectSelected', function (object) {
-                var selectedBreadcrumbs = getAllTheHierarchyPaths(object);
+                var selectedBreadcrumbs = getAllTheHierarchyPaths(object.mesh);
                 $scope.data.selectedBreadcrumbs = selectedBreadcrumbs;
                 $scope.data.breadcrumbs = $scope.data.selectedBreadcrumbs;
                 $scope.safeApply();
