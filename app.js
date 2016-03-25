@@ -166,13 +166,13 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
 
         //load background
         nrrdLoader = new THREE.NRRDLoader();
-        if (typeof header.backgroundImages === "object") {
-            loadBackground(header.backgroundImages.source);
-        }
-        else if (Array.isArray(header.backgroundImages)) {
+        if (Array.isArray(header.backgroundImages)) {
             for (i = 0; i < header.backgroundImages.length; i++) {
                 loadBackground(header.backgroundImages[i].source);
             }
+        }
+        else if (typeof header.backgroundImages === "object") {
+            loadBackground(header.backgroundImages.source);
         }
 
         // renderer
