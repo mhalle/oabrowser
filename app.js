@@ -134,7 +134,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
 
     function dealWithAtlasStructure(data) {
         var i;
-        atlasStructure = atlasJson(data);
+        atlasStructure = atlasJson.parse(data);
 
         header = atlasStructure.header;
         if (header) {
