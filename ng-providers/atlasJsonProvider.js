@@ -87,7 +87,9 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
                 }
                 objectsByType.header = object;
             }
-            (objectsByType[type] ||(objectsByType[type] = [])).push(object);
+            else {
+                (objectsByType[type] ||(objectsByType[type] = [])).push(object);
+            }
         }
     }
 
@@ -146,8 +148,8 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
             result = atlas.all;
         }
         for (var i = 0; i < result.length; i++) {
-                replaceByReferences(result[i]);
-            }
+            replaceByReferences(result[i]);
+        }
         return JSON.stringify(result, map, espace);
     }
 
