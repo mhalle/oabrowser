@@ -141,7 +141,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
             mainApp.emit('headerData',header);
         }
 
-        vtkStructures = atlasJson.filter(item => {
+        vtkStructures = atlasJson.structure.filter(item => {
             if (Array.isArray(item.sourceSelector)) {
                 return item.sourceSelector.some(selector => /\.vtk$/.test(selector.dataSource.source));
             }
