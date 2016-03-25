@@ -121,6 +121,12 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
             value,
             reference;
 
+        //delete properties that could have been added by the application
+
+        delete object.mesh;
+        delete object.open;
+        delete object.visible;
+
         for(key in object) {
             value = object[key];
             if (Array.isArray(value) && typeof value[0] === 'object' && value[0]['@id']) {
@@ -138,6 +144,7 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
             }
         }
     }
+
     function stringify (atlas, map, espace) {
         map = map || null;
         espace = espace || 0;
