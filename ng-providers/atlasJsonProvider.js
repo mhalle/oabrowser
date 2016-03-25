@@ -57,10 +57,16 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
                             resolveQueue.push(retrieved);
                         }
                     }
+                    else if (typeof value === 'object') {
+                        if (!value._resolved) {
+                            resolveQueue.push(value);
+                        }
+                    }
                 }
             }
             object._resolved = true;
             resolvedList.push(object);
+            addObjectToTypeList(object);
         }
     }
 
@@ -103,7 +109,6 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
         var objectToParse;
         while ((objectToParse = resolveQueue.pop()) && objectToParse) {
             resolveReferences(objectToParse);
-            addObjectToTypeList(objectToParse);
         }
         cleanObjects();
         objectsByType.all = atlasObject;
