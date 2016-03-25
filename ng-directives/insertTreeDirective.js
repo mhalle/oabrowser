@@ -18,7 +18,7 @@ angular.module('atlasDemo').directive( 'insertTree', function ( $compile ) {
                 console.log('event received', hierarchy);
                 var template = document.getElementById('treeListDirective').innerHTML;
                 $scope.data = {
-                    root : {children : hierarchy }
+                    root : {members : hierarchy }
                 };
                 var el = $compile( template )( $scope );
                 $element.append( el );
