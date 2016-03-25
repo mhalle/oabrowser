@@ -57,7 +57,7 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
 
             mainApp.on('mouseOverObject', function (object) {
                 if (object) {
-                    var breadcrumbs = getAllTheHierarchyPaths(object.mesh);
+                    var breadcrumbs = getAllTheHierarchyPaths(object);
                     $scope.data.breadcrumbs = breadcrumbs;
                 }
                 else {
