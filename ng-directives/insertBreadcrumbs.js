@@ -88,7 +88,7 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
             mainApp.on('objectAddedToSelection', function (selectionList) {
                 $scope.data.selectedBreadcrumbs = getPathFromSelectionList(selectionList);
                 $scope.data.breadcrumbs = $scope.data.selectedBreadcrumbs;
-                $scope.$apply();
+                $scope.safeApply();
             });
         }
     };
