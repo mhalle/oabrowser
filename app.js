@@ -2,7 +2,7 @@ if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
 }
 
-angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp, objectSelector) {
+angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", function (mainApp, objectSelector, atlasJson) {
 
     var container,
         stats,
@@ -38,7 +38,20 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
     //this function enables us to create a scope and then keep the right item in the callback
     function loadVTKFile(i) {
-        var file = vtkStructures[i].sourceSelector.dataSourceObject.source;
+        var file;
+        if (Array.isArray(vtkStructures[i].sourceSelector)) {
+            var geometrySelector = vtkStructures[i].sourceSelector.find(selector => selector['@type'].includes('geometrySelector'));
+            if (geometrySelector) {
+                file = geometrySelector.dataSource.source;
+            }
+            else {
+                throw 'In case of multiple selectors, VTK selector should have an array as @type which includes "geometrySelector"';
+            }
+        }
+        else {
+            file = vtkStructures[i].sourceSelector.dataSource.source;
+        }
+
         loader.load(file, function (geometry) {
 
             var item = vtkStructures[i];
@@ -70,7 +83,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
 
             var mesh = new THREE.Mesh(geometry, material);
-            //TODO : retrieve name from annotation object if annotation use a reference
             mesh.name = item.annotation && item.annotation.name || '';
             meshesList.push(mesh);
             item.mesh = mesh;
@@ -88,67 +100,55 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
         });
     }
 
-    function getTreeObjectFromUuid(uuid) {
-        var item = atlasStructure.find(x=>x['@id']===uuid);
-        var treeObject = {
-            name : item.annotation.name,
-            mesh : item.mesh
-        };
+    function getMesh(item) {
+
         if (item['@type']==='group') {
-            treeObject.children = item.members.map(getTreeObjectFromUuid).filter(x => x.mesh !== undefined);
-            treeObject.mesh = new HierarchyGroup();
-            treeObject.mesh.name = treeObject.name;
-            for (var i = 0; i< treeObject.children.length; i++) {
+            var childrenMeshes = item.members.map(getMesh);
+            //HierarchyGroup is used instead of THREE.Group because THREE.Group does not allow children to have multiple parents
+            item.mesh = new HierarchyGroup();
+            for (var i = 0; i< childrenMeshes.length; i++) {
                 try {
-                    treeObject.mesh.add(treeObject.children[i].mesh);
+                    item.mesh.add(childrenMeshes[i]);
                 }
                 catch (e) {
                     console.log(e);
                 }
             }
         }
-        return treeObject;
+        return item.mesh;
     }
 
     function createHierarchy() {
-        var rootGroups = atlasStructure.filter(x => x['@type']==='group' && header.roots.indexOf(x['@id']) !== -1);
-        var hierarchyTree = {
-            children : rootGroups.map(group => getTreeObjectFromUuid(group['@id']))
-        };
+        var rootGroups = header.roots;
+        rootGroups.map(getMesh);
 
-        mainApp.emit('insertTree',hierarchyTree);
+        console.log(rootGroups);
+
+        mainApp.emit('insertTree',rootGroups);
 
         //send a signal to the modal
-        mainApp.emit('modal.hierarchyLoaded', vtkStructures.length);
+        mainApp.emit('modal.hierarchyLoaded');
 
 
     }
 
     function dealWithAtlasStructure(data) {
         var i;
-        atlasStructure = data;
+        atlasStructure = atlasJson(data);
 
-        header = atlasStructure.find(x=>x['@type']==='header');
+        header = atlasStructure.header;
         if (header) {
             mainApp.emit('headerData',header);
         }
 
-        var vtkDatasources = data.filter(function (object) { 
-            return object['@type']==='datasource' && /\.vtk$/.test(object.source);
-        });
-        var vtkDatasourcesId = vtkDatasources.map(source => source["@id"]);
-        vtkStructures = [];
-        for(i=0; i<atlasStructure.length; i++) {
-            var item = atlasStructure[i];
-            if (item['@type']==='structure') {
-                var dataSourceIndex = vtkDatasourcesId.indexOf(item.sourceSelector.dataSource);
-                if ( dataSourceIndex> -1) {
-                    //item refers to a vtk file
-                    item.sourceSelector.dataSourceObject = vtkDatasources[dataSourceIndex];
-                    vtkStructures.push(item);
-                }
+        vtkStructures = atlasJson.filter(item => {
+            if (Array.isArray(item.sourceSelector)) {
+                return item.sourceSelector.some(selector => /\.vtk$/.test(selector.dataSource.source));
             }
-        }
+            else {
+                return /\.vtk$/.test(item.sourceSelector.dataSource.source);
+            }
+        });
 
 
         //Load all the vtk files
@@ -166,12 +166,12 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", function (mainApp,
 
         //load background
         nrrdLoader = new THREE.NRRDLoader();
-        if (typeof header.backgroundImages === "string") {
-            loadBackground(header.backgroundImages);
+        if (typeof header.backgroundImages === "object") {
+            loadBackground(header.backgroundImages.source);
         }
-        else if (typeof header.backgroundImages === "object") {
+        else if (Array.isArray(header.backgroundImages)) {
             for (i = 0; i < header.backgroundImages.length; i++) {
-                loadBackground(header.backgroundImages[i]);
+                loadBackground(header.backgroundImages[i].source);
             }
         }
 
