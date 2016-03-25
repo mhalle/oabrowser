@@ -8,20 +8,21 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
 
     function _select (object) {
 
-        if (object instanceof THREE.Object3D) {
+        var mesh = object.mesh;
+        if (object['@type'] === 'structure') {
 
-            if (!object.originalColor) {
-                object.originalColor = object.material.color.getHex();
+            if (!mesh.originalColor) {
+                mesh.originalColor = mesh.material.color.getHex();
             }
-            object.material.color.setHex(highlightMeshColor);
+            mesh.material.color.setHex(highlightMeshColor);
 
         }
-        else if (object instanceof HierarchyGroup) {
+        else if (object['@type'] === 'group') {
 
-            for (var i = 0; i < object.children.length; i++) {
+            for (var i = 0; i < object.members.length; i++) {
 
-                removeFromSelection(object.children[i]);
-                _select(object.children[i]);
+                removeFromSelection(object.members[i]);
+                _select(object.members[i]);
 
             }
 
@@ -37,16 +38,16 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
 
     function _unselect (object) {
 
-        if (object instanceof THREE.Object3D) {
+        if (object['@type'] === 'structure') {
 
-            object.material.color.setHex(object.originalColor);
+            object.mesh.material.color.setHex(object.mesh.originalColor);
 
         }
-        else if (object instanceof HierarchyGroup) {
+        else if (object['@type'] === 'group') {
 
-            for (var i = 0; i < object.children.length; i++) {
+            for (var i = 0; i < object.members.length; i++) {
 
-                _unselect(object.children[i]);
+                _unselect(object.members[i]);
 
             }
 
@@ -110,7 +111,7 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
             return selectedObjects;
         },
         set : function (value) {
-            if (value instanceof THREE.Object3D || value instanceof HierarchyGroup) {
+            if (value['@type'] === 'structure' || value['@type'] === 'group') {
                 select(value);
             }
             else if (value instanceof Array) {

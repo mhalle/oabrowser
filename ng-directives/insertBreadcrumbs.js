@@ -22,6 +22,7 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
                     }
                 }
                 addParents(object, []);
+                result = result.map(list => list.map(x => x.atlasStructure));
                 return result;
             }
 

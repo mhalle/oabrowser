@@ -126,6 +126,7 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
         delete object.mesh;
         delete object.open;
         delete object.visible;
+        delete object.selected;
 
         for(key in object) {
             value = object[key];

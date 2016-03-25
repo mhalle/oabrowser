@@ -6,11 +6,11 @@ angular.module('atlasDemo').directive( 'insertTree', function ( $compile ) {
         controller: function ( $scope, $element, mainApp, objectSelector ) {
             console.log('event listener registred');
             $scope.select = function (item) {
-                if (item.mesh.selected) {
-                    objectSelector.removeFromSelection(item.mesh);
+                if (item.selected) {
+                    objectSelector.removeFromSelection(item);
                 }
                 else {
-                    objectSelector.addToSelection(item.mesh);
+                    objectSelector.addToSelection(item);
                 }
             };
 

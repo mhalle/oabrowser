@@ -86,6 +86,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
             mesh.name = item.annotation && item.annotation.name || '';
             meshesList.push(mesh);
             item.mesh = mesh;
+            mesh.atlasStructure = item;
             scene.add(mesh);
             loadedFile++;
 
@@ -106,6 +107,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
             var childrenMeshes = item.members.map(getMesh);
             //HierarchyGroup is used instead of THREE.Group because THREE.Group does not allow children to have multiple parents
             item.mesh = new HierarchyGroup();
+            item.mesh.atlasStructure = item;
             for (var i = 0; i< childrenMeshes.length; i++) {
                 try {
                     item.mesh.add(childrenMeshes[i]);
@@ -354,10 +356,10 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
                 object = intersects[0].object;
                 if (event.ctrlKey) {
                     if (object.selected) {
-                        objectSelector.removeFromSelection(object);
+                        objectSelector.removeFromSelection(object.atlasStructure);
                     }
                     else {
-                        objectSelector.addToSelection(object);
+                        objectSelector.addToSelection(object.atlasStructure);
                     }
                 }
                 else if (event.altKey && sliceX && sliceY && sliceZ) {
