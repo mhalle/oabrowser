@@ -1,4 +1,4 @@
-angular.module('atlasDemo').provider('atlasJson', ['mainAppProvider', function (mainAppProvider) {
+angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', function (mainAppProvider) {
 
     var mainApp = mainAppProvider.$get(),
         volumes = [],
