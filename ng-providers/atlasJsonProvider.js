@@ -31,6 +31,63 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
         }
     }
 
+    function colorToHex (color, opacity) {
+        var match,
+            r,
+            g,
+            b,
+            a;
+        if (opacity !== undefined && opacity < 1) {
+            opacity = Math.round(255*opacity);
+        }
+        if (typeof color === 'number') {
+            return color;
+        }
+        else if (typeof color === 'string') {
+            var rgb = /^rgb *\( *(\d+) *, *(\d+) *, *(\d+) *\)$/;
+            var rgba = /^rgba *\( *(\d+) *, *(\d+) *, *(\d+) *, *(\d+) *\)$/;
+            match = color.match(rgb) || color.match(rgba);
+            if (match) {
+                r = Number(match[1]);
+                g = Number(match[2]);
+                b = Number(match[3]);
+                a = Number(opacity || match[4] || 255);
+                return r<<24 + g<<16 + b<<8 + a;
+            }
+            var hex = /^#(\w{2})(\w{2})(\w{2})(\w{2})?$/;
+            match = color.match(hex);
+            if (match) {
+                match = match.map(x=>parseInt(x,16));
+                r = match[1];
+                g = match[2];
+                b = match[3];
+                a = opacity || match[4] || 255;
+                return r<<24 + g<<16 + b<<8 + a;
+
+            }
+            var hexshort = /^#(\w)(\w)(\w)(\w)?$/;
+            match = color.match(hexshort);
+            if (match) {
+                match = match.map(x=>parseInt(x+x,16));
+                r = match[1];
+                g = match[2];
+                b = match[3];
+                a = opacity || match[4] || 255;
+                return r<<24 + g<<16 + b<<8 + a;
+
+            }
+        }
+        throw 'Application did not manage to parse a color from : '+color;
+    }
+
+    function parseColors (structures) {
+        var renderOptions;
+        for (var i = 0; i < structures.length; i++) {
+            renderOptions = structures[i].renderOptions;
+            renderOptions.color = colorToHex(renderOptions.color, renderOptions.opacity);
+        }
+    }
+
     function resolveReferences (object) {
 
         var key,
@@ -110,6 +167,7 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
         while ((objectToParse = resolveQueue.pop()) && objectToParse) {
             resolveReferences(objectToParse);
         }
+        parseColors(objectsByType.structure);
         cleanObjects();
         objectsByType.all = atlasObject;
         return objectsByType;
