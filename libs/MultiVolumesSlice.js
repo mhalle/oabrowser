@@ -142,7 +142,7 @@ THREE.MultiVolumesSlice.prototype = {
         for (i = 0; i < this.slices.length; i++) {
             slice = this.slices[i];
             ctx.globalAlpha = this.opacities[i] || 1.0;
-            ctx.drawImage(slice.canvas);
+            ctx.drawImage(slice.canvas,0,0);
 
         }
 
