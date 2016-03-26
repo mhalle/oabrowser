@@ -62,7 +62,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
         $scope.safeApply();
     });
 
-    mainApp.on('modal.backgroundStart', function (filename) {
+    mainApp.on('volumesManager.loadingStart', function (filename) {
         $scope.backgroundFiles.push({
             filename : filename,
             progress : 0
@@ -70,7 +70,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
         $scope.safeApply();
     });
 
-    mainApp.on('modal.backgroundLoaded', function (filename) {
+    mainApp.on('volumesManager.loadingEnd', function (filename) {
         var backgroundObject = $scope.backgroundFiles.find(o => o.filename === filename);
         backgroundObject.progress = 100;
         var everyBackgroundLoadingFinished = $scope.backgroundFiles.every(o => o.progress === 100);
@@ -80,7 +80,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
         $scope.safeApply();
     });
 
-    mainApp.on('modal.backgroundProgress', function (event) {
+    mainApp.on('volumesManager.loadingProgress', function (event) {
         var backgroundObject = $scope.backgroundFiles.find(o => o.filename === event.filename);
         if (!backgroundObject) {
             backgroundObject = {
