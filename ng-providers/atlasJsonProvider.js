@@ -52,6 +52,9 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
                 g = Number(match[2]);
                 b = Number(match[3]);
                 a = Number(opacity || match[4] || 255);
+                if (a<=1) {
+                    a = Math.round(a*255);
+                }
                 return (r<<24) + (g<<16) + (b<<8) + a;
             }
             var hex = /^#(\w{2})(\w{2})(\w{2})(\w{2})?$/;
