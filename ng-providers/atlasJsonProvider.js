@@ -45,7 +45,7 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
         }
         else if (typeof color === 'string') {
             var rgb = /^rgb *\( *(\d+) *, *(\d+) *, *(\d+) *\)$/;
-            var rgba = /^rgba *\( *(\d+) *, *(\d+) *, *(\d+) *, *(\d+) *\)$/;
+            var rgba = /^rgba *\( *(\d+) *, *(\d+) *, *(\d+) *, *(\d*\.?\d*) *\)$/;
             match = color.match(rgb) || color.match(rgba);
             if (match) {
                 r = Number(match[1]);
