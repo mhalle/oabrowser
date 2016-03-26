@@ -29,10 +29,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         header,
         mousedownDate,
         mousedownPosition = new THREE.Vector2(0,0),
-        containerOffset,
-        sliceZ = null,
-        sliceY = null,
-        sliceX = null;
+        containerOffset;
 
 
     //this function enables us to create a scope and then keep the right item in the callback
@@ -358,15 +355,15 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                         objectSelector.addToSelection(object.atlasStructure);
                     }
                 }
-                else if (event.altKey && sliceX && sliceY && sliceZ) {
+                else if (event.altKey && volumesManager.compostingSlices.axial) {
                     var point = intersects[0].point;
-                    var offset = sliceX.volume.RASDimensions;
-                    sliceX.index = Math.floor(point.x + offset[0]/2);
-                    sliceX.repaint();
-                    sliceY.index = Math.floor(point.y + offset[1]/2);
-                    sliceY.repaint();
-                    sliceZ.index = Math.floor(point.z + offset[2]/2);
-                    sliceZ.repaint();
+                    var offset = volumesManager.volumes[0].RASDimensions;
+                    volumesManager.compostingSlices.sagittal.index = Math.floor(point.x + offset[0]/2);
+                    volumesManager.compostingSlices.sagittal.repaint(true);
+                    volumesManager.compostingSlices.coronal.index = Math.floor(point.y + offset[1]/2);
+                    volumesManager.compostingSlices.coronal.repaint(true);
+                    volumesManager.compostingSlices.axial.index = Math.floor(point.z + offset[2]/2);
+                    volumesManager.compostingSlices.axial.repaint(true);
                 }
                 else {
                     if (object.selected) {
