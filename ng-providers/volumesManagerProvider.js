@@ -43,11 +43,11 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     function buildColorTable (datasource, volume) {
 
         function findSelector (struc) {
-            if (Array.isArray(struc.selector)) {
-                return struc.selector.find(selector => selector.dataSource === datasource);
+            if (Array.isArray(struc.sourceSelector)) {
+                return struc.sourceSelector.find(selector => selector.dataSource === datasource);
             }
             else {
-                return struc.selector;
+                return struc.sourceSelector;
             }
         }
 
