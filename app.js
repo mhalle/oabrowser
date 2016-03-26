@@ -451,7 +451,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         var texture = new THREE.Texture(canvas);
         texture.needsUpdate = true;
 
-        var spriteMaterial = new THREE.SpriteMaterial({ map: texture, useScreenCoordinates: false });
+        var spriteMaterial = new THREE.SpriteMaterial({ map: texture});
 
         var sprite = new THREE.Sprite( spriteMaterial );
         sprite.scale.set(fontsize,fontsize,1.0);
