@@ -44,7 +44,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
 
         function findSelector (struc) {
             if (Array.isArray(struc.selector)) {
-                return struc.selector.find(selector => selector.datasource === datasource);
+                return struc.selector.find(selector => selector.dataSource === datasource);
             }
             else {
                 return struc.selector;
