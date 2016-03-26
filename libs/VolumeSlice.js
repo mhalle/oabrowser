@@ -143,7 +143,7 @@ THREE.VolumeSlice.prototype = {
 				for ( i = 0; i < iLength; i ++ ) {
 
 					label = volumeData[ sliceAccess( i, j ) ];
-					color = this.colorMap[ label ] || 0;
+					color = volume.colorMap[ label ] || 0;
 					data[ 4 * pixelCount ] = ( color >> 24 ) & 0xff;
 					data[ 4 * pixelCount + 1 ] = ( color >> 16 ) & 0xff;
 					data[ 4 * pixelCount + 2 ] = ( color >> 8 ) & 0xff;
