@@ -133,7 +133,7 @@ THREE.VolumeSlice.prototype = {
 		var pixelCount = 0;
 
         var i,j;
-		if ( volume.dataType === 'label' && this.colorMap) {
+		if ( volume.dataType === 'label' && volume.colorMap) {
 
 			//this part is currently useless but will be used when colortables will be handled
             var label,
