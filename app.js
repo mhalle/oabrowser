@@ -2,7 +2,7 @@ if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
 }
 
-angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", function (mainApp, objectSelector, atlasJson) {
+angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volumesManager", function (mainApp, objectSelector, atlasJson, volumesManager) {
 
     var container,
         stats,
@@ -26,7 +26,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
         camera2,
         axes2,
         scene2,
-        nrrdLoader,
         header,
         mousedownDate,
         mousedownPosition = new THREE.Vector2(0,0),
@@ -58,22 +57,14 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
 
             geometry.computeVertexNormals();
 
-            var rgb = item.renderOptions.color.match(/^rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,?\s*([.0-9]+)?\)$/);
-            if (rgb) {
-                rgb = rgb.map(Number);
-            }
-            else {
-                rgb = [0, 0, 0, 0];
-            }
-
             var material = new THREE.MeshLambertMaterial({
                 wireframe : false,
                 morphTargets : false,
                 side : THREE.DoubleSide,
-                color : rgb[1] * 256 * 256 + rgb[2] * 256 + rgb[3]
+                color : item.renderOptions.color >> 8 //get rid of alpha
             });
 
-            material.opacity = item.renderOptions.opacity || rgb[4] || 1.0;
+            material.opacity = (item.renderOptions.color & 0xff)/255;
             material.visible = true;
 
 
@@ -137,6 +128,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
     function dealWithAtlasStructure(data) {
         var i;
         atlasStructure = atlasJson.parse(data);
+        mainApp.atlasStructure = atlasStructure;
 
         header = atlasStructure.header;
         if (header) {
@@ -167,14 +159,14 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
         }
 
         //load background
-        nrrdLoader = new THREE.NRRDLoader();
+
         if (Array.isArray(header.backgroundImages)) {
             for (i = 0; i < header.backgroundImages.length; i++) {
-                loadBackground(header.backgroundImages[i].source);
+                volumesManager.loadVolume(header.backgroundImages[i]);
             }
         }
         else if (typeof header.backgroundImages === "object") {
-            loadBackground(header.backgroundImages.source);
+            volumesManager.loadVolume(header.backgroundImages);
         }
 
         // renderer
@@ -234,6 +226,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
         controls.dynamicDampingFactor = 0.3;
 
         scene = new THREE.Scene();
+        volumesManager.setScene(scene);
 
         scene.add( camera );
 
@@ -259,6 +252,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
         gui = new dat.GUI({autoPlace : false});
         var guiContainer = document.getElementById('gui-container');
         guiContainer.appendChild(gui.domElement);
+
+        gui.addColor( objectSelector, 'highlightMeshColor').name('Selection Color');
+        mainApp.gui = gui;
 
         setupInset();
 
@@ -463,94 +459,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", funct
 
     }
 
-    function loadBackground(nrrdFileLocation) {
 
-        var onProgress = function ( xhr ) {
-            if ( xhr.lengthComputable ) {
-                var percentComplete = Math.round(xhr.loaded / xhr.total * 100);
-                mainApp.emit('modal.backgroundProgress', {filename : nrrdFileLocation, progress : percentComplete});
-            }
-        };
-
-        mainApp.emit('modal.backgroundStart', nrrdFileLocation);
-
-        nrrdLoader.load( nrrdFileLocation, function ( volume ) {
-            var time = Date.now();
-
-            mainApp.emit('modal.backgroundLoaded', nrrdFileLocation);
-
-            if (window.globalViewerParameters.cubeHelper) {
-                //box helper to see the extend of the volume
-                var geometry = new THREE.BoxGeometry( volume.xLength, volume.yLength, volume.zLength );
-                var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-                var cube = new THREE.Mesh( geometry, material );
-                cube.visible = false;
-                var box = new THREE.BoxHelper( cube );
-                scene.add( box );
-                box.applyMatrix(volume.matrix);
-                scene.add( cube );
-            }
-
-            //z plane
-
-            sliceZ = volume.extractSlice('z',Math.floor(volume.RASDimensions[2]/2));
-            console.debug(sliceZ);
-            mainApp.emit('insertSlice', {sliceId : 'axial', slice : sliceZ});
-            scene.add( sliceZ.mesh );
-
-            //y plane
-            sliceY = volume.extractSlice('y',Math.floor(volume.RASDimensions[1]/2));
-            console.debug(sliceY);
-            mainApp.emit('insertSlice', {sliceId : 'coronal', slice : sliceY});
-            scene.add( sliceY.mesh );
-
-            //x plane
-            sliceX = volume.extractSlice('x',Math.floor(volume.RASDimensions[0]/2));
-            console.debug(sliceX);
-            mainApp.emit('insertSlice', {sliceId : 'sagittal', slice : sliceX});
-            scene.add( sliceX.mesh );
-
-            console.log('generating slices in ' +(Date.now()-time)+ ' ms');
-
-            //be careful with .listen, checks for change are made every frame
-            gui.add( sliceX, "index", 0, volume.RASDimensions[0], 1 ).name( "index Sagittal" ).listen().onChange( function () {sliceX.repaint.call(sliceX);} );
-            gui.add( sliceY, "index", 0, volume.RASDimensions[1], 1 ).name( "index Coronal" ).listen().onChange( function () {sliceY.repaint.call(sliceY);} );
-            gui.add( sliceZ, "index", 0, volume.RASDimensions[2], 1 ).name( "index Axial" ).listen().onChange( function () {sliceZ.repaint.call(sliceZ);} );
-
-            var visibilityController = {},
-                visible = true;
-            Object.defineProperty(visibilityController, 'visible', {
-                get : function () {
-                    return visible;
-                },
-                set : function (value) {
-                    sliceX.mesh.visible = value;
-                    sliceY.mesh.visible = value;
-                    sliceZ.mesh.visible = value;
-                    visible = value;
-                }
-            });
-
-            gui.add(visibilityController, 'visible').name('Slices visible');
-
-            gui.add( volume, "lowerThreshold", volume.min, volume.max, 1).name( "Lower Threshold").onChange( function () {
-                volume.repaintAllSlices();
-            });
-            gui.add( volume, "upperThreshold", volume.min, volume.max, 1).name( "Upper Threshold").onChange( function () {
-                volume.repaintAllSlices();
-            });
-            gui.add( volume, "level", volume.min, volume.max, 1).name( "Level").onChange( function () {
-                volume.repaintAllSlices();
-            });
-            gui.add( volume, "window", 0, volume.max-volume.min, 1).name( "Window").onChange( function () {
-                volume.repaintAllSlices();
-            });
-
-            gui.addColor( objectSelector, 'highlightMeshColor').name('Selection Color');
-
-        }, onProgress );
-
-    }
 
     init();
 

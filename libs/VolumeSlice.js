@@ -136,13 +136,14 @@ THREE.VolumeSlice.prototype = {
 		if ( volume.dataType === 'label' ) {
 
 			//this part is currently useless but will be used when colortables will be handled
+            var label,
+                color;
 			for ( j = 0; j < jLength; j ++ ) {
 
 				for ( i = 0; i < iLength; i ++ ) {
 
-					var label = volumeData[ sliceAccess( i, j ) ];
-					label = label >= this.colorMap.length ? ( label % this.colorMap.length ) + 1 : label;
-					var color = this.colorMap[ label ];
+					label = volumeData[ sliceAccess( i, j ) ];
+					color = this.colorMap[ label ] || 0;
 					data[ 4 * pixelCount ] = ( color >> 24 ) & 0xff;
 					data[ 4 * pixelCount + 1 ] = ( color >> 16 ) & 0xff;
 					data[ 4 * pixelCount + 2 ] = ( color >> 8 ) & 0xff;
