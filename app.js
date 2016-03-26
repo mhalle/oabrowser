@@ -155,16 +155,13 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             loadVTKFile(i);
         }
 
-        //load background
+        //load labelmap and background
 
-        if (Array.isArray(header.backgroundImages)) {
-            for (i = 0; i < header.backgroundImages.length; i++) {
-                volumesManager.loadVolume(header.backgroundImages[i]);
-            }
+        var nrrdDatasource = atlasStructure.datasource.filter(datasource => /\.nrrd$/.test(datasource.source));
+        for (i = 0; i < nrrdDatasource.length; i++) {
+            volumesManager.loadVolume(nrrdDatasource[i]);
         }
-        else if (typeof header.backgroundImages === "object") {
-            volumesManager.loadVolume(header.backgroundImages);
-        }
+
 
         // renderer
 
