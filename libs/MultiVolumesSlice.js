@@ -204,16 +204,18 @@ THREE.MultiVolumesSlice.prototype = {
      */
     addSlice : function (slice, opacity, insertInBackground) {
 
-        opacity = opacity || 1;
-        insertInBackground = insertInBackground || false;
+        if (!this.slices.includes(slice)) {
+            opacity = opacity || 1;
+            insertInBackground = insertInBackground || false;
 
-        if (insertInBackground) {
-            this.slices.unshift(slice);
-            this.opacities.unshift(slice);
-        }
-        else {
-            this.slices.push(slice);
-            this.opacities.push(opacity);
+            if (insertInBackground) {
+                this.slices.unshift(slice);
+                this.opacities.unshift(slice);
+            }
+            else {
+                this.slices.push(slice);
+                this.opacities.push(opacity);
+            }
         }
     },
 

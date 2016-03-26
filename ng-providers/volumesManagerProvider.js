@@ -71,16 +71,26 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     }
 
     function addToCompositingSlices (sliceSet, treatAsBackground) {
+        var opacity;
         if (!compositingSlices.axial) {
 
             compositingSlices.axial = new THREE.MultiVolumesSlice();
             mainApp.emit('insertSlice', {sliceId : 'axial', slice :  compositingSlices.axial});
+            scene.add(compositingSlices.axial.mesh);
 
             compositingSlices.sagittal = new THREE.MultiVolumesSlice();
             mainApp.emit('insertSlice', {sliceId : 'sagittal', slice : compositingSlices.sagittal});
+            scene.add(compositingSlices.sagittal.mesh);
 
             compositingSlices.coronal = new THREE.MultiVolumesSlice();
             mainApp.emit('insertSlice', {sliceId : 'coronal', slice : compositingSlices.coronal});
+            scene.add(compositingSlices.coronal.mesh);
+
+
+            opacity = treatAsBackground ? 1 : 0.5;
+            compositingSlices.sagittal.addSlice(sliceSet.x, opacity, treatAsBackground);
+            compositingSlices.coronal.addSlice(sliceSet.y, opacity, treatAsBackground);
+            compositingSlices.axial.addSlice(sliceSet.z, opacity, treatAsBackground);
 
             var gui = mainApp.gui;
             var volume = sliceSet.x.volume;
@@ -89,7 +99,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             gui.add( compositingSlices.axial, "index", 0, volume.RASDimensions[2], 1 ).name( "index Axial" ).listen().onChange( function () {compositingSlices.axial.repaint(true);} );
 
         }
-        var opacity = treatAsBackground ? 1 : 0.5;
+        opacity = treatAsBackground ? 1 : 0.5;
         compositingSlices.sagittal.addSlice(sliceSet.x, opacity, treatAsBackground);
         compositingSlices.coronal.addSlice(sliceSet.y, opacity, treatAsBackground);
         compositingSlices.axial.addSlice(sliceSet.z, opacity, treatAsBackground);
@@ -119,15 +129,12 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         //z plane
 
         sliceZ = volume.extractSlice('z',Math.floor(volume.RASDimensions[2]/2));
-        scene.add( sliceZ.mesh );
 
         //y plane
         sliceY = volume.extractSlice('y',Math.floor(volume.RASDimensions[1]/2));
-        scene.add( sliceY.mesh );
 
         //x plane
         sliceX = volume.extractSlice('x',Math.floor(volume.RASDimensions[0]/2));
-        scene.add( sliceX.mesh );
 
         var sliceSet = {x : sliceX, y : sliceY, z : sliceZ};
         addToCompositingSlices(sliceSet, treatAsBackground);
