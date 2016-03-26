@@ -52,7 +52,7 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
                 g = Number(match[2]);
                 b = Number(match[3]);
                 a = Number(opacity || match[4] || 255);
-                return r<<24 + g<<16 + b<<8 + a;
+                return (r<<24) + (g<<16) + (b<<8) + a;
             }
             var hex = /^#(\w{2})(\w{2})(\w{2})(\w{2})?$/;
             match = color.match(hex);
@@ -62,7 +62,7 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
                 g = match[2];
                 b = match[3];
                 a = opacity || match[4] || 255;
-                return r<<24 + g<<16 + b<<8 + a;
+                return (r<<24) + (g<<16) + (b<<8) + a;
 
             }
             var hexshort = /^#(\w)(\w)(\w)(\w)?$/;
@@ -73,7 +73,7 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
                 g = match[2];
                 b = match[3];
                 a = opacity || match[4] || 255;
-                return r<<24 + g<<16 + b<<8 + a;
+                return (r<<24) + (g<<16) + (b<<8) + a;
 
             }
         }
