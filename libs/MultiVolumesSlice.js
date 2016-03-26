@@ -79,7 +79,6 @@ THREE.MultiVolumesSlice = function( ) {
 	 * @member {CanvasRenderingContext2D} ctx Context of the canvas
 	 */
     this.canvas = document.createElement( 'canvas' );
-    this.updateGeometry();
 
 
     var canvasMap = new THREE.Texture( this.canvas );
@@ -94,7 +93,6 @@ THREE.MultiVolumesSlice = function( ) {
      * @member {Boolean} geometryNeedsUpdate If set to true, updateGeometry will be triggered at the next repaint
      */
     this.geometryNeedsUpdate = true;
-    this.repaint();
 
     /**
      * @member {Number} iLength Width of slice in the original coordinate system, corresponds to the width of the buffer canvas
