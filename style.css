@@ -76,7 +76,7 @@ body, html {
 .slice-container {
     overflow: hidden;
     width: 100%;
-    height: calc(100% - 45px);
+    height: calc(100% - 35px);
     background-color: black;
 }
 .glyphicon-chevron-left,
