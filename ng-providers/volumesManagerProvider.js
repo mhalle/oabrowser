@@ -196,6 +196,9 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             compositingSlices.axial.setOpacity(slices[index].z, opacity);
             compositingSlices.coronal.setOpacity(slices[index].y, opacity);
             compositingSlices.sagittal.setOpacity(slices[index].x, opacity);
+            compositingSlices.axial.repaint();
+            compositingSlices.coronal.repaint();
+            compositingSlices.sagittal.repaint();
         }
         else {
             if (background) {
@@ -204,6 +207,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
                 }
             }
             slice.setOpacity(slices[index][slice.axis], opacity);
+            slice.repaint();
         }
     }
 
