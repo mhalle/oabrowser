@@ -271,9 +271,18 @@ THREE.MultiVolumesSlice.prototype = {
      */
     setOpacity : function (slice, opacity) {
 
-        var index = this.slices.indexOf(slice);
-        if (index > -1) {
-            this.opacities[index] = opacity;
+        var index;
+        if (slice instanceof THREE.VolumeSlice) {
+            index = this.slices.indexOf(slice);
+            if (index > -1) {
+                this.opacities[index] = opacity;
+            }
+        }
+        else if (slice instanceof THREE.Volume) {
+            index = this.volumes.indexOf(slice);
+            if (index > -1) {
+                this.opacities[index] = opacity;
+            }
         }
 
     },

@@ -182,7 +182,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         var opacity  = background ? 1 : 0.5;
         var index = volumes.indexOf(volume);
         var visible = slice.getOpacity(volume)>0;
-        opacity = visible ? opacity : 0;
+        opacity = visible ? 0 : opacity;
         var i;
 
         if (singleton.slicesLinked) {
