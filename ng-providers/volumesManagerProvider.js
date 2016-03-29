@@ -193,9 +193,9 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
                     compositingSlices.sagittal.setOpacity(backgrounds[i], 0);
                 }
             }
-            compositingSlices.axial.setOpacity(this.slices[index].z, opacity);
-            compositingSlices.coronal.setOpacity(this.slices[index].y, opacity);
-            compositingSlices.sagittal.setOpacity(this.slices[index].x, opacity);
+            compositingSlices.axial.setOpacity(slices[index].z, opacity);
+            compositingSlices.coronal.setOpacity(slices[index].y, opacity);
+            compositingSlices.sagittal.setOpacity(slices[index].x, opacity);
         }
         else {
             if (background) {
@@ -203,7 +203,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
                     slice.setOpacity(backgrounds[i], 0);
                 }
             }
-            slice.setOpacity(this.slices[index][slice.axis], opacity);
+            slice.setOpacity(slices[index][slice.axis], opacity);
         }
     }
 
