@@ -106,6 +106,7 @@ THREE.MultiVolumesSlice = function( ) {
     definePropertyAsFirstSlice('jLength');
 
     definePropertyAsFirstSlice('matrix');
+    definePropertyAsFirstSlice('maxIndex');
 
 
 
@@ -182,7 +183,7 @@ THREE.MultiVolumesSlice.prototype = {
     },
 
     /**
-     * @member {Function} onRepaint add  a listener to the list of listeners
+     * @member {Function} onRepaint add a listener to the list of listeners
      * @param {Object} context
      * @param {Function} listener
      * @memberof THREE.MultiVolumesSlice
@@ -190,6 +191,30 @@ THREE.MultiVolumesSlice.prototype = {
     onRepaint : function (context, callback) {
 
         this.listeners.repaint.push({callback : callback, context : context});
+
+    },
+
+    /**
+     * @member {Function} onAddSlice add a listener to the list of listeners
+     * @param {Object} context
+     * @param {Function} listener
+     * @memberof THREE.MultiVolumesSlice
+     */
+    onAddSlice : function (context, callback) {
+
+        this.listeners.addSlice.push({callback : callback, context : context});
+
+    },
+
+    /**
+     * @member {Function} onRemoveSlice add a listener to the list of listeners
+     * @param {Object} context
+     * @param {Function} listener
+     * @memberof THREE.MultiVolumesSlice
+     */
+    onRemoveSlice : function (context, callback) {
+
+        this.listeners.removeSlice.push({callback : callback, context : context});
 
     },
 
@@ -214,6 +239,8 @@ THREE.MultiVolumesSlice.prototype = {
                 this.slices.push(slice);
                 this.opacities.push(opacity);
             }
+
+            this.listeners.addSlice.map( listener => listener.callback.call(listener.context, slice));
         }
     },
 
@@ -228,6 +255,8 @@ THREE.MultiVolumesSlice.prototype = {
         if (index > -1) {
             this.slices.splice(index,1);
             this.opacities.splice(index,1);
+
+            this.listeners.removeSlice.map( listener => listener.callback.call(listener.context, slice));
         }
 
     },

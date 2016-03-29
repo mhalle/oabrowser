@@ -128,6 +128,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         volumes.push(volume);
 
         datasource.volume = volume;
+        volume.datasource = datasource;
 
         //z plane
 
@@ -206,6 +207,10 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         }
     }
 
+    function isVolumeABackground (volume) {
+        return backgrounds.includes(volume);
+    }
+
 
 
 
@@ -213,6 +218,8 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     singleton.loadVolume = loadVolume;
     singleton.toggleVisibility = toggleVisibilityInCompositing;
     singleton.compostingSlices = compositingSlices;
+    singleton.isVolumeABackground = isVolumeABackground;
+    singleton.isBackground = isBackground;
 
     //methods accessible from outside by injecting volumesManager
     this.$get = function () {

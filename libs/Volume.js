@@ -308,7 +308,8 @@ THREE.Volume.prototype = {
 		firstSpacing,
 		secondSpacing,
 		positionOffset,
-		IJKIndex;
+		IJKIndex,
+        maxIndex;
 
 		var axisInIJK = new THREE.Vector3(),
 		firstDirection = new THREE.Vector3(),
@@ -330,6 +331,7 @@ THREE.Volume.prototype = {
 				planeMatrix.multiply( ( new THREE.Matrix4() ).makeRotationY( Math.PI / 2 ) );
 				positionOffset = ( volume.RASDimensions[ 0 ] - 1 ) / 2;
 				planeMatrix.setPosition( new THREE.Vector3( RASIndex - positionOffset, 0, 0 ) );
+                maxIndex = volume.RASDimensions[0]-1;
 				break;
 			case 'y' :
 				axisInIJK.set( 0, 1, 0 );
@@ -342,6 +344,7 @@ THREE.Volume.prototype = {
 				planeMatrix.multiply( ( new THREE.Matrix4() ).makeRotationX( - Math.PI / 2 ) );
 				positionOffset = ( volume.RASDimensions[ 1 ] - 1 ) / 2;
 				planeMatrix.setPosition( new THREE.Vector3( 0, RASIndex - positionOffset, 0 ) );
+                maxIndex = volume.RASDimensions[1]-1;
 				break;
 			case 'z' :
 				axisInIJK.set( 0, 0, 1 );
@@ -353,6 +356,7 @@ THREE.Volume.prototype = {
 
 				positionOffset = ( volume.RASDimensions[ 2 ] - 1 ) / 2;
 				planeMatrix.setPosition( new THREE.Vector3( 0, 0, RASIndex - positionOffset ) );
+                maxIndex = volume.RASDimensions[3]-1;
 				break;
 
 			default :
@@ -402,7 +406,8 @@ THREE.Volume.prototype = {
 			sliceAccess : sliceAccess,
 			matrix : planeMatrix,
 			planeWidth : planeWidth,
-			planeHeight : planeHeight
+			planeHeight : planeHeight,
+            maxIndex : maxIndex
 		};
 
 	},

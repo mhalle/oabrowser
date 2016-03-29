@@ -202,6 +202,7 @@ THREE.VolumeSlice.prototype = {
 		this.jLength = extracted.jLength;
 		this.iLength = extracted.iLength;
 		this.matrix = extracted.matrix;
+        this.maxIndex = extracted.maxIndex;
 
 		this.canvas.width = extracted.planeWidth;
 		this.canvas.height = extracted.planeHeight;

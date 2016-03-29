@@ -72,7 +72,7 @@ body, html {
 
 .slice-container {
     overflow: hidden;
-    width: 100%;
+    width: calc(100% - 45px);
     height: 100%;
     background-color: black;
 }
@@ -84,4 +84,24 @@ body, html {
 }
 #rendererFrame canvas {
     background: linear-gradient(#657FB5, #D3E2FF);
+}
+
+
+.sliceControls {
+    width : 100%;
+    height: 43px;
+    overflow: hidden;
+}
+
+.sliceIndexControl {
+    width : calc(100% - 50px);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.sliceControlsLinked {
+    color : #5cb85c;
+}
+.sliceControlsUnlinked {
+    color: #d9534f;
 }
