@@ -73,6 +73,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         sliceContainer.append(canvas);
                         $scope.canvas = canvas;
                         $(canvas).on('mousedown', mouseDown);
+                        $(canvas).on('mousewheel', mouseWheel);
                     }
                     updateControlsScope();
                     Object.defineProperty($scope.controls, 'index', {
@@ -165,6 +166,11 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             function mouseUp () {
                 $(document.body).off('mouseup', mouseUp);
                 $(document.body).off('mousemove', mouseMove);
+            }
+
+            function mouseWheel (event) {
+                $scope.slice.index += event.deltaY;
+                $scope.slice.repaint(true);
             }
 
 
