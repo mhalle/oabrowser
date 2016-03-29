@@ -127,7 +127,12 @@ THREE.MultiVolumesSlice.prototype = {
 
         repaintAll = repaintAll || false;
         if (repaintAll) {
-            this.slices.forEach(slice => slice.repaint());
+            var multiSlice = this;
+            this.slices.forEach(function (slice,i) {
+                if (multiSlice.opacities[i]>0) {
+                    slice.repaint();
+                }
+            });
         }
 
         if ( this.geometryNeedsUpdate ) {
