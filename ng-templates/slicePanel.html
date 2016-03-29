@@ -10,13 +10,19 @@
             <li class="dropdown-header">Background</li>
 
             <li role="menuitem" ng-repeat="item in controls.backgrounds" ng-click="toggleVisibility(item)">
-                <a href="#">{{item.name}}</a><span ng-if="item.visible" class="glyphicon glyphicon-link pull-right" aria-hidden="true"></span>
+                <a href="#">
+                    {{item.name}}
+                    <span ng-if="item.visible" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></span>
+                </a>
             </li>
 
             <li class="dropdown-header">Label map</li>
 
             <li role="menuitem" ng-repeat="item in controls.labelMaps" ng-click="toggleVisibility(item)">
-                <a href="#">{{item.name}}</a><span ng-if="item.visible" class="glyphicon glyphicon-link pull-right" aria-hidden="true"></span>
+                <a href="#">
+                    {{item.name}}
+                    <span ng-if="item.visible" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></span>
+                </a>
             </li>
         </ul>
     </div>

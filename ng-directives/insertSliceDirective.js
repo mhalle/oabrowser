@@ -33,7 +33,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     visible,
                     object;
 
-                $scope.controls.background = [];
+                $scope.controls.backgrounds = [];
                 $scope.controls.labelMaps = [];
 
                 for (var i = 0; i < volumesDatasource.length; i++) {
@@ -46,7 +46,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         volume : volumes[i]
                     };
                     if (volumesManager.isBackground(datasource)) {
-                        $scope.controls.background.push(object);
+                        $scope.controls.backgrounds.push(object);
                     }
                     else {
                         $scope.controls.labelMaps.push(object);
