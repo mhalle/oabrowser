@@ -61,7 +61,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 //      - sliceId which identify in which directive you want to insert the slice
                 //      - slice the actual slice object
                 if ($scope.sliceId === data.sliceId) {
-                    sliceContainer = $element.find('.sliceContainer');
+                    sliceContainer = $element.find('.slice-container');
                     $scope.slice = data.slice;
                     if (!$scope.canvas) {
                         var canvas = document.createElement('canvas');
