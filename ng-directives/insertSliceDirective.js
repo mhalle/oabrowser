@@ -69,6 +69,15 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         $scope.canvas = canvas;
                     }
                     updateControlsScope();
+                    Object.defineProperty($scope.controls, 'index', {
+                        get : function () {
+                            return $scope.slice.index;
+                        },
+                        set : function (value) {
+                            $scope.slice.index = value;
+                            $scope.slice.repaint(true);
+                        }
+                    });
                     $scope.slice.onAddSlice(null, updateControlsScope);
                     $scope.slice.onRemoveSlice(null, updateControlsScope);
                     $scope.slice.onRepaint(null, $scope.repaint);
