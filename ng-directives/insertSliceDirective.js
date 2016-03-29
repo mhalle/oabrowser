@@ -14,7 +14,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             $scope.volumesManager = volumesManager;
             var sliceContainer = null,
                 mousedownPosition = new THREE.Vector2(0,0),
-                mouse = new THREE.Vector2(0,0);
+                mouse = new THREE.Vector2(0,0),
+                background = null,
+                initialWindow,
+                initialLevel;
 
             $scope.toggleLink = function () {
                 volumesManager.slicesLinked = !volumesManager.slicesLinked;
@@ -136,11 +139,16 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             };
 
             function mouseDown (event) {
-                console.log(event);
-                $(document.body).on('mousemove', mouseMove);
-                $(document.body).on('mouseup', mouseUp);
                 mousedownPosition.x = event.clientX;
                 mousedownPosition.y = event.clientY;
+                background = volumesManager.getBackground($scope.slice);
+                if (background) {
+                    $(document.body).on('mousemove', mouseMove);
+                    $(document.body).on('mouseup', mouseUp);
+                    $(document.body).on('mouseout', mouseUp);
+                    initialLevel = background.level;
+                    initialWindow = background.window;
+                }
 
 
             }
@@ -148,12 +156,15 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             function mouseMove (event) {
                 mouse.x = event.clientX-mousedownPosition.x;
                 mouse.y = event.clientY-mousedownPosition.x;
-                console.log(mouse);
+                background.window = Math.max(initialWindow + mouse.x,0);
+                background.level = initialLevel+mouse.y;
+                background.repaintAllSlices();
+                volumesManager.repaintCompositingSlices(false);
             }
 
             function mouseUp () {
                 $(document.body).off('mouseup', mouseUp);
-                $(document.body).off('mousemouve', mouseMove);
+                $(document.body).off('mousemove', mouseMove);
             }
 
 

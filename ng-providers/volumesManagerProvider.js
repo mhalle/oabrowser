@@ -215,6 +215,20 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         return backgrounds.includes(volume);
     }
 
+    function getBackground (slice) {
+        var background = slice.volumes[0];
+        if (isVolumeABackground(background)) {
+            return background;
+        }
+        return null;
+    }
+
+    function repaintCompositingSlices (all) {
+        compositingSlices.axial.repaint(all);
+        compositingSlices.coronal.repaint(all);
+        compositingSlices.sagittal.repaint(all);
+    }
+
 
 
 
@@ -224,6 +238,8 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     singleton.compostingSlices = compositingSlices;
     singleton.isVolumeABackground = isVolumeABackground;
     singleton.isBackground = isBackground;
+    singleton.getBackground = getBackground;
+    singleton.repaintCompositingSlices = repaintCompositingSlices;
 
     //methods accessible from outside by injecting volumesManager
     this.$get = function () {
