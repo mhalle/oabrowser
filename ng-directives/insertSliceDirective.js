@@ -33,7 +33,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     object;
 
                 $scope.controls.background = [];
-                $scope.controle.labelMaps = [];
+                $scope.controls.labelMaps = [];
 
                 for (var i = 0; i < volumesDatasource.length; i++) {
                     datasource = volumesDatasource[i];
