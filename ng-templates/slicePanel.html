@@ -1,6 +1,6 @@
-<span class="sliceControls">
+<span class="slice-controls">
     <button type="button" class="btn btn-default btn-sm" aria-label="Link" ng-click="toggleLink()">
-        <span class="glyphicon glyphicon-link" aria-hidden="true" ng-class="{sliceControlsLinked : volumesManager.slicesLinked, sliceControlsUnlinked : !volumesManager.slicesLinked, }"></span>
+        <span class="glyphicon glyphicon-link" aria-hidden="true" ng-class="{'slice-controls-linked': volumesManager.slicesLinked, 'slice-controls-unlinked' : !volumesManager.slicesLinked, }"></span>
     </button>
     <div class="btn-group btn-sm" uib-dropdown>
         <button id="single-button" type="button" class="btn btn-default btn-sm" uib-dropdown-toggle>
@@ -20,9 +20,9 @@
             </li>
         </ul>
     </div>
-    <div class="sliceIndexControl">
+    <div class="slice-index-control">
         <input type="range" min="0" max="{{data.slice.maxIndex}}" ng-value="data.slice.index" />
     </div>
 </span>
-<div class="sliceContainer">
+<div class="slice-container">
 </div>

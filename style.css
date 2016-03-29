@@ -72,8 +72,8 @@ body, html {
 
 .slice-container {
     overflow: hidden;
-    width: calc(100% - 45px);
-    height: 100%;
+    width: 100%;
+    height: calc(100% - 45px);
     background-color: black;
 }
 .glyphicon-chevron-left,
@@ -87,21 +87,26 @@ body, html {
 }
 
 
-.sliceControls {
+.slice-controls {
     width : 100%;
     height: 43px;
     overflow: hidden;
 }
 
-.sliceIndexControl {
-    width : calc(100% - 50px);
+.slice-index-control {
+    width : calc(100% - 90px);
     display: inline-block;
     vertical-align: middle;
 }
 
-.sliceControlsLinked {
+.slice-controls-linked {
     color : #5cb85c;
 }
-.sliceControlsUnlinked {
+.slice-controls-unlinked {
     color: #d9534f;
+}
+
+/*Modify dropdown padding in the slice controls to save space*/
+.slice-controls .btn-group.btn-sm.dropdown {
+    padding: 0;
 }
