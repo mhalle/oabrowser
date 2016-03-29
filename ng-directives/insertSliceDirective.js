@@ -17,7 +17,12 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 mouse = new THREE.Vector2(0,0),
                 background = null,
                 initialWindow,
-                initialLevel;
+                initialLevel,
+                initialOffset,
+                initialZoom,
+                globalZoom = 1,
+                globalOffset = new THREE.Vector2(0,0),
+                mouseAction;
 
             $scope.toggleLink = function () {
                 volumesManager.slicesLinked = !volumesManager.slicesLinked;
@@ -107,7 +112,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     var image = $scope.slice.canvas;
                     var ctx = canvas.getContext('2d');
 
-                    var zoom = Math.min(canvas.width/image.width, canvas.height/image.height);
+                    var zoom = globalZoom * Math.min(canvas.width/image.width, canvas.height/image.height);
 
                     ctx.save();
                     ctx.translate(canvas.width/2, canvas.height/2);
@@ -142,13 +147,32 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             function mouseDown (event) {
                 mousedownPosition.x = event.clientX;
                 mousedownPosition.y = event.clientY;
-                background = volumesManager.getBackground($scope.slice);
-                if (background) {
+                if (event.buttons & 1) {
+                    background = volumesManager.getBackground($scope.slice);
+                    if (background) {
+                        $(document.body).on('mousemove', mouseMove);
+                        $(document.body).on('mouseup', mouseUp);
+                        $(document.body).on('mouseout', mouseUp);
+                        initialLevel = background.level;
+                        initialWindow = background.window;
+                        mouseAction = "windowLevel";
+                    }
+                }
+                else if (event.buttons & 2) {
+                    //right button -> zoom
                     $(document.body).on('mousemove', mouseMove);
                     $(document.body).on('mouseup', mouseUp);
                     $(document.body).on('mouseout', mouseUp);
-                    initialLevel = background.level;
-                    initialWindow = background.window;
+                    initialZoom = globalZoom;
+                    mouseAction = "zoom";
+                }
+                else if (event.buttons & 4) {
+                    //middle button ->translation
+                    $(document.body).on('mousemove', mouseMove);
+                    $(document.body).on('mouseup', mouseUp);
+                    $(document.body).on('mouseout', mouseUp);
+                    initialOffset = globalOffset.clone();
+                    mouseAction = "zoom";
                 }
 
 
@@ -157,10 +181,22 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             function mouseMove (event) {
                 mouse.x = event.clientX-mousedownPosition.x;
                 mouse.y = event.clientY-mousedownPosition.y;
-                background.window = Math.max(initialWindow + 2*mouse.x,0);
-                background.level = initialLevel+mouse.y;
-                background.repaintAllSlices();
-                volumesManager.repaintCompositingSlices(false);
+                if (mouseAction === "windowLevel") {
+                    background.window = Math.max(initialWindow + 2*mouse.x,0);
+                    background.level = initialLevel+mouse.y;
+                    background.repaintAllSlices();
+                    volumesManager.repaintCompositingSlices(false);
+                }
+                else if (mouseAction === "zoom") {
+                    globalZoom = initialZoom * Math.exp(mouse.y/$scope.canvas.height);
+                    $scope.repaint();
+                }
+                else if (mouseAction === "translation") {
+                    globalOffset.x = initialOffset.x + mouse.x;
+                    globalOffset.y = initialOffset.y + mouse.y;
+                    $scope.repaint();
+
+                }
             }
 
             function mouseUp () {
