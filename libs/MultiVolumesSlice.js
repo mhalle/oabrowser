@@ -69,7 +69,9 @@ THREE.MultiVolumesSlice = function( ) {
      * @member {Object} listeners store all the listeners to the events of this slice
      */
     this.listeners = {
-        repaint : []
+        repaint : [],
+        addSlice : [],
+        removeSlice : []
     };
 
     /**
