@@ -58,6 +58,9 @@ body, html {
 .dg * {
     box-sizing: content-box;
 }
+.dg input {
+    line-height: normal;
+}
 
 #gui-container {
     position: absolute;
