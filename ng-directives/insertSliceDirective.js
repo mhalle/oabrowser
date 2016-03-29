@@ -86,7 +86,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 if ($scope.canvas) {
                     var canvas = $scope.canvas;
                     canvas.width = sliceContainer.width();
-                    canvas.height = sliceContainer.height();
+                    canvas.height = sliceContainer.parent.height()-35;
 
                     var image = $scope.slice.canvas;
                     var ctx = canvas.getContext('2d');
