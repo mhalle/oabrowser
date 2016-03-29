@@ -11,6 +11,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 backgrounds : [],
                 labelMaps : []
             };
+            $scope.volumesManager = volumesManager;
             var sliceContainer = null;
 
             $scope.toggleLink = function () {
