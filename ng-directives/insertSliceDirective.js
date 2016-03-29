@@ -164,14 +164,16 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     initialZoom = globalZoom;
                     mouseAction = "zoom";
                     event.preventDefault();
+                    event.stopImmediatePropagation();
                 }
                 else if (event.buttons & 4) {
                     //middle button ->translation
                     $(document.body).on('mousemove', mouseMove);
                     $(document.body).on('mouseup', mouseUp);
                     initialOffset = globalOffset.clone();
-                    mouseAction = "zoom";
+                    mouseAction = "translation";
                     event.preventDefault();
+                    event.stopImmediatePropagation();
                 }
 
 
@@ -197,6 +199,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     event.preventDefault();
 
                 }
+                event.stopImmediatePropagation();
             }
 
             function mouseUp (event) {
@@ -206,6 +209,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 if (mouseAction === "zoom" || mouseAction === "translation") {
                     event.preventDefault();
                 }
+                event.stopImmediatePropagation();
             }
 
             function mouseWheel (event) {
