@@ -142,8 +142,10 @@ THREE.MultiVolumesSlice.prototype = {
 
         for (i = 0; i < this.slices.length; i++) {
             slice = this.slices[i];
-            ctx.globalAlpha = this.opacities[i] || 1.0;
-            ctx.drawImage(slice.canvas,0,0);
+            if (this.opacities>0) {
+                ctx.globalAlpha = this.opacities[i];
+                ctx.drawImage(slice.canvas,0,0);
+            }
 
         }
 
@@ -230,7 +232,7 @@ THREE.MultiVolumesSlice.prototype = {
     addSlice : function (slice, opacity, insertInBackground) {
 
         if (!this.slices.includes(slice)) {
-            opacity = opacity || 1;
+            opacity = opacity === undefined ? 1 : opacity;
             insertInBackground = insertInBackground || false;
 
             if (insertInBackground) {
