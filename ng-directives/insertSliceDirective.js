@@ -144,10 +144,15 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 }
             };
 
+            function preventDefault (e) {
+                e.preventDefault();
+                return false;
+            }
+
             function mouseDown (event) {
                 mousedownPosition.x = event.clientX;
                 mousedownPosition.y = event.clientY;
-                if (event.buttons & 1) {
+                if (event.which === 1) {
                     background = volumesManager.getBackground($scope.slice);
                     if (background) {
                         $(document.body).on('mousemove', mouseMove);
@@ -157,7 +162,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         mouseAction = "windowLevel";
                     }
                 }
-                else if (event.buttons & 2) {
+                else if (event.which === 3) {
                     //right button -> zoom
                     $(document.body).on('mousemove', mouseMove);
                     $(document.body).on('mouseup', mouseUp);
@@ -165,8 +170,9 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     mouseAction = "zoom";
                     event.preventDefault();
                     event.stopImmediatePropagation();
+                    $(document).delegate("contextmenu",preventDefault);
                 }
-                else if (event.buttons & 4) {
+                else if (event.which === 2) {
                     //middle button ->translation
                     $(document.body).on('mousemove', mouseMove);
                     $(document.body).on('mouseup', mouseUp);
@@ -191,6 +197,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 else if (mouseAction === "zoom") {
                     globalZoom = initialZoom * Math.exp(mouse.y/$scope.canvas.height);
                     $scope.repaint();
+                    event.preventDefault();
                 }
                 else if (mouseAction === "translation") {
                     globalOffset.x = initialOffset.x + mouse.x;
@@ -210,6 +217,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     event.preventDefault();
                 }
                 event.stopImmediatePropagation();
+                $(document).undelegate('contextmenu', preventDefault);
             }
 
             function mouseWheel (event) {
