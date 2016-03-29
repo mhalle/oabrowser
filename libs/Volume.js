@@ -356,7 +356,7 @@ THREE.Volume.prototype = {
 
 				positionOffset = ( volume.RASDimensions[ 2 ] - 1 ) / 2;
 				planeMatrix.setPosition( new THREE.Vector3( 0, 0, RASIndex - positionOffset ) );
-                maxIndex = volume.RASDimensions[3]-1;
+                maxIndex = volume.RASDimensions[2]-1;
 				break;
 
 			default :
