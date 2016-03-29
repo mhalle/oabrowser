@@ -115,7 +115,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     var zoom = globalZoom * Math.min(canvas.width/image.width, canvas.height/image.height);
 
                     ctx.save();
-                    ctx.translate(canvas.width/2, canvas.height/2);
+                    ctx.translate(canvas.width/2+globalOffset.x, canvas.height/2+globalOffset.y);
                     if ($scope.sliceId === 'axial') {
 
                         ctx.scale(-1,1);
@@ -199,9 +199,13 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 }
             }
 
-            function mouseUp () {
+            function mouseUp (event) {
                 $(document.body).off('mouseup', mouseUp);
                 $(document.body).off('mousemove', mouseMove);
+                //prevent right click menu
+                if (mouseAction === "zoom") {
+                    event.preventDefault();
+                }
             }
 
             function mouseWheel (event) {
