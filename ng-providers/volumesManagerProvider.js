@@ -99,7 +99,8 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             gui.add( compositingSlices.axial, "index", 0, volume.RASDimensions[2], 1 ).name( "index Axial" ).listen().onChange( function () {compositingSlices.axial.repaint(true);} );
 
         }
-        opacity = treatAsBackground ? 1 : 0.5;
+        //only the first background has a full opacity, the others start with an opacity of 0
+        opacity = treatAsBackground ? (backgrounds.length>1 ? 0 : 1) : 0.5;
         compositingSlices.sagittal.addSlice(sliceSet.x, opacity, treatAsBackground);
         compositingSlices.sagittal.repaint();
         compositingSlices.coronal.addSlice(sliceSet.y, opacity, treatAsBackground);
@@ -216,9 +217,12 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     }
 
     function getBackground (slice) {
-        var background = slice.volumes[0];
-        if (isVolumeABackground(background)) {
-            return background;
+        var volumes = slice.volumes;
+        for (var i = 0; i<volumes.length; i++) {
+            var background = slice.volumes[i];
+            if (isVolumeABackground(background) && slice.getOpacity(background)>0) {
+                return background;
+            }
         }
         return null;
     }
