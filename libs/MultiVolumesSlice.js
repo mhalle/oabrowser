@@ -235,7 +235,7 @@ THREE.MultiVolumesSlice.prototype = {
 
             if (insertInBackground) {
                 this.slices.unshift(slice);
-                this.opacities.unshift(slice);
+                this.opacities.unshift(opacity);
             }
             else {
                 this.slices.push(slice);
