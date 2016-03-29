@@ -217,7 +217,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     event.preventDefault();
                 }
                 event.stopImmediatePropagation();
-                $(document).off('contextmenu', preventDefault);
+                //detach event blocker with a timeout to block 'contextmenu' which happens after mouse up
+                setTimeout(function () {$(document).off('contextmenu', preventDefault);},100);
             }
 
             function mouseWheel (event) {
