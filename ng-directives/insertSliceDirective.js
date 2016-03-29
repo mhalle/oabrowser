@@ -170,7 +170,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     mouseAction = "zoom";
                     event.preventDefault();
                     event.stopImmediatePropagation();
-                    $(document).delegate("contextmenu",preventDefault);
+                    $(document).on("contextmenu",preventDefault);
                 }
                 else if (event.which === 2) {
                     //middle button ->translation
@@ -217,7 +217,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     event.preventDefault();
                 }
                 event.stopImmediatePropagation();
-                $(document).undelegate('contextmenu', preventDefault);
+                $(document).off('contextmenu', preventDefault);
             }
 
             function mouseWheel (event) {
