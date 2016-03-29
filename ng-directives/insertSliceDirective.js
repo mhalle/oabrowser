@@ -155,8 +155,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
             function mouseMove (event) {
                 mouse.x = event.clientX-mousedownPosition.x;
-                mouse.y = event.clientY-mousedownPosition.x;
-                background.window = Math.max(initialWindow + mouse.x,0);
+                mouse.y = event.clientY-mousedownPosition.y;
+                background.window = Math.max(initialWindow + 2*mouse.x,0);
                 background.level = initialLevel+mouse.y;
                 background.repaintAllSlices();
                 volumesManager.repaintCompositingSlices(false);
