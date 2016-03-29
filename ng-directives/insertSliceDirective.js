@@ -12,7 +12,9 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 labelMaps : []
             };
             $scope.volumesManager = volumesManager;
-            var sliceContainer = null;
+            var sliceContainer = null,
+                mousedownPosition = new THREE.Vector2(0,0),
+                mouse = new THREE.Vector2(0,0);
 
             $scope.toggleLink = function () {
                 volumesManager.slicesLinked = !volumesManager.slicesLinked;
@@ -67,6 +69,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         var canvas = document.createElement('canvas');
                         sliceContainer.append(canvas);
                         $scope.canvas = canvas;
+                        $(canvas).on('mousedown', mouseDown);
                     }
                     updateControlsScope();
                     Object.defineProperty($scope.controls, 'index', {
@@ -131,6 +134,27 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
                 }
             };
+
+            function mouseDown (event) {
+                console.log(event);
+                $(document.body).on('mousemove', mouseMove);
+                $(document.body).on('mouseup', mouseUp);
+                mousedownPosition.x = event.clientX;
+                mousedownPosition.y = event.clientY;
+
+
+            }
+
+            function mouseMove (event) {
+                mouse.x = event.clientX-mousedownPosition.x;
+                mouse.y = event.clientY-mousedownPosition.x;
+                console.log(mouse);
+            }
+
+            function mouseUp () {
+                $(document.body).off('mouseup', mouseUp);
+                $(document.body).off('mousemouve', mouseMove);
+            }
 
 
         }
