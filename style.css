@@ -110,3 +110,8 @@ body, html {
 .slice-controls .btn-group.btn-sm.dropdown {
     padding: 0;
 }
+
+[insert-slice] {
+    width: 100%;
+    height: 100%;
+}
