@@ -91,6 +91,7 @@ THREE.MultiVolumesSlice = function( ) {
      * @member {THREE.Mesh} mesh The mesh ready to get used in the scene
      */
     this.mesh = new THREE.Mesh( this.geometry, material );
+    this.mesh.renderOrder = 0;
     /**
      * @member {Boolean} geometryNeedsUpdate If set to true, updateGeometry will be triggered at the next repaint
      */

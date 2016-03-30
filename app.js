@@ -72,6 +72,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
             var mesh = new THREE.Mesh(geometry, material);
             mesh.name = item.annotation && item.annotation.name || '';
+            mesh.renderOrder = 1;
             meshesList.push(mesh);
             item.mesh = mesh;
             mesh.atlasStructure = item;
