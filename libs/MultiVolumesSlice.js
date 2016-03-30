@@ -53,8 +53,11 @@ THREE.MultiVolumesSlice = function( ) {
         },
         set : function( value ) {
 
-            this.slices.forEach(slice => slice.index = value);
-            this.geometryNeedsUpdate = true;
+            value = Number(value);
+            if (!isNaN(value)) {
+                this.slices.forEach(slice => slice.index = value);
+                this.geometryNeedsUpdate = true;
+            }
             return value;
 
         }
