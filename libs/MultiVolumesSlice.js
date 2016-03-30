@@ -137,6 +137,7 @@ THREE.MultiVolumesSlice.prototype = {
 
         if ( this.geometryNeedsUpdate ) {
 
+            this.slices[0].updateGeometry();
             this.updateGeometry();
 
         }
