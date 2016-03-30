@@ -222,7 +222,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             }
 
             function mouseWheel (event) {
-                $scope.slice.index += event.deltaY;
+                $scope.slice.index += Number(event.deltaY);
                 $scope.slice.repaint(true);
             }
 
