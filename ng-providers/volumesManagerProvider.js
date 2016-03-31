@@ -102,11 +102,11 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         //only the first background has a full opacity, the others start with an opacity of 0
         opacity = treatAsBackground ? (backgrounds.length>1 ? 0 : 1) : 0.5;
         compositingSlices.sagittal.addSlice(sliceSet.x, opacity, treatAsBackground);
-        compositingSlices.sagittal.repaint();
+        compositingSlices.sagittal.repaint(true);
         compositingSlices.coronal.addSlice(sliceSet.y, opacity, treatAsBackground);
-        compositingSlices.coronal.repaint();
+        compositingSlices.coronal.repaint(true);
         compositingSlices.axial.addSlice(sliceSet.z, opacity, treatAsBackground);
-        compositingSlices.axial.repaint();
+        compositingSlices.axial.repaint(true);
     }
 
     function addVolume (volume, datasource, treatAsBackground) {
