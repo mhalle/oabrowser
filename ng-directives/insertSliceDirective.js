@@ -4,7 +4,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
         restrict: 'A',
         templateUrl: 'ng-templates/slicePanel.html',
         scope: { sliceId : '=sliceid' },
-        controller: function ( $scope, $element, mainApp, volumesManager ) {
+        controller: function ( $scope, $element, $rootScope, mainApp, volumesManager ) {
 
             $scope.sliceId = $element.attr('sliceid');
             $scope.controls = {
@@ -90,6 +90,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                             $scope.slice.repaint(true);
                         }
                     });
+                    $rootScope.$broadcast('ui.layout.forcedUpdate');
                     $scope.slice.onAddSlice(null, updateControlsScope);
                     $scope.slice.onRemoveSlice(null, updateControlsScope);
                     $scope.slice.onRepaint(null, $scope.repaint);

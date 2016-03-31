@@ -4,7 +4,7 @@
  * UI.Layout
  */
 angular.module('ui.layout', [])
-  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', '$timeout', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, $timeout, LayoutContainer) {
+  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', '$timeout', '$rootScope', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, $timeout, $rootScope, LayoutContainer) {
     var ctrl = this;
     var opts = angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options));
     var numOfSplitbars = 0;
@@ -40,6 +40,12 @@ angular.module('ui.layout', [])
       console.log(ctrl.containers);
       ctrl.updateDisplay();
     };
+
+      $rootScope.$on('ui.layout.forcedUpdate', function () {
+          setTimeout(function () {
+              ctrl.updateDisplay();
+          },10);
+      });
 
     var debounceEvent;
     function draw() {
