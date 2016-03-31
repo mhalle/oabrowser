@@ -451,14 +451,10 @@ angular.module('ui.layout', [])
 
         function onResize() {
           $timeout(function () {
-              //scope.$apply(function() {
             ctrl.updateDisplay();
-          //});
           }, 10);
           $timeout(function () {
-              //scope.$apply(function() {
             ctrl.updateDisplay();
-          //});
           }, 20);
         }
 
