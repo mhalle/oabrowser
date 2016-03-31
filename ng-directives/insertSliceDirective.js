@@ -33,6 +33,16 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 updateControlsScope();
             };
 
+            $scope.toggleMeshVisibility = function ($event) {
+                var value = !$scope.slice.mesh.visible;
+                if ($event.altKey) {
+                    volumesManager.setCompositingSlicesVisibility(value);
+                }
+                else {
+                    $scope.slice.mesh.visible = value;
+                }
+            };
+
             function updateControlsScope () {
 
                 var volumes = $scope.slice.volumes,

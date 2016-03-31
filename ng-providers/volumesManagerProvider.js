@@ -233,6 +233,12 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         compositingSlices.sagittal.repaint(all);
     }
 
+    function setCompositingSlicesVisibity (value) {
+        compositingSlices.axial.mesh.visible = value;
+        compositingSlices.coronal.mesh.visible = value;
+        compositingSlices.sagittal.mesh.visible = value;
+    }
+
 
 
 
@@ -244,6 +250,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     singleton.isBackground = isBackground;
     singleton.getBackground = getBackground;
     singleton.repaintCompositingSlices = repaintCompositingSlices;
+    singleton.setCompositingSlicesVisibity = setCompositingSlicesVisibity;
 
     //methods accessible from outside by injecting volumesManager
     this.$get = function () {
