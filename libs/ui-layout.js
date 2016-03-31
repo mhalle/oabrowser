@@ -449,15 +449,17 @@ angular.module('ui.layout', [])
         });
 
         function onResize() {
-          scope.$apply(function() {
+          setTimeout(function () {
+              scope.$apply(function() {
             ctrl.updateDisplay();
           });
+          }, 10);
         }
 
-        angular.element($window).bind('resize', onResize);
+        angular.element($window).on('resize', onResize);
 
         scope.$on('$destroy', function() {
-          angular.element($window).unbind('resize', onResize);
+          angular.element($window).off('resize', onResize);
         });
       }
     };
