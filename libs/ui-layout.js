@@ -440,7 +440,7 @@ angular.module('ui.layout', [])
     return ctrl;
   }])
 
-  .directive('uiLayout', ['$window', function($window) {
+  .directive('uiLayout', ['$window', '$timeout', function($window, $timeout) {
     return {
       restrict: 'AE',
       controller: 'uiLayoutCtrl',
@@ -450,11 +450,16 @@ angular.module('ui.layout', [])
         });
 
         function onResize() {
-          setTimeout(function () {
-              scope.$apply(function() {
+          $timeout(function () {
+              //scope.$apply(function() {
             ctrl.updateDisplay();
-          });
+          //});
           }, 10);
+          $timeout(function () {
+              //scope.$apply(function() {
+            ctrl.updateDisplay();
+          //});
+          }, 20);
         }
 
         angular.element($window).on('resize', onResize);
