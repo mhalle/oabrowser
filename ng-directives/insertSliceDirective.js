@@ -164,7 +164,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 mousedownPosition.x = event.clientX;
                 mousedownPosition.y = event.clientY;
                 if (event.which === 1) {
-                    background = volumesManager.getBackground($scope.slice);
+                    background = $scope.slice.getBackground();
                     if (background) {
                         $(document.body).on('mousemove', mouseMove);
                         $(document.body).on('mouseup', mouseUp);

@@ -277,7 +277,7 @@ THREE.MultiVolumesSlice.prototype = {
 
     /**
      * @member {Function} setOpacity change the opacity of the given slice
-     * @param {THREE.VolumeSlice} slice   The slice to remove
+     * @param {THREE.VolumeSlice} slice   The slice or volume whose opacity will be changed
      * @param {Number} opacity  new value
      * @memberof THREE.MultiVolumesSlice
      */
@@ -300,10 +300,10 @@ THREE.MultiVolumesSlice.prototype = {
     },
 
     /**
-     * @member {Function} setOpacity change the opacity of the given slice
-     * @param {THREE.VolumeSlice} slice   The slice to remove
-     * @param {Number} opacity  new value
+     * @member {Function} getOpacity get the opacity of the given slice
+     * @param {THREE.VolumeSlice} slice   The slice or volume
      * @memberof THREE.MultiVolumesSlice
+     * @returns {Number} the opacity
      */
     getOpacity : function (slice) {
         var index;
@@ -321,6 +321,22 @@ THREE.MultiVolumesSlice.prototype = {
         }
         return undefined;
 
+    },
+
+    /**
+     * @member {Function} getBackground get the background of this multislice
+     * @memberof THREE.MultiVolumesSlice
+     * @returns {THREE.Volume} the background or null if none is found
+     */
+    getBackground : function () {
+        var volumes = this.volumes;
+        for (var i = 0; i<volumes.length; i++) {
+            var background = volumes[i];
+            if (background.dataType === 'background' && this.getOpacity(background)>0) {
+                return background;
+            }
+        }
+        return null;
     }
 
 };
