@@ -1,4 +1,4 @@
-angular.module('atlasDemo').controller('LayoutController', function($scope, mainApp) {
+angular.module('atlasDemo').controller('LayoutController', function($scope, $timeout, mainApp) {
     $scope.config = {
         flow: 'column'
     };
@@ -29,6 +29,12 @@ angular.module('atlasDemo').controller('LayoutController', function($scope, main
 
     $scope.$on('ui.layout.resize', function () {
         mainApp.emit('ui.layout.resize', $scope);
+    });
+
+    mainApp.on('ui.layout.forcedUpdate', function () {
+        $timeout(function () {
+            $scope.updateDisplay();
+        },10);
     });
 
 });
