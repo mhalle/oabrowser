@@ -102,10 +102,10 @@ body, html {
     vertical-align: middle;
 }
 
-.slice-controls-linked {
+.slice-controls-true {
     color : #5cb85c;
 }
-.slice-controls-unlinked {
+.slice-controls-false {
     color: #d9534f;
 }
 
