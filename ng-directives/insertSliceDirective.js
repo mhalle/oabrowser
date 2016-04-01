@@ -272,6 +272,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
             function mouseUp (event) {
                 $(document.body).off('mouseup', mouseUp);
+                mouseAction = null;
                 //prevent right click menu
                 if (mouseAction === "zoom" || mouseAction === "translation") {
                     event.preventDefault();
