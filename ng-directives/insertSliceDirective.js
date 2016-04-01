@@ -27,7 +27,9 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 mouseAction,
                 canvasOffset,
                 currentMatrix = new THREE.Matrix4(),
-                currentInverseMatrix = new THREE.Matrix4();
+                currentInverseMatrix = new THREE.Matrix4(),
+                e,
+                f;
 
             $scope.toggleLink = function () {
                 volumesManager.slicesLinked = !volumesManager.slicesLinked;
@@ -166,10 +168,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                                   zoom*image.width,
                                   zoom*image.height
                                  );
-                    var e = -zoom*image.width/2;
-                    var f = -zoom*image.height/2;
-                    currentMatrix.set(a, c, 0, e,
-                                      b, d, 0, f,
+                    e = zoom*image.width/2;
+                    f = zoom*image.height/2;
+                    currentMatrix.set(a, c, 0, 0,
+                                      b, d, 0, 0,
                                       0, 0, 1, 0,
                                       0, 0, 0, 1);
                     currentInverseMatrix.getInverse(currentMatrix);
@@ -190,9 +192,11 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             function getIJPosition (x,y) {
                 var pos = new THREE.Vector4(),
                     canvas = $scope.canvas;
-                pos.x = x-canvas.width/2+globalOffset.x;
-                pos.y = y-canvas.height/2+globalOffset.y;
+                pos.x = x-canvas.width/2-globalOffset.x;
+                pos.y = y-canvas.height/2-globalOffset.y;
                 pos.applyMatrix4(currentInverseMatrix);
+                pos.x += e;
+                pos.y += f;
                 return pos;
 
             }
