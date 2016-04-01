@@ -184,8 +184,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         container.appendChild( stats.domElement );
 
         mainApp.on('insertSlice', function (data) {
-            if (!meshesAndSlicesList.includes(data.slice)) {
-                meshesAndSlicesList.push(data.slice);
+            if (!meshesAndSlicesList.includes(data.slice.mesh)) {
+                meshesAndSlicesList.push(data.slice.mesh);
             }
         });
 
