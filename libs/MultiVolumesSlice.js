@@ -349,11 +349,14 @@ THREE.MultiVolumesSlice.prototype = {
     getStructuresAtPosition : function (x,y) {
         var self = this;
         //get only the label map slices that are displayed
-        var labelSlices = this.slices.filer((slice,i) => slice.volume.dataType === 'label' && self.opacities[i]);
+        var labelSlices = this.slices.filter((slice,i) => slice.volume.dataType === 'label' && self.opacities[i]);
         //return the structures
         return labelSlices.map(slice => {
             var i = Math.round(x*slice.canvasBuffer.width/slice.canvas.width);
             var j = Math.round(y*slice.canvasBuffer.height/slice.canvas.height);
+            if (i>= slice.iLength || i<0 || j>= slice.jLength || j<0) {
+                return undefined;
+            }
             return slice.volume.reverseMapping[slice.volume.data[slice.sliceAccess(i,j)]];
         });
     }
