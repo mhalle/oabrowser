@@ -205,6 +205,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     background = $scope.slice.getBackground();
                     if (background) {
                         $(document.body).on('mouseup', mouseUp);
+                        $(document.body).on('mousemove', mouseMoveAction);
                         initialLevel = background.level;
                         initialWindow = background.window;
                         mouseAction = "windowLevel";
@@ -213,6 +214,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 else if (event.which === 3) {
                     //right button -> zoom
                     $(document.body).on('mouseup', mouseUp);
+                    $(document.body).on('mousemove', mouseMoveAction);
                     initialZoom = globalZoom;
                     mouseAction = "zoom";
                     event.preventDefault();
@@ -222,6 +224,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 else if (event.which === 2) {
                     //middle button ->translation
                     $(document.body).on('mouseup', mouseUp);
+                    $(document.body).on('mousemove', mouseMoveAction);
                     initialOffset = globalOffset.clone();
                     mouseAction = "translation";
                     event.preventDefault();
@@ -232,28 +235,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             }
 
             function mouseMove (event) {
-                if (mouseAction) {
-                    mouse.x = event.clientX-mousedownPosition.x;
-                    mouse.y = event.clientY-mousedownPosition.y;
-                    if (mouseAction === "windowLevel") {
-                        background.window = Math.max(initialWindow + 2*mouse.x,0);
-                        background.level = initialLevel+mouse.y;
-                        background.repaintAllSlices();
-                        volumesManager.repaintCompositingSlices(false);
-                    }
-                    else if (mouseAction === "zoom") {
-                        globalZoom = initialZoom * Math.exp(mouse.y/$scope.canvas.height);
-                        $scope.repaint();
-                        event.preventDefault();
-                    }
-                    else if (mouseAction === "translation") {
-                        globalOffset.x = initialOffset.x + mouse.x;
-                        globalOffset.y = initialOffset.y + mouse.y;
-                        $scope.repaint();
-                        event.preventDefault();
-                    }
-                }
-                else {
+
+                if (!mouseAction) {
                     var x = event.clientX-canvasOffset.left,
                         y = event.clientY-canvasOffset.top;
                     var IJ = getIJPosition(x,y);
@@ -267,11 +250,33 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     }
 
                 }
-                event.stopImmediatePropagation();
+            }
+
+            function mouseMoveAction (event) {
+                mouse.x = event.clientX-mousedownPosition.x;
+                mouse.y = event.clientY-mousedownPosition.y;
+                if (mouseAction === "windowLevel") {
+                    background.window = Math.max(initialWindow + 2*mouse.x,0);
+                    background.level = initialLevel+mouse.y;
+                    background.repaintAllSlices();
+                    volumesManager.repaintCompositingSlices(false);
+                }
+                else if (mouseAction === "zoom") {
+                    globalZoom = initialZoom * Math.exp(mouse.y/$scope.canvas.height);
+                    $scope.repaint();
+                    event.preventDefault();
+                }
+                else if (mouseAction === "translation") {
+                    globalOffset.x = initialOffset.x + mouse.x;
+                    globalOffset.y = initialOffset.y + mouse.y;
+                    $scope.repaint();
+                    event.preventDefault();
+                }
             }
 
             function mouseUp (event) {
                 $(document.body).off('mouseup', mouseUp);
+                $(document.body).off('mousemove', mouseMoveAction);
                 mouseAction = null;
                 //prevent right click menu
                 if (mouseAction === "zoom" || mouseAction === "translation") {
