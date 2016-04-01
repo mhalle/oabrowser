@@ -347,9 +347,8 @@ THREE.MultiVolumesSlice.prototype = {
      * @returns {Array} the structures (can contain undefined)
      */
     getStructuresAtPosition : function (x,y) {
-        var self = this;
-        //get only the label map slices that are displayed
-        var labelSlices = this.slices.filter((slice,i) => slice.volume.dataType === 'label' && self.opacities[i]);
+        //get only the label map
+        var labelSlices = this.slices.filter(slice => slice.volume.dataType === 'label');
         //return the structures
         return labelSlices.map(slice => {
             var i = Math.round(x*slice.canvasBuffer.width/slice.canvas.width);
