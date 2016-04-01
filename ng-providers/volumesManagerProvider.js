@@ -234,7 +234,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
 
 
 
-
+    singleton.volumes = volumes;
     singleton.setScene = setScene;
     singleton.loadVolume = loadVolume;
     singleton.toggleVisibility = toggleVisibilityInCompositing;
