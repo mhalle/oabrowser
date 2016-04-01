@@ -337,6 +337,25 @@ THREE.MultiVolumesSlice.prototype = {
             }
         }
         return null;
+    },
+
+    /**
+     * @member {Function} getStructuresAtPosition Returns a list of structures from the labels map stacked at this position
+     * @param {Number} x
+     * @param {Number} y
+     * @memberof THREE.MultiVolumesSlice
+     * @returns {Array} the structures (can contain undefined)
+     */
+    getStructuresAtPosition : function (x,y) {
+        var self = this;
+        //get only the label map slices that are displayed
+        var labelSlices = this.slices.filer((slice,i) => slice.volume.dataType === 'label' && self.opacities[i]);
+        //return the structures
+        return labelSlices.map(slice => {
+            var i = Math.round(x*slice.canvasBuffer.width/slice.canvas.width);
+            var j = Math.round(y*slice.canvasBuffer.height/slice.canvas.height);
+            return slice.volume.reverseMapping[slice.volume.data[slice.sliceAccess(i,j)]];
+        });
     }
 
 };

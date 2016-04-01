@@ -26,7 +26,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 globalOffset = new THREE.Vector2(0,0),
                 mouseAction,
                 canvasOffset,
-                currentMatrix = new THREE.Matrix4();
+                currentMatrix = new THREE.Matrix4(),
+                currentInverseMatrix = new THREE.Matrix4();
 
             $scope.toggleLink = function () {
                 volumesManager.slicesLinked = !volumesManager.slicesLinked;
@@ -129,27 +130,33 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     var ctx = canvas.getContext('2d');
                     canvasOffset = $(canvas).offset();
 
+                    var a = 0,
+                        b = 0,
+                        c = 0,
+                        d = 0;
+
                     var zoom = globalZoom * Math.min(canvas.width/image.width, canvas.height/image.height);
 
                     ctx.save();
-                    currentMatrix.identity();
                     ctx.translate(canvas.width/2+globalOffset.x, canvas.height/2+globalOffset.y);
                     if ($scope.sliceId === 'axial') {
 
                         ctx.scale(-1,1);
-                        currentMatrix.scale(new THREE.Vector4(-zoom,zoom,1,1));
+                        a = -zoom;
+                        d = zoom;
 
                     } else if ($scope.sliceId === 'coronal') {
 
                         ctx.scale(-1,-1);
-                        currentMatrix.scale(new THREE.Vector4(-zoom,-zoom,1,1));
+                        a = -zoom;
+                        d = -zoom;
 
                     } else if ($scope.sliceId === 'sagittal') {
 
                         ctx.rotate(Math.PI/2);
-                        currentMatrix.multiply((new THREE.Matrix4()).makeRotationZ(Math.PI/2));
                         ctx.scale(1,-1);
-                        currentMatrix.scale(new THREE.Vector4(zoom,-zoom,1,1));
+                        c = -zoom;
+                        d = -zoom;
 
                     }
 
@@ -159,12 +166,15 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                                   zoom*image.width,
                                   zoom*image.height
                                  );
-
-                    currentMatrix.multiply((new THREE.Matrix4()).makeTranslation(
-                        canvas.width/2+globalOffset.x-zoom*image.width/2,
-                        canvas.height/2+globalOffset.y-zoom*image.height/2,
-                        0));
+                    var e = canvas.width/2+globalOffset.x-zoom*image.width/2;
+                    var f = canvas.height/2+globalOffset.y-zoom*image.height/2;
+                    currentMatrix.set(a, c, 0, e,
+                                      b, d, 0, f,
+                                      0, 0, 1, 0,
+                                      0, 0, 0, 1);
+                    currentInverseMatrix = currentMatrix.inverse();
                     console.log($scope.sliceId, currentMatrix);
+
 
                     ctx.restore();
 
@@ -231,6 +241,17 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         $scope.repaint();
                         event.preventDefault();
                     }
+                }
+                else {
+                    var pos = new THREE.Vector4();
+                    pos.x = event.clientX-canvasOffset.x;
+                    pos.y = event.clientY-canvasOffset.y;
+                    var IJ = pos.applyMatrix4(currentInverseMatrix);
+                    var structures = $scope.slice.getStructuresAtPosition(IJ.x, IJ.y);
+                    if (structures[0]) {
+                        mainApp.emit('mouseOverObject', structures[0].mesh);
+                    }
+
                 }
                 event.stopImmediatePropagation();
             }

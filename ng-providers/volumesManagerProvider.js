@@ -56,17 +56,20 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             selector,
             structures = mainApp.atlasStructure.structure,
             length = structures.length,
-            i;
+            i,
+            reverseMapping = {};
 
         for (i = 0; i < length; i++) {
             structure = structures[i];
             selector = findSelector(structure);
             if (selector) {
                 colorTable[selector.dataKey] = structure.renderOptions.color;
+                reverseMapping[selector.dataKey] = structure;
             }
         }
 
         volume.colorMap = colorTable;
+        volume.reverseMapping = reverseMapping;
         return colorTable;
     }
 
