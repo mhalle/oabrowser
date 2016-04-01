@@ -155,8 +155,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
                         ctx.rotate(Math.PI/2);
                         ctx.scale(1,-1);
-                        c = -zoom;
-                        b = -zoom;
+                        c = zoom;
+                        b = zoom;
 
                     }
 
