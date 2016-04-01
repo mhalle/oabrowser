@@ -166,8 +166,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                                   zoom*image.width,
                                   zoom*image.height
                                  );
-                    var e = canvas.width/2+globalOffset.x-zoom*image.width/2;
-                    var f = canvas.height/2+globalOffset.y-zoom*image.height/2;
+                    var e = -zoom*image.width/2;
+                    var f = -zoom*image.height/2;
                     currentMatrix.set(a, c, 0, e,
                                       b, d, 0, f,
                                       0, 0, 1, 0,
@@ -185,6 +185,16 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             function preventDefault (e) {
                 e.preventDefault();
                 return false;
+            }
+
+            function getIJPosition (x,y) {
+                var pos = new THREE.Vector4(),
+                    canvas = $scope.canvas;
+                pos.x = x-canvas.width/2+globalOffset.x;
+                pos.y = y-canvas.height/2+globalOffset.y;
+                pos.applyMatrix4(currentInverseMatrix);
+                return pos;
+
             }
 
             function mouseDown (event) {
@@ -243,10 +253,9 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     }
                 }
                 else {
-                    var pos = new THREE.Vector4();
-                    pos.x = event.clientX-canvasOffset.left;
-                    pos.y = event.clientY-canvasOffset.top;
-                    var IJ = pos.applyMatrix4(currentInverseMatrix);
+                    var x = event.clientX-canvasOffset.left,
+                        y = event.clientY-canvasOffset.top;
+                    var IJ = getIJPosition(x,y);
                     var structures = $scope.slice.getStructuresAtPosition(IJ.x, IJ.y);
                     if (structures[0]) {
                         mainApp.emit('mouseOverObject', structures[0].mesh);
