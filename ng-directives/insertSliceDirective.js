@@ -127,7 +127,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
                     var image = $scope.slice.canvas;
                     var ctx = canvas.getContext('2d');
-                    canvasOffset = $(canvas).$offset();
+                    canvasOffset = $(canvas).offset();
 
                     var zoom = globalZoom * Math.min(canvas.width/image.width, canvas.height/image.height);
 
