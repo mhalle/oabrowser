@@ -172,7 +172,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                                       b, d, 0, f,
                                       0, 0, 1, 0,
                                       0, 0, 0, 1);
-                    currentInverseMatrix = currentMatrix.inverse();
+                    currentInverseMatrix.getInverse(currentMatrix);
                     console.log($scope.sliceId, currentMatrix);
 
 
