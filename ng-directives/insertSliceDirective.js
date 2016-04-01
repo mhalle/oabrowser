@@ -156,7 +156,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         ctx.rotate(Math.PI/2);
                         ctx.scale(1,-1);
                         c = -zoom;
-                        d = -zoom;
+                        b = -zoom;
 
                     }
 
@@ -244,8 +244,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 }
                 else {
                     var pos = new THREE.Vector4();
-                    pos.x = event.clientX-canvasOffset.x;
-                    pos.y = event.clientY-canvasOffset.y;
+                    pos.x = event.clientX-canvasOffset.left;
+                    pos.y = event.clientY-canvasOffset.top;
                     var IJ = pos.applyMatrix4(currentInverseMatrix);
                     var structures = $scope.slice.getStructuresAtPosition(IJ.x, IJ.y);
                     if (structures[0]) {
