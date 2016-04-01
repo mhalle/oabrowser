@@ -261,6 +261,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     if (structures[0]) {
                         mainApp.emit('mouseOverObject', structures[0].mesh);
                     }
+                    else {
+                        //free the breadcrumbs
+                        mainApp.emit('mouseOverObject', null);
+                    }
 
                 }
                 event.stopImmediatePropagation();
