@@ -18,6 +18,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         mouse,
         raycaster,
         meshesList = [],
+        meshesAndSlicesList = [],
         needPickupUpdate,
         resizeTimeout = setTimeout(function () {}),
         gui,
@@ -74,6 +75,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             mesh.name = item.annotation && item.annotation.name || '';
             mesh.renderOrder = 1;
             meshesList.push(mesh);
+            meshesAndSlicesList.push(mesh);
             item.mesh = mesh;
             mesh.atlasStructure = item;
             scene.add(mesh);
@@ -180,6 +182,12 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         stats.domElement.style.position = 'absolute';
         stats.domElement.style.top = '0px';
         container.appendChild( stats.domElement );
+
+        mainApp.on('insertSlice', function (data) {
+            if (!meshesAndSlicesList.includes(data.slice)) {
+                meshesAndSlicesList.push(data.slice);
+            }
+        });
 
         function setResizeTimeout () {
             clearTimeout(resizeTimeout);
@@ -296,11 +304,19 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
             raycaster.setFromCamera( mouse, camera );
 
-            var intersects = raycaster.intersectObjects( meshesList );
+            var intersects = raycaster.intersectObjects( meshesAndSlicesList );
 
             var object = null;
             if (intersects.length > 0) {
                 object = intersects[0].object;
+                //pick up in the 3D slices
+                if (object instanceof THREE.MultiVolumesSlice) {
+                    var point = intersects[0].point;
+                    var structures = volumesManager.getStructuresAtRASPosition(point);
+                    if (structures[0]) {
+                        object = structures[0].mesh;
+                    }
+                }
             }
             mainApp.emit('mouseOverObject', object);
             needPickupUpdate = false;

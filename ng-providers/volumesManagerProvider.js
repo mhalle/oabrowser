@@ -232,6 +232,34 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         compositingSlices.sagittal.mesh.visible = value;
     }
 
+    function getStructuresAtRASPosition (point) {
+        var result = [],
+            volume,
+            pos,
+            label,
+            structure,
+            i;
+        for (i = 0; i < volumes.length; i++) {
+            volume = volumes[i];
+            if (volume.dataType === 'label') {
+                pos = point.clone();
+                pos.x += volume.RASDimensions[0]/2;
+                pos.y += volume.RASDimensions[1]/2;
+                pos.z += volume.RASDimensions[2]/2;
+                pos.applyMatrix4(volume.inverseMatrix);
+                pos.round();
+                label = volume.getData(pos.x, pos.y, pos.z);
+                if (label) {
+                    structure = volume.reverseMapping[label];
+                    if (structure) {
+                        result.push(structure);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
 
 
     singleton.volumes = volumes;
@@ -243,6 +271,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     singleton.isBackground = isBackground;
     singleton.repaintCompositingSlices = repaintCompositingSlices;
     singleton.setCompositingSlicesVisibility = setCompositingSlicesVisibility;
+    singleton.getStructuresAtRASPosition = getStructuresAtRASPosition;
 
     //methods accessible from outside by injecting volumesManager
     this.$get = function () {
