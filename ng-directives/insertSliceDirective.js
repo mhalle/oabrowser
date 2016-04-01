@@ -11,7 +11,9 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 backgrounds : [],
                 labelMaps : []
             };
+
             $scope.volumesManager = volumesManager;
+
             var sliceContainer = null,
                 mousedownPosition = new THREE.Vector2(0,0),
                 mouse = new THREE.Vector2(0,0),
@@ -22,7 +24,9 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 initialZoom,
                 globalZoom = 1,
                 globalOffset = new THREE.Vector2(0,0),
-                mouseAction;
+                mouseAction,
+                canvasOffset,
+                currentMatrix = new THREE.Matrix4();
 
             $scope.toggleLink = function () {
                 volumesManager.slicesLinked = !volumesManager.slicesLinked;
@@ -88,6 +92,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         sliceContainer.append(canvas);
                         $scope.canvas = canvas;
                         $(canvas).on('mousedown', mouseDown);
+                        $(canvas).on('mousemove', mouseMove);
                         $(canvas).on('mousewheel', mouseWheel);
                     }
                     updateControlsScope();
@@ -122,23 +127,29 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
                     var image = $scope.slice.canvas;
                     var ctx = canvas.getContext('2d');
+                    canvasOffset = $(canvas).$offset();
 
                     var zoom = globalZoom * Math.min(canvas.width/image.width, canvas.height/image.height);
 
                     ctx.save();
+                    currentMatrix.identity();
                     ctx.translate(canvas.width/2+globalOffset.x, canvas.height/2+globalOffset.y);
                     if ($scope.sliceId === 'axial') {
 
                         ctx.scale(-1,1);
+                        currentMatrix.scale(new THREE.Vector4(-zoom,zoom,1,1));
 
                     } else if ($scope.sliceId === 'coronal') {
 
                         ctx.scale(-1,-1);
+                        currentMatrix.scale(new THREE.Vector4(-zoom,-zoom,1,1));
 
                     } else if ($scope.sliceId === 'sagittal') {
 
                         ctx.rotate(Math.PI/2);
+                        currentMatrix.multiply((new THREE.Matrix4()).makeRotationZ(Math.PI/2));
                         ctx.scale(1,-1);
+                        currentMatrix.scale(new THREE.Vector4(zoom,-zoom,1,1));
 
                     }
 
@@ -148,6 +159,12 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                                   zoom*image.width,
                                   zoom*image.height
                                  );
+
+                    currentMatrix.multiply((new THREE.Matrix4()).makeTranslation(
+                        canvas.width/2+globalOffset.x-zoom*image.width/2,
+                        canvas.height/2+globalOffset.y-zoom*image.height/2,
+                        0));
+                    console.log($scope.sliceId, currentMatrix);
 
                     ctx.restore();
 
@@ -166,7 +183,6 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 if (event.which === 1) {
                     background = $scope.slice.getBackground();
                     if (background) {
-                        $(document.body).on('mousemove', mouseMove);
                         $(document.body).on('mouseup', mouseUp);
                         initialLevel = background.level;
                         initialWindow = background.window;
@@ -175,7 +191,6 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 }
                 else if (event.which === 3) {
                     //right button -> zoom
-                    $(document.body).on('mousemove', mouseMove);
                     $(document.body).on('mouseup', mouseUp);
                     initialZoom = globalZoom;
                     mouseAction = "zoom";
@@ -185,7 +200,6 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 }
                 else if (event.which === 2) {
                     //middle button ->translation
-                    $(document.body).on('mousemove', mouseMove);
                     $(document.body).on('mouseup', mouseUp);
                     initialOffset = globalOffset.clone();
                     mouseAction = "translation";
@@ -197,32 +211,32 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             }
 
             function mouseMove (event) {
-                mouse.x = event.clientX-mousedownPosition.x;
-                mouse.y = event.clientY-mousedownPosition.y;
-                if (mouseAction === "windowLevel") {
-                    background.window = Math.max(initialWindow + 2*mouse.x,0);
-                    background.level = initialLevel+mouse.y;
-                    background.repaintAllSlices();
-                    volumesManager.repaintCompositingSlices(false);
-                }
-                else if (mouseAction === "zoom") {
-                    globalZoom = initialZoom * Math.exp(mouse.y/$scope.canvas.height);
-                    $scope.repaint();
-                    event.preventDefault();
-                }
-                else if (mouseAction === "translation") {
-                    globalOffset.x = initialOffset.x + mouse.x;
-                    globalOffset.y = initialOffset.y + mouse.y;
-                    $scope.repaint();
-                    event.preventDefault();
-
+                if (mouseAction) {
+                    mouse.x = event.clientX-mousedownPosition.x;
+                    mouse.y = event.clientY-mousedownPosition.y;
+                    if (mouseAction === "windowLevel") {
+                        background.window = Math.max(initialWindow + 2*mouse.x,0);
+                        background.level = initialLevel+mouse.y;
+                        background.repaintAllSlices();
+                        volumesManager.repaintCompositingSlices(false);
+                    }
+                    else if (mouseAction === "zoom") {
+                        globalZoom = initialZoom * Math.exp(mouse.y/$scope.canvas.height);
+                        $scope.repaint();
+                        event.preventDefault();
+                    }
+                    else if (mouseAction === "translation") {
+                        globalOffset.x = initialOffset.x + mouse.x;
+                        globalOffset.y = initialOffset.y + mouse.y;
+                        $scope.repaint();
+                        event.preventDefault();
+                    }
                 }
                 event.stopImmediatePropagation();
             }
 
             function mouseUp (event) {
                 $(document.body).off('mouseup', mouseUp);
-                $(document.body).off('mousemove', mouseMove);
                 //prevent right click menu
                 if (mouseAction === "zoom" || mouseAction === "translation") {
                     event.preventDefault();

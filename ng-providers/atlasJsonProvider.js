@@ -85,10 +85,21 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
 
     function parseColors (structures) {
         var renderOptions;
+        var reverseMapping = {};
         for (var i = 0; i < structures.length; i++) {
             renderOptions = structures[i].renderOptions;
             renderOptions.color = colorToHex(renderOptions.color, renderOptions.opacity);
+            if (!reverseMapping[renderOptions.color]) {
+                reverseMapping[renderOptions.color] = structures[i];
+            }
+            else {
+                console.warn('Several structures share the same color : '+renderOptions.color,
+                             'The two spotted structures are :',
+                             reverseMapping[renderOptions.color],
+                             structures[i]);
+            }
         }
+        return reverseMapping;
     }
 
     function resolveReferences (object) {
@@ -170,7 +181,7 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
         while ((objectToParse = resolveQueue.pop()) && objectToParse) {
             resolveReferences(objectToParse);
         }
-        parseColors(objectsByType.structure);
+        objectsByType.labelReverseMapping = parseColors(objectsByType.structure);
         cleanObjects();
         objectsByType.all = atlasObject;
         return objectsByType;
