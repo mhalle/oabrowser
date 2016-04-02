@@ -74,7 +74,8 @@ THREE.MultiVolumesSlice = function( ) {
     this.listeners = {
         repaint : [],
         addSlice : [],
-        removeSlice : []
+        removeSlice : [],
+        updateGeometry : []
     };
 
     /**
