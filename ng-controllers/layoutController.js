@@ -34,6 +34,7 @@ angular.module('atlasDemo').controller('LayoutController', function($scope, $tim
     mainApp.on('ui.layout.forcedUpdate', function () {
         $timeout(function () {
             $scope.updateDisplay();
+            mainApp.emit('ui.layout.resize');
         },10);
     });
 
