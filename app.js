@@ -369,15 +369,15 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                         objectSelector.addToSelection(object.atlasStructure);
                     }
                 }
-                else if (event.altKey && volumesManager.compostingSlices.axial) {
+                else if (event.altKey && volumesManager.compositingSlices.axial) {
                     var point = intersects[0].point;
                     var offset = volumesManager.volumes[0].RASDimensions;
-                    volumesManager.compostingSlices.sagittal.index = Math.floor(point.x + offset[0]/2);
-                    volumesManager.compostingSlices.sagittal.repaint(true);
-                    volumesManager.compostingSlices.coronal.index = Math.floor(point.y + offset[1]/2);
-                    volumesManager.compostingSlices.coronal.repaint(true);
-                    volumesManager.compostingSlices.axial.index = Math.floor(point.z + offset[2]/2);
-                    volumesManager.compostingSlices.axial.repaint(true);
+                    volumesManager.compositingSlices.sagittal.index = Math.floor(point.x + offset[0]/2);
+                    volumesManager.compositingSlices.sagittal.repaint(true);
+                    volumesManager.compositingSlices.coronal.index = Math.floor(point.y + offset[1]/2);
+                    volumesManager.compositingSlices.coronal.repaint(true);
+                    volumesManager.compositingSlices.axial.index = Math.floor(point.z + offset[2]/2);
+                    volumesManager.compositingSlices.axial.repaint(true);
                 }
                 else {
                     if (object.selected) {
