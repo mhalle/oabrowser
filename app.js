@@ -310,7 +310,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             if (intersects.length > 0) {
                 object = intersects[0].object;
                 //pick up in the 3D slices
-                if (object instanceof THREE.MultiVolumesSlice) {
+                if (object.geometry instanceof THREE.PlaneGeometry) {
                     var point = intersects[0].point;
                     var structures = volumesManager.getStructuresAtRASPosition(point);
                     if (structures[0]) {
