@@ -243,10 +243,10 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             volume = volumes[i];
             if (volume.dataType === 'label') {
                 pos = point.clone();
-                pos.x += volume.RASDimensions[0]/2;
-                pos.y += volume.RASDimensions[1]/2;
-                pos.z += volume.RASDimensions[2]/2;
                 pos.applyMatrix4(volume.inverseMatrix);
+                pos.x += volume.dimensions[0]/2;
+                pos.y += volume.dimensions[1]/2;
+                pos.z += volume.dimensions[2]/2;
                 pos.round();
                 label = volume.getData(pos.x, pos.y, pos.z);
                 if (label) {
