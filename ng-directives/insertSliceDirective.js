@@ -7,6 +7,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
         controller: function ( $scope, $element, mainApp, volumesManager, crosshair ) {
 
             $scope.sliceId = $element.attr('sliceid');
+            $scope.displayCrosshair = false;
             $scope.controls = {
                 backgrounds : [],
                 labelMaps : []
@@ -32,6 +33,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
             $scope.toggleLink = function () {
                 volumesManager.slicesLinked = !volumesManager.slicesLinked;
+            };
+
+            $scope.toggleCrosshair = function ($event) {
+                $scope.displayCrosshair = ! $scope.displayCrosshair;
             };
 
             $scope.toggleVisibility = function (item) {
@@ -174,7 +179,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
 
                     var crosshairIntersection = crosshair.getFixedCrosshair($scope.sliceId);
-                    if (crosshairIntersection) {
+                    if (crosshairIntersection && $scope.displayCrosshair) {
                         ctx.strokeStyle = "#ffef00";
                         ctx.lineWidth = 1;
                         ctx.beginPath();

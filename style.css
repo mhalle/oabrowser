@@ -97,7 +97,7 @@ body, html {
 }
 
 .slice-index-control {
-    width : calc(100% - 90px);
+    width : calc(100% - 135px);
     display: inline-block;
     vertical-align: middle;
 }
