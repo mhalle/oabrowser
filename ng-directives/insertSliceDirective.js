@@ -108,7 +108,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         }
                     });
                     mainApp.emit('ui.layout.forcedUpdate');
-                    mainApp.on('crosshair.positionchanged', $scope.repaint);
+                    mainApp.on('crosshair.positionChanged', $scope.repaint);
                     mainApp.on('sliceControls.visibilityChanged', updateControlsScope);
                     mainApp.on('ui.layout.resize', $scope.repaint);
                     $scope.slice.onAddSlice(null, updateControlsScope);

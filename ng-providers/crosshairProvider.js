@@ -15,8 +15,8 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
             var dimensions = volumesManager.volumes[0].RASDimensions;
             crosshairPosition =  {
                 coronal:[sagittal.index, axial.index],
-                sagittal :[coronal.index, axial.index],
-                axial :[sagittal.index, coronal.index]
+                sagittal :[dimensions[2]-axial.index, dimensions[1]-coronal.index],
+                axial :[sagittal.index, dimensions[1]-coronal.index]
             };
             mainApp.emit('crosshair.positionChanged');
         }
