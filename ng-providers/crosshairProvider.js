@@ -3,7 +3,7 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
     var singleton = {},
         volumesManager = volumesManagerProvider.$get(),
         mainApp = mainAppProvider.$get(),
-        crosshairPosition,
+        crosshairPosition = {},
         needUpdate =true;
 
 
