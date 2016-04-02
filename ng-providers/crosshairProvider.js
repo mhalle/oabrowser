@@ -31,7 +31,7 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
     };
 
     mainApp.on('insertSlice', function (data) {
-        data.slice.onGeometryUpdate(null, computeCrosshairPosition);
+        data.slice.onUpdateGeometry(null, computeCrosshairPosition);
     });
 
 
