@@ -316,6 +316,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                     if (structures[0]) {
                         object = structures[0].mesh;
                     }
+                    else {
+                        object = null;
+                    }
                 }
             }
             mainApp.emit('mouseOverObject', object);
