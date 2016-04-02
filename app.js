@@ -115,8 +115,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         var rootGroups = header.roots;
         rootGroups.map(getMesh);
 
-        console.log(rootGroups);
-
         mainApp.emit('insertTree',rootGroups);
 
         //send a signal to the modal
@@ -191,7 +189,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         function setResizeTimeout () {
             clearTimeout(resizeTimeout);
-            console.log('set resize timeout');
             resizeTimeout = setTimeout(onWindowResize, 100);
         }
 

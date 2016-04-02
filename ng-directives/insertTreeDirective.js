@@ -4,7 +4,6 @@ angular.module('atlasDemo').directive( 'insertTree', function ( $compile ) {
         restrict: 'A',
         scope: { text: '@' },
         controller: function ( $scope, $element, mainApp, objectSelector ) {
-            console.log('event listener registred');
             $scope.select = function (item) {
                 if (item.selected) {
                     objectSelector.removeFromSelection(item);
@@ -15,7 +14,6 @@ angular.module('atlasDemo').directive( 'insertTree', function ( $compile ) {
             };
 
             mainApp.on('insertTree', function (hierarchy) {
-                console.log('event received', hierarchy);
                 var template = document.getElementById('treeListDirective').innerHTML;
                 $scope.data = {
                     root : {members : hierarchy }
