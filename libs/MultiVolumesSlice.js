@@ -193,7 +193,7 @@ THREE.MultiVolumesSlice.prototype = {
             }
 
             this.geometryNeedsUpdate = false;
-            this.listeners.geometryUpdate.map( listener => listener.callback.call(listener.context));
+            this.listeners.updateGeometry.map( listener => listener.callback.call(listener.context));
         }
 
     },
