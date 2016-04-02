@@ -178,12 +178,12 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         ctx.strokeStyle = "#ffef00";
                         ctx.lineWidth = 1;
                         ctx.beginPath();
-                        ctx.moveTo(-zoom*(image.width/2+crosshairIntersection[0]), -zoom*image.height/2);
-                        ctx.lineTo(-zoom*(image.width/2+crosshairIntersection[0]), zoom*image.height/2);
+                        ctx.moveTo(zoom*(-image.width/2+crosshairIntersection[0]), -zoom*image.height/2);
+                        ctx.lineTo(zoom*(-image.width/2+crosshairIntersection[0]), zoom*image.height/2);
                         ctx.stroke();
                         ctx.beginPath();
-                        ctx.moveTo(-zoom*image.width/2, -zoom*(image.height/2+crosshairIntersection[1]));
-                        ctx.lineTo(zoom*image.width/2, -zoom*(image.height/2+crosshairIntersection[1]));
+                        ctx.moveTo(-zoom*image.width/2, zoom*(-image.height/2+crosshairIntersection[1]));
+                        ctx.lineTo(zoom*image.width/2, zoom*(-image.height/2+crosshairIntersection[1]));
                         ctx.stroke();
                     }
 
