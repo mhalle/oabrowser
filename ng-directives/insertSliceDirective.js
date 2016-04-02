@@ -4,7 +4,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
         restrict: 'A',
         templateUrl: 'ng-templates/slicePanel.html',
         scope: { sliceId : '=sliceid' },
-        controller: function ( $scope, $element, mainApp, volumesManager ) {
+        controller: function ( $scope, $element, mainApp, volumesManager, crosshair ) {
 
             $scope.sliceId = $element.attr('sliceid');
             $scope.controls = {
@@ -27,7 +27,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 mouseAction,
                 canvasOffset,
                 currentMatrix = new THREE.Matrix4(),
-                currentInverseMatrix = new THREE.Matrix4();
+                currentInverseMatrix = new THREE.Matrix4(),
+                ctx;
 
             $scope.toggleLink = function () {
                 volumesManager.slicesLinked = !volumesManager.slicesLinked;
@@ -35,7 +36,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
             $scope.toggleVisibility = function (item) {
                 volumesManager.toggleVisibility(item.volume, $scope.slice);
-                updateControlsScope();
+                mainApp.emit('sliceControls.visibilityChanged');
             };
 
             $scope.toggleMeshVisibility = function ($event) {
@@ -107,6 +108,9 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         }
                     });
                     mainApp.emit('ui.layout.forcedUpdate');
+                    mainApp.on('crosshair.positionchanged', $scope.repaint);
+                    mainApp.on('sliceControls.visibilityChanged', updateControlsScope);
+                    mainApp.on('ui.layout.resize', $scope.repaint);
                     $scope.slice.onAddSlice(null, updateControlsScope);
                     $scope.slice.onRemoveSlice(null, updateControlsScope);
                     $scope.slice.onRepaint(null, $scope.repaint);
@@ -114,10 +118,6 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 }
             });
 
-            //set timeout to wait for the scope to be created
-            setTimeout( function () {
-                mainApp.on('ui.layout.resize', $scope.repaint);
-            }, 1000);
 
             $scope.repaint = function () {
 
@@ -127,7 +127,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     canvas.height = sliceContainer.parent().height()-35;
 
                     var image = $scope.slice.canvas;
-                    var ctx = canvas.getContext('2d');
+                    ctx = canvas.getContext('2d');
                     canvasOffset = $(canvas).offset();
 
                     var a = 0,
@@ -172,6 +172,18 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                                       0, 0, 0, 1);
                     currentInverseMatrix.getInverse(currentMatrix);
 
+
+                    var crosshairIntersection = crosshair.getFixedCrosshair($scope.sliceId);
+                    ctx.strokeStyle = "#ffef00";
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(-zoom*(image.width/2+crosshairIntersection[0]), -zoom*image.height/2);
+                    ctx.lineTo(-zoom*(image.width/2+crosshairIntersection[0]), zoom*image.height/2);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(-zoom*image.width/2, -zoom*(image.height/2+crosshairIntersection[1]));
+                    ctx.lineTo(zoom*image.width/2, -zoom*(image.height/2+crosshairIntersection[1]));
+                    ctx.stroke();
 
                     ctx.restore();
 

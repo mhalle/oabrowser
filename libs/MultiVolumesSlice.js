@@ -192,6 +192,7 @@ THREE.MultiVolumesSlice.prototype = {
             }
 
             this.geometryNeedsUpdate = false;
+            this.listeners.geometryUpdate.map( listener => listener.callback.call(listener.context));
         }
 
     },
@@ -229,6 +230,19 @@ THREE.MultiVolumesSlice.prototype = {
     onRemoveSlice : function (context, callback) {
 
         this.listeners.removeSlice.push({callback : callback, context : context});
+
+    },
+
+
+    /**
+     * @member {Function} onUpdateGeometry add a listener to the list of listeners
+     * @param {Object} context
+     * @param {Function} listener
+     * @memberof THREE.MultiVolumesSlice
+     */
+    onUpdateGeometry : function (context, callback) {
+
+        this.listeners.updateGeometry.push({callback : callback, context : context});
 
     },
 
