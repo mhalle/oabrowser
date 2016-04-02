@@ -37,6 +37,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
             $scope.toggleCrosshair = function ($event) {
                 $scope.displayCrosshair = ! $scope.displayCrosshair;
+                $scope.repaint();
             };
 
             $scope.toggleVisibility = function (item) {
