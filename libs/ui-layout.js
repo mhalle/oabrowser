@@ -455,10 +455,8 @@ angular.module('ui.layout', [])
           }, 10);
           $timeout(function () {
             ctrl.updateDisplay();
+            scope.$broadcast('ui.layout.resize');
           }, 20);
-          $timeout(function () {
-            ctrl.updateDisplay();
-          }, 1000);
         }
 
         angular.element($window).on('resize', onResize);
