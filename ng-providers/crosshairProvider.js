@@ -4,7 +4,7 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
         volumesManager = volumesManagerProvider.$get(),
         mainApp = mainAppProvider.$get(),
         crosshairPosition,
-        needUpdate;
+        needUpdate =true;
 
 
     function computeCrosshairPosition () {
