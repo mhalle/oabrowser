@@ -160,6 +160,9 @@ THREE.MultiVolumesSlice.prototype = {
             slice,
             ctx = this.ctx;
 
+        //clean canvas before doing anything
+        ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
+
         for (i = 0; i < this.slices.length; i++) {
             slice = this.slices[i];
             if (this.visibilities[i] && this.opacities[i]>0) {
