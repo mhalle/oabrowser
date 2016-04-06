@@ -147,11 +147,9 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         var sliceSet = {x : sliceX, y : sliceY, z : sliceZ};
         addToCompositingSlices(sliceSet, treatAsBackground);
         if (treatAsBackground && backgrounds.length>1) {
-            toggleVisibilityInCompositing(volume, compositingSlices.axial);
-            if (!singleton.slicesLinked) {
-                toggleVisibilityInCompositing(volume, compositingSlices.coronal);
-                toggleVisibilityInCompositing(volume, compositingSlices.sagittal);
-            }
+            compositingSlices.axial.setVisibility(volume, false);
+            compositingSlices.coronal.setVisibility(volume, false);
+            compositingSlices.sagittal.setVisibility(volume, false);
         }
         slices.push(sliceSet);
 
