@@ -182,7 +182,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     }
 
     function toggleVisibilityInCompositing (volume, slice) {
-        var background = backgrounds.include(volume),
+        var background = backgrounds.includes(volume),
             index = volumes.indexOf(volume),
             visible = slice.getVisibility(volume),
             i;
