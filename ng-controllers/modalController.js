@@ -46,8 +46,8 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
         $scope.safeApply();
     });
 
-    mainApp.on('modal.fileLoaded', function () {
-        $scope.loadedVTKFiles++;
+    mainApp.on('modal.fileLoaded', function (loaded) {
+        $scope.loadedVTKFiles = loaded;
         if ($scope.loadedVTKFiles === $scope.numberOfVTKFiles) {
             $scope.loadingVTK = false;
             $scope.loadingHierarchy = true;

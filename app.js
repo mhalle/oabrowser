@@ -82,7 +82,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             loadedFile++;
 
             //signal to the modal
-            mainApp.emit('modal.fileLoaded');
+            mainApp.emit('modal.fileLoaded', loadedFile);
 
             if (loadedFile === numberOfFilesToLoad) {
                 //put it in an immediate timeout to give the browser the opportunity to refresh the modal
@@ -150,6 +150,11 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         //send the modal a signal to give the number of vtk files to load
         mainApp.emit('modal.JSONLoaded', numberOfFilesToLoad);
+
+        //add this event in case the json is loaded before angular compilation is finished
+        angular.element(document).ready(function () {
+            mainApp.emit('modal.JSONLoaded', numberOfFilesToLoad);
+        });
 
 
         for (i = 0; i<vtkStructures.length; i++) {
