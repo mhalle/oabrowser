@@ -27,7 +27,15 @@ THREE.MultiVolumesSlice = function( ) {
      */
     this.slices = [];
 
+    /**
+     * @member {Array} opacities Hold all the corresponding opacities
+     */
     this.opacities = [];
+
+    /**
+     * @member {Array} visibilities Hold all the corresponding visibilities
+     */
+    this.visibilities = [];
 
     /**
      * @member {Array} volumes Read only : Hold all the volumes associated to the slices
@@ -134,7 +142,7 @@ THREE.MultiVolumesSlice.prototype = {
         if (repaintAll) {
             var multiSlice = this;
             this.slices.forEach(function (slice,i) {
-                if (multiSlice.opacities[i]>0) {
+                if (multiSlice.visibilities[i]>0) {
                     slice.repaint();
                 }
             });
@@ -153,7 +161,7 @@ THREE.MultiVolumesSlice.prototype = {
 
         for (i = 0; i < this.slices.length; i++) {
             slice = this.slices[i];
-            if (this.opacities[i]>0) {
+            if (this.visibilities[i] && this.opacities[i]>0) {
                 ctx.globalAlpha = this.opacities[i];
                 ctx.drawImage(slice.canvas,0,0);
             }
@@ -263,10 +271,12 @@ THREE.MultiVolumesSlice.prototype = {
             if (insertInBackground) {
                 this.slices.unshift(slice);
                 this.opacities.unshift(opacity);
+                this.visibilities.unshift(true);
             }
             else {
                 this.slices.push(slice);
                 this.opacities.push(opacity);
+                this.visibilities.push(true);
             }
 
             this.listeners.addSlice.map( listener => listener.callback.call(listener.context, slice));
@@ -332,6 +342,54 @@ THREE.MultiVolumesSlice.prototype = {
             index = this.volumes.indexOf(slice);
             if (index > -1) {
                 return this.opacities[index];
+            }
+        }
+        return undefined;
+
+    },
+
+    /**
+     * @member {Function} setVisibility change the visibility of the given slice or volume
+     * @param {THREE.VolumeSlice} slice   The slice or volume whose visibility will be changed
+     * @param {Number} visibility  new value
+     * @memberof THREE.MultiVolumesSlice
+     */
+    setVisibility : function (slice, visibility) {
+
+        var index;
+        if (slice instanceof THREE.VolumeSlice) {
+            index = this.slices.indexOf(slice);
+            if (index > -1) {
+                this.visibilities[index] = visibility;
+            }
+        }
+        else if (slice instanceof THREE.Volume) {
+            index = this.volumes.indexOf(slice);
+            if (index > -1) {
+                this.visibilities[index] = visibility;
+            }
+        }
+
+    },
+
+    /**
+     * @member {Function} getVisibility get the visibility of the given slice or volume
+     * @param {THREE.VolumeSlice} slice   The slice or volume
+     * @memberof THREE.MultiVolumesSlice
+     * @returns {Number} the visibility
+     */
+    getVisibility : function (slice) {
+        var index;
+        if (slice instanceof THREE.VolumeSlice) {
+            index = this.slices.indexOf(slice);
+            if (index > -1) {
+                return this.visibilities[index];
+            }
+        }
+        else if (slice instanceof THREE.Volume) {
+            index = this.volumes.indexOf(slice);
+            if (index > -1) {
+                return this.visibilities[index];
             }
         }
         return undefined;

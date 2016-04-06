@@ -71,7 +71,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 for (var i = 0; i < volumesDatasource.length; i++) {
                     datasource = volumesDatasource[i];
                     match = datasource.source.match(nameRegexp);
-                    visible = $scope.slice.getOpacity(datasource.volume) > 0;
+                    visible = $scope.slice.getVisibility(datasource.volume);
                     object = {
                         name : match[1],
                         visible : visible,
@@ -115,7 +115,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     });
                     mainApp.emit('ui.layout.forcedUpdate');
                     mainApp.on('crosshair.positionChanged', $scope.repaint);
-                    mainApp.on('sliceControls.visibilityChanged', updateControlsScope);
+                    mainApp.on('sliceControls.visibilityChanged', function () {
+                        updateControlsScope();
+                        $scope.repaint();
+                    });
                     mainApp.on('ui.layout.resize', $scope.repaint);
                     $scope.slice.onAddSlice(null, updateControlsScope);
                     $scope.slice.onRemoveSlice(null, updateControlsScope);

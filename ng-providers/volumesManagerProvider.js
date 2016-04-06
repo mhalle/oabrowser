@@ -182,36 +182,32 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     }
 
     function toggleVisibilityInCompositing (volume, slice) {
-        var background = backgrounds.includes(volume);
-        var opacity  = background ? 1 : 0.5;
-        var index = volumes.indexOf(volume);
-        var visible = slice.getOpacity(volume)>0;
-        opacity = visible ? 0 : opacity;
-        var i;
+        var background = backgrounds.include(volume),
+            index = volumes.indexOf(volume),
+            visible = slice.getVisibility(volume),
+            i;
 
         if (singleton.slicesLinked) {
             if (background) {
                 for (i = 0; i < backgrounds.length; i++) {
-                    compositingSlices.axial.setOpacity(backgrounds[i], 0);
-                    compositingSlices.coronal.setOpacity(backgrounds[i], 0);
-                    compositingSlices.sagittal.setOpacity(backgrounds[i], 0);
+                    compositingSlices.axial.setVisibility(backgrounds[i], false);
+                    compositingSlices.coronal.setVisibility(backgrounds[i], false);
+                    compositingSlices.sagittal.setVisibility(backgrounds[i], false);
                 }
             }
-            compositingSlices.axial.setOpacity(slices[index].z, opacity);
-            compositingSlices.coronal.setOpacity(slices[index].y, opacity);
-            compositingSlices.sagittal.setOpacity(slices[index].x, opacity);
-            compositingSlices.axial.repaint();
-            compositingSlices.coronal.repaint();
-            compositingSlices.sagittal.repaint();
+            compositingSlices.axial.setVisibility(slices[index].z, !visible);
+            compositingSlices.coronal.setVisibility(slices[index].y, !visible);
+            compositingSlices.sagittal.setVisibility(slices[index].x, !visible);
+            repaintCompositingSlices(true);
         }
         else {
             if (background) {
                 for (i = 0; i < backgrounds.length; i++) {
-                    slice.setOpacity(backgrounds[i], 0);
+                    slice.setVisibility(backgrounds[i], false);
                 }
             }
-            slice.setOpacity(slices[index][slice.axis], opacity);
-            slice.repaint();
+            slice.setVisibility(slices[index][slice.axis], !visible);
+            slice.repaint(true);
         }
     }
 
