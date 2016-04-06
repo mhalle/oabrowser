@@ -154,6 +154,8 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
 
         slices.push(sliceSet);
 
+        mainApp.emit('volumesManager.volumeAdded');
+
 
     }
 

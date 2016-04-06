@@ -121,6 +121,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     mainApp.on('crosshair.positionChanged', $scope.repaint);
                     mainApp.on('sliceControls.visibilityChanged', update);
                     mainApp.on('ui.layout.resize', $scope.repaint);
+                    mainApp.on('volumesManager.volumeAdded', update);
                     $scope.slice.onAddSlice(null, update);
                     $scope.slice.onRemoveSlice(null, update);
                     $scope.slice.onRepaint(null, $scope.repaint);
