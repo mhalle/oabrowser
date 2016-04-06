@@ -87,6 +87,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
 
             }
+            function update() {
+                updateControlsScope();
+                $scope.repaint();
+            }
 
             mainApp.on('insertSlice', function (data) {
                 //we are expecting data to hold two properties :
@@ -115,13 +119,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     });
                     mainApp.emit('ui.layout.forcedUpdate');
                     mainApp.on('crosshair.positionChanged', $scope.repaint);
-                    mainApp.on('sliceControls.visibilityChanged', function () {
-                        updateControlsScope();
-                        $scope.repaint();
-                    });
+                    mainApp.on('sliceControls.visibilityChanged', update);
                     mainApp.on('ui.layout.resize', $scope.repaint);
-                    $scope.slice.onAddSlice(null, updateControlsScope);
-                    $scope.slice.onRemoveSlice(null, updateControlsScope);
+                    $scope.slice.onAddSlice(null, update);
+                    $scope.slice.onRemoveSlice(null, update);
                     $scope.slice.onRepaint(null, $scope.repaint);
                     $scope.repaint();
                 }

@@ -142,7 +142,7 @@ THREE.MultiVolumesSlice.prototype = {
         if (repaintAll) {
             var multiSlice = this;
             this.slices.forEach(function (slice,i) {
-                if (multiSlice.visibilities[i]>0) {
+                if (multiSlice.visibilities[i]) {
                     slice.repaint();
                 }
             });
@@ -150,7 +150,8 @@ THREE.MultiVolumesSlice.prototype = {
 
         if ( this.geometryNeedsUpdate ) {
 
-            this.slices[0].updateGeometry();
+            this.slices[0].geometryNeedsUpdate = true;
+            this.slices[0].repaint();
             this.updateGeometry();
 
         }
