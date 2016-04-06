@@ -105,11 +105,16 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         //only the first background has a full opacity, the others start with an opacity of 0
         opacity = treatAsBackground ? 1 : 0.5;
         compositingSlices.sagittal.addSlice(sliceSet.x, opacity, treatAsBackground);
-        compositingSlices.sagittal.repaint(true);
         compositingSlices.coronal.addSlice(sliceSet.y, opacity, treatAsBackground);
-        compositingSlices.coronal.repaint(true);
         compositingSlices.axial.addSlice(sliceSet.z, opacity, treatAsBackground);
-        compositingSlices.axial.repaint(true);
+
+        if (treatAsBackground && backgrounds.length>1) {
+            compositingSlices.axial.setVisibility(sliceSet.z, false);
+            compositingSlices.coronal.setVisibility(sliceSet.y, false);
+            compositingSlices.sagittal.setVisibility(sliceSet.x, false);
+        }
+
+        repaintCompositingSlices(true);
     }
 
     function addVolume (volume, datasource, treatAsBackground) {
@@ -146,11 +151,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
 
         var sliceSet = {x : sliceX, y : sliceY, z : sliceZ};
         addToCompositingSlices(sliceSet, treatAsBackground);
-        if (treatAsBackground && backgrounds.length>1) {
-            compositingSlices.axial.setVisibility(volume, false);
-            compositingSlices.coronal.setVisibility(volume, false);
-            compositingSlices.sagittal.setVisibility(volume, false);
-        }
+
         slices.push(sliceSet);
 
 
