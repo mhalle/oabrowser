@@ -64,9 +64,15 @@ body, html {
 
 #gui-container {
     position: absolute;
-    top: 50px;
-    left: 5px;
+    top: 0px;
+    left: 0px;
     z-index: 100;
+}
+
+div#stats {
+    bottom: 0px !important;
+    right: 0px !important;
+    top: inherit !important;
 }
 
 #centerContainer {
