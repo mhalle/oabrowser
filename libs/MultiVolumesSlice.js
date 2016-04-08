@@ -94,11 +94,18 @@ THREE.MultiVolumesSlice = function( ) {
 	 */
     this.canvas = document.createElement( 'canvas' );
 
+    this.alphaCanvas = document.createElement( 'canvas' );
+
 
     var canvasMap = new THREE.Texture( this.canvas );
     canvasMap.minFilter = THREE.LinearFilter;
     canvasMap.wrapS = canvasMap.wrapT = THREE.ClampToEdgeWrapping;
-    var material = new THREE.MeshBasicMaterial( { map: canvasMap, side: THREE.DoubleSide, transparent : true } );
+
+    var alphaCanvasMap = new THREE.Texture( this.alphaCanvas );
+    alphaCanvasMap.minFilter = THREE.LinearFilter;
+    alphaCanvasMap.wrapS = alphaCanvasMap.wrapT = THREE.ClampToEdgeWrapping;
+
+    var material = new THREE.MeshBasicMaterial( { map: canvasMap, alphaMap: alphaCanvasMap, side: THREE.DoubleSide, transparent : true, alphaTest : 0.01 } );
     /**
      * @member {THREE.Mesh} mesh The mesh ready to get used in the scene
      */
@@ -171,7 +178,18 @@ THREE.MultiVolumesSlice.prototype = {
             }
 
         }
+        var imageData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        var alphaCtx = this.alphaCanvas.getContext('2d');
+        var alphaImageData = alphaCtx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        for (i = 0; i < alphaImageData.length; i++) {
+            alphaImageData[i] = imageData[i+3];
+            alphaImageData[i+1] = imageData[i+3];
+            alphaImageData[i+2] = imageData[i+3];
+            alphaImageData[i+3] = imageData[i+3];
+            i = i + 4;
+        }
 
+        this.mesh.material.alphaMap.needsUpdate = true;
         this.mesh.material.map.needsUpdate = true;
 
         this.listeners.repaint.map( listener => listener.callback.call(listener.context));
@@ -192,6 +210,9 @@ THREE.MultiVolumesSlice.prototype = {
             this.canvas.width = mainSlice.canvas.width;
             this.canvas.height = mainSlice.canvas.height;
             this.ctx = this.canvas.getContext( '2d' );
+
+            this.alphaCanvas.width = mainSlice.canvas.width;
+            this.alphaCanvas.height = mainSlice.canvas.height;
 
             this.geometry = mainSlice.geometry;
 
