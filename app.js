@@ -288,6 +288,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             menu.add(lightKit.longitude, id, -90,90).name(id+' latitude').onChange(function(){lightKit.updatePosition();});
         }
 
+        gui.close();
         setupInset();
 
 
