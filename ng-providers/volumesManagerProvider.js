@@ -37,6 +37,9 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             box.applyMatrix(volume.matrix);
             scene.add( cube );
             cubeHelper = box;
+            var gui = mainApp.gui;
+            box.visible = false;
+            gui.add(box, 'visible').name('Cube Helper');
         }
     }
 
