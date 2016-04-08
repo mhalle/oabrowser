@@ -29,7 +29,7 @@ function LightKit ( camera, controls ) {
 
 
 
-    this.intensity = 1;
+    this.intensity = 0.3;
 
     this.ratio = {
         key : 1,
@@ -164,7 +164,7 @@ LightKit.prototype = {
             inf = Math.floor(i),
             sup = Math.min(63,Math.ceil(i)),
             frac = i-inf,
-            int = Math.round(255*((1-frac)*this.warmthTable[4*inf+3]+frac*this.warmthTable[4*sup+3]));
+            int = (1-frac)*this.warmthTable[4*inf+3]+frac*this.warmthTable[4*sup+3];
         return 1/int;
     },
 

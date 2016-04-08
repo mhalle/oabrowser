@@ -267,6 +267,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         gui.addColor( objectSelector, 'highlightMeshColor').name('Selection Color');
         mainApp.gui = gui;
 
+        gui.add(lightKit, 'intensity',0,1).name('Light Intensity');
+
         setupInset();
 
 

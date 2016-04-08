@@ -79,6 +79,7 @@
         "Stats" : false,
         "jQuery" : false,
         "$" : false,
-        "HierarchyGroup" : false
+        "HierarchyGroup" : false,
+        "LightKit" : false
     }
 }
