@@ -240,11 +240,17 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         // light
 
+        /*
+
         var dirLight = new THREE.DirectionalLight( 0xffffff );
         dirLight.position.set( 200, 200, 1000 ).normalize();
 
         camera.add( dirLight );
         camera.add( dirLight.target );
+        */
+
+        var lightKit = new LightKit(camera, controls);
+
 
         //fetch atlas structure
         jQuery.ajax({
