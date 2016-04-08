@@ -267,7 +267,26 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         gui.addColor( objectSelector, 'highlightMeshColor').name('Selection Color');
         mainApp.gui = gui;
 
-        gui.add(lightKit, 'intensity',0,0.02).name('Light Intensity').onChange(function () {lightKit.updateIntensity();});
+        var lightKitGui = gui.addFolder('LightKit');
+
+        lightKitGui.add(lightKit, 'intensity',0,0.02).name('Light Intensity').onChange(function () {lightKit.updateIntensity();});
+        var menu = lightKitGui.addFolder('Warmth');
+        var id;
+        for (id in lightKit.lights) {
+            menu.add(lightKit.warmth, id, 0,1).name(id+' warmth').onChange(function(){lightKit.updateColor();});
+        }
+        menu = lightKitGui.addFolder('Intensity Ratio');
+        for (id in lightKit.lights) {
+            menu.add(lightKit.ratio, id, 1,10).name(id+' intensity ratio').onChange(function(){lightKit.updateIntensity();});
+        }
+        menu = lightKitGui.addFolder('Longitude');
+        for (id in lightKit.lights) {
+            menu.add(lightKit.longitude, id, -180,180).name(id+' longitude').onChange(function(){lightKit.updatePosition();});
+        }
+        menu = lightKitGui.addFolder('Latitude');
+        for (id in lightKit.lights) {
+            menu.add(lightKit.longitude, id, -90,90).name(id+' latitude').onChange(function(){lightKit.updatePosition();});
+        }
 
         setupInset();
 
