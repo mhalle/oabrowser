@@ -2,6 +2,13 @@
 This repository hosts the files for an atlas viewer application.
 
 This is not a standalone application. You need to provide an atlas structure JSON file in the config.js file.
+To achieve that you can first run the mrmlToJson script which you will find [here](https://github.com/stity/mrmlToJson).
+
+If you are using any of these repositories :
+* [spl-brain-atlas](https://github.com/stity/spl-brain-atlas)
+* [spl-knee-atlas](https://github.com/stity/spl-knee-atlas)
+* [spl-abdominal-atlas](https://github.com/stity/spl-abdominal-atlas)
+You need to run the mrmlToJson module first.
 
 To use the viewer :
 * go in atlas repository
