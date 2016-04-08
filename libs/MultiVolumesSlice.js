@@ -178,16 +178,18 @@ THREE.MultiVolumesSlice.prototype = {
             }
 
         }
-        var imageData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        var imageData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height).data;
         var alphaCtx = this.alphaCanvas.getContext('2d');
         var alphaImageData = alphaCtx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        var alphaData = alphaImageData.data;
         for (i = 0; i < alphaImageData.length; i++) {
-            alphaImageData[i] = imageData[i+3];
-            alphaImageData[i+1] = imageData[i+3];
-            alphaImageData[i+2] = imageData[i+3];
-            alphaImageData[i+3] = imageData[i+3];
+            alphaData[i] = imageData[i+3];
+            alphaData[i+1] = imageData[i+3];
+            alphaData[i+2] = imageData[i+3];
+            alphaData[i+3] = imageData[i+3];
             i = i + 4;
         }
+        alphaCtx.putImageData(alphaImageData, 0, 0);
 
         this.mesh.material.alphaMap.needsUpdate = true;
         this.mesh.material.map.needsUpdate = true;
