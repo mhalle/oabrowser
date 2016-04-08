@@ -29,7 +29,7 @@ function LightKit ( camera, controls ) {
 
 
 
-    this.intensity = 0.3;
+    this.intensity = 0.04;
 
     this.ratio = {
         key : 1,
