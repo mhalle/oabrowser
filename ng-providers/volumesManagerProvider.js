@@ -268,6 +268,12 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     }
 
 
+    function setVolumeOpacityInCompositingSlices (volume, value) {
+        compositingSlices.axial.setOpacity(volume,value);
+        compositingSlices.coronal.setOpacity(volume,value);
+        compositingSlices.sagittal.setOpacity(volume,value);
+    }
+
 
     singleton.volumes = volumes;
     singleton.setScene = setScene;
@@ -279,6 +285,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     singleton.repaintCompositingSlices = repaintCompositingSlices;
     singleton.setCompositingSlicesVisibility = setCompositingSlicesVisibility;
     singleton.getStructuresAtRASPosition = getStructuresAtRASPosition;
+    singleton.setVolumeOpacityInCompositingSlices = setVolumeOpacityInCompositingSlices;
 
     //methods accessible from outside by injecting volumesManager
     this.$get = function () {

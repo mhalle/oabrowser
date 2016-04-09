@@ -76,8 +76,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     labelOpacity : {
                         onChange : function (id) {
                             var item = $scope.controls.labelMaps[Number(id) || 0];
-                            $scope.slice.setOpacity(item.volume, item.opacity);
-                            $scope.slice.repaint();
+                            volumesManager.setVolumeOpacityInCompositingSlices(item.volume, item.opacity);
+                            volumesManager.repaintCompositingSlices();
                         },
                         floor : 0,
                         ceil : 1,
