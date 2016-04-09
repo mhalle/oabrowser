@@ -4,11 +4,11 @@
         <span style="width:100px; display: inline-block;">
             <rzslider rz-slider-model="controls.activeBackground.volume.lowerThreshold"
                       rz-slider-high="controls.activeBackground.volume.higherThreshold"
-                      rz-slider-options="slider.options.threshold"></rzslider>
+                      rz-slider-options="sliders.options.threshold"></rzslider>
         </span>
     </span><br>
     <span style="width:100px; display: block;" ng-repeat="item in controls.labelMaps">
         {{item.name}} opacity : <rzslider rz-slider-model="item.opacity"
-                                          rz-slider-options="slider.options.labelOpacity"></rzslider>
+                                          rz-slider-options="sliders.options.labelOpacity"></rzslider>
     </span>
 </div>
