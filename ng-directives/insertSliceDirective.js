@@ -74,7 +74,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 $scope.sliders = {};
                 $scope.sliders.options = {
                     labelOpacity : {
-                        onChange : function (item) {
+                        onChange : function (id) {
+                            var item = $scope.controls.labelMaps[Number(id) || 0];
                             $scope.slice.setOpacity(item.volume, item.opacity);
                             $scope.slice.repaint();
                         },
@@ -116,7 +117,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         }
                     }
                     else {
+                        object.sliderOptions = Object.assign({},$scope.sliders.options.labelOpacity);
+                        object.sliderOptions.id = $scope.controls.labelMaps.length;
                         $scope.controls.labelMaps.push(object);
+
                     }
                 }
 
