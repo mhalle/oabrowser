@@ -14,6 +14,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             };
 
             $scope.volumesManager = volumesManager;
+            $scope.popoverIsOpen = false;
 
             var sliceContainer = null,
                 mousedownPosition = new THREE.Vector2(0,0),
@@ -55,6 +56,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 }
             };
 
+            $scope.togglePopover = function () {
+                $scope.popoverIsOpen = ! $scope.popoverIsOpen;
+            };
+
             function updateControlsScope () {
 
                 var volumes = $scope.slice.volumes,
@@ -63,22 +68,52 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     datasource,
                     match,
                     visible,
-                    object;
+                    object,
+                    opacity;
+
+                $scope.sliders = {};
+                $scope.sliders.options = {
+                    labelOpacity : {
+                        onChange : function (item) {
+                            $scope.slice.setOpacity(item.volume, item.opacity);
+                            $scope.slice.repaint();
+                        },
+                        floor : 0,
+                        ceil : 1,
+                        step : 0.02,
+                        precision : 1,
+                        showSelectionBar : true
+                    },
+                    threshold : {
+                        onChange: function() {
+                            volumesManager.repaintCompositingSlices(true);
+                        },
+                        draggableRange : true
+                    }
+                };
 
                 $scope.controls.backgrounds = [];
                 $scope.controls.labelMaps = [];
+                $scope.controls.activeBackground = null;
 
                 for (var i = 0; i < volumesDatasource.length; i++) {
                     datasource = volumesDatasource[i];
                     match = datasource.source.match(nameRegexp);
                     visible = $scope.slice.getVisibility(datasource.volume);
+                    opacity = $scope.slice.getOpacity(datasource.volume);
                     object = {
                         name : match[1],
                         visible : visible,
-                        volume : volumes[i]
+                        volume : volumes[i],
+                        opacity : opacity
                     };
                     if (volumesManager.isBackground(datasource)) {
                         $scope.controls.backgrounds.push(object);
+                        if (visible) {
+                            $scope.controls.activeBackground = object;
+                            $scope.sliders.options.threshold.floor = volumes[i].min;
+                            $scope.sliders.options.threshold.ceil = volumes[i].max;
+                        }
                     }
                     else {
                         $scope.controls.labelMaps.push(object);

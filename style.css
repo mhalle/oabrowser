@@ -103,7 +103,7 @@ div#stats {
 }
 
 .slice-index-control {
-    width : calc(100% - 135px);
+    width : calc(100% - 173px);
     display: inline-block;
     vertical-align: middle;
 }
