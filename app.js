@@ -510,9 +510,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 camera.position.x+
                 camera.position.y+
                 camera.position.z+
-                controls.target.position.x+
-                controls.target.position.y+
-                controls.target.position.z+
+                controls.target.x+
+                controls.target.y+
+                controls.target.z+
                 camera.up.x+
                 camera.up.y+
                 camera.up.z;
@@ -527,9 +527,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             camera.position.x = snapshot.camera.position.x;
             camera.position.y = snapshot.camera.position.y;
             camera.position.z = snapshot.camera.position.z;
-            controls.target.position.x = snapshot.target.x;
-            controls.target.position.y = snapshot.target.y;
-            controls.target.position.z = snapshot.target.z;
+            controls.target.x = snapshot.target.x;
+            controls.target.y = snapshot.target.y;
+            controls.target.z = snapshot.target.z;
             camera.up.x = snapshot.camera.up.x;
             camera.up.y = snapshot.camera.up.y;
             camera.up.z = snapshot.camera.up.z;
