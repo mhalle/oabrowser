@@ -75,6 +75,10 @@ var FirebaseView = (function () {
             if (initialPath.length === 0) {
                 setNewPath();
             }
+            else {
+                uuid = initialPath;
+                loadDatabaseConnection();
+            }
         }
     }
 
