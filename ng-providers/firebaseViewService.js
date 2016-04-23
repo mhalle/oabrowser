@@ -36,8 +36,11 @@ var FirebaseView = (function () {
     function setWatcher () {
         if ($root && $location && !unwatch) {
             unwatch = $root.$watch(function () { return $location.path();}, function (newValue) {
-                uuid = parsePath(newValue);
-                loadDatabaseConnection();
+                var newPath = parsePath(newValue);
+                if (newPath !== uuid) {
+                    uuid = newPath;
+                    loadDatabaseConnection();
+                }
             });
         }
     }
