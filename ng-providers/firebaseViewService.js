@@ -96,6 +96,7 @@ var FirebaseView = (function () {
         });
         obj.$bindTo(singleton, 'view');
 
+        singleton.view = singleton.view || {};
         singleton.obj = obj;
         singleton.ref = ref;
 
