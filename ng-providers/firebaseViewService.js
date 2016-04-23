@@ -114,7 +114,7 @@ var FirebaseView = (function () {
     singleton.bind = function (watchFunction, watchCallback, dbChangeCallback) {
         singleton.ref.on('value', dbChangeCallback);
         singleton.ref.on('child_changed', dbChangeCallback);
-        $root.$watch(watchFunction, function (){
+        requestAnimationFrame(function (){
             watchCallback($root.view);
         });
     };
