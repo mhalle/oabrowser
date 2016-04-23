@@ -208,6 +208,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         containerOffset = $(container).offset();
 
         animate();
+        initFirebase();
 
     }
 
@@ -290,7 +291,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         gui.close();
         setupInset();
-        initFirebase();
 
 
     }
