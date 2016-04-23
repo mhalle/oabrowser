@@ -2,7 +2,7 @@ if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
 }
 
-angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volumesManager", function (mainApp, objectSelector, atlasJson, volumesManager) {
+angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volumesManager", "firebaseView", function (mainApp, objectSelector, atlasJson, volumesManager, firebaseView) {
 
     var container,
         stats,
@@ -290,6 +290,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         gui.close();
         setupInset();
+        initFirebase();
 
 
     }
@@ -503,6 +504,12 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
     }
 
+    function initFirebase () {
+        firebaseView.view.camera = firebaseView.view.camera || {};
+        firebaseView.view.camera.position = camera.position;
+        firebaseView.view.camera.target = controls.target;
+        firebaseView.view.camera.up = camera.up;
+    }
 
 
     init();

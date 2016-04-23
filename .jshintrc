@@ -80,6 +80,7 @@
         "jQuery" : false,
         "$" : false,
         "HierarchyGroup" : false,
-        "LightKit" : false
+        "LightKit" : false,
+        "Firebase" : false
     }
 }
