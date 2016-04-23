@@ -101,9 +101,10 @@ var FirebaseView = (function () {
             .catch(function(err) {
             console.error(err);
         });
-        obj.$bindTo(singleton, 'view');
-
-        singleton.view = singleton.view || {};
+        obj.$bindTo($root, 'view');
+        $root.view = $root.view || {};
+        singleton.view = $root.view;
+        console.log(singleton.view);
         singleton.obj = obj;
         singleton.ref = ref;
 
