@@ -520,7 +520,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         function watchCallback (view) {
             view.camera = view.camera || {};
             view.camera.position = camera.position;
-            view.camera.target = controls.target.position;
+            view.camera.target = controls.target;
             view.camera.up = camera.up;
         }
         function dbChangeCallback (snapshot) {
