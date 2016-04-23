@@ -29,6 +29,7 @@ var FirebaseView = (function () {
             $firebaseObject = firebaseObject;
             $firebaseAuth = firebaseAuth;
         }
+        init();
 
     };
 
@@ -69,7 +70,7 @@ var FirebaseView = (function () {
 
     function init () {
         setWatcher();
-        if ($location) {
+        if ($location && $firebaseObject) {
             var initialPath = parsePath($location.path());
             if (initialPath.length === 0) {
                 setNewPath();
