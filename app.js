@@ -524,16 +524,17 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             view.camera.up = camera.up;
         }
         function dbChangeCallback (snapshot) {
-            if (snapshot.camera) {
-                camera.position.x = snapshot.camera.position.x;
-                camera.position.y = snapshot.camera.position.y;
-                camera.position.z = snapshot.camera.position.z;
-                controls.target.x = snapshot.camera.target.x;
-                controls.target.y = snapshot.camera.target.y;
-                controls.target.z = snapshot.camera.target.z;
-                camera.up.x = snapshot.camera.up.x;
-                camera.up.y = snapshot.camera.up.y;
-                camera.up.z = snapshot.camera.up.z;
+            var val = snapshot.val().camera;
+            if (val) {
+                camera.position.x = val.position.x;
+                camera.position.y = val.position.y;
+                camera.position.z = val.position.z;
+                controls.target.x = val.target.x;
+                controls.target.y = val.target.y;
+                controls.target.z = val.target.z;
+                camera.up.x = val.up.x;
+                camera.up.y = val.up.y;
+                camera.up.z = val.up.z;
             }
         }
         firebaseView.bind(watchFunction, watchCallback, dbChangeCallback);
