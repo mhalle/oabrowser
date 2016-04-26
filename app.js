@@ -529,9 +529,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             if (val && val.camera) {
                 val = val.camera;
                 var cameraStart = camera.position.clone().sub(controls.target),
-                    cameraStartLength = cameraStart.length,
+                    cameraStartLength = cameraStart.length(),
                     cameraEnd = new THREE.Vector3().add(val.position).sub(val.target),
-                    cameraEndLength = cameraEnd.length;
+                    cameraEndLength = cameraEnd.length();
 
 
                 new TWEEN.Tween(controls.target)
@@ -550,7 +550,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                     .onUpdate(function () {
                     camera.up.normalize();
                 }).onComplete(function () {
-                    camera.up.copy(val.target);
+                    camera.up.copy(val.up);
                 }).start();
             }
         }
