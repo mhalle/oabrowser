@@ -81,6 +81,7 @@
         "$" : false,
         "HierarchyGroup" : false,
         "LightKit" : false,
-        "Firebase" : false
+        "Firebase" : false,
+        "TWEEN" : false
     }
 }
