@@ -545,6 +545,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
                 new TWEEN.Tween(obj)
                     .to(val, 1000)
+                    .onUpdate(function () {console.log(arguments);})
                     .start();
             }
         }
