@@ -526,6 +526,12 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         function dbChangeCallback (snapshot) {
             var val = snapshot.val().camera;
             if (val) {
+                var obj = {
+                    position : camera.position,
+                    target : controls.target,
+                    up : camera.up
+                };
+                /*
                 camera.position.x = val.position.x;
                 camera.position.y = val.position.y;
                 camera.position.z = val.position.z;
@@ -535,6 +541,11 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 camera.up.x = val.up.x;
                 camera.up.y = val.up.y;
                 camera.up.z = val.up.z;
+                */
+
+                new TWEEN.Tween(obj)
+                    .to(val, 1000)
+                    .start();
             }
         }
         firebaseView.bind(watchFunction, watchCallback, dbChangeCallback);
