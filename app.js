@@ -524,8 +524,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             view.camera.up = camera.up;
         }
         function dbChangeCallback (snapshot) {
-            var val = snapshot.val().camera;
-            if (val) {
+            var val = snapshot.val();
+            if (val && val.camera) {
+                var val = val.camera;
                 var obj = {
                     position : camera.position,
                     target : controls.target,
