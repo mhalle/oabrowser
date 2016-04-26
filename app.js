@@ -528,33 +528,29 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             var val = snapshot.val();
             if (val && val.camera) {
                 val = val.camera;
-
-                // Apply the tracking controls to a cloned dummy camera so
-                // that we can get the final quaternion.
-                var dummyCamera = camera.clone();
-                dummyCamera.position.set(val.position.x, val.position.y, val.position.z);
-                dummyCamera.up.set(val.up.x, val.up.y, val.up.z);
-                var dummyControls = new THREE.TrackballControls(dummyCamera);
-                dummyControls.target.set(val.target.x, val.target.y, val.target.z);
-                dummyControls.update();
-
-                // Save the initial quaternion so that we can use it as a
-                // starting point for the slerp.
-                var startQuaternion = camera.quaternion.clone();
+                var cameraStart = camera.position.clone().sub(controls.target),
+                    cameraStartLength = cameraStart.length,
+                    cameraEnd = new THREE.Vector3().add(val.position).sub(val.target),
+                    cameraEndLength = cameraEnd.length;
 
 
                 new TWEEN.Tween(controls.target)
                     .to(val.target, 1000)
                     .onUpdate(function (timestamp) {
-                    // Slerp the camera quaternion as well.
-                    // timestamp is the eased time value from the tween.
-                    THREE.Quaternion.slerp(startQuaternion, dummyCamera.quaternion, camera.quaternion, timestamp);
+                        var l = (1-timestamp)*cameraStartLength+timestamp*cameraEndLength;
+                        var t = cameraStart.clone().lerp(cameraEnd, timestamp).setLength(l);
+                        camera.position.copy(t.add(controls.target));
+                }).onComplete(function () {
+                    controls.target.copy(val.target);
+                    camera.position.copy(val.position);
                 }).start();
 
                 new TWEEN.Tween(camera.up)
                     .to(val.up, 1000)
                     .onUpdate(function () {
                     camera.up.normalize();
+                }).onComplete(function () {
+                    camera.up.copy(val.target);
                 }).start();
             }
         }
