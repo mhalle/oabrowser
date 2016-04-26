@@ -308,7 +308,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
     }
 
-    function animate() {
+    function animate(time) {
 
         requestAnimationFrame( animate );
 
@@ -325,6 +325,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         stats.update();
         displayPickup();
+        TWEEN.update(time);
 
     }
 
@@ -526,28 +527,35 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         function dbChangeCallback (snapshot) {
             var val = snapshot.val();
             if (val && val.camera) {
-                var val = val.camera;
-                var obj = {
-                    position : camera.position,
-                    target : controls.target,
-                    up : camera.up
-                };
-                /*
-                camera.position.x = val.position.x;
-                camera.position.y = val.position.y;
-                camera.position.z = val.position.z;
-                controls.target.x = val.target.x;
-                controls.target.y = val.target.y;
-                controls.target.z = val.target.z;
-                camera.up.x = val.up.x;
-                camera.up.y = val.up.y;
-                camera.up.z = val.up.z;
-                */
+                val = val.camera;
 
-                new TWEEN.Tween(obj)
-                    .to(val, 1000)
-                    .onUpdate(function () {console.log(arguments);})
-                    .start();
+                // Apply the tracking controls to a cloned dummy camera so
+                // that we can get the final quaternion.
+                var dummyCamera = camera.clone();
+                dummyCamera.position.set(val.position.x, val.position.y, val.position.z);
+                dummyCamera.up.set(val.up.x, val.up.y, val.up.z);
+                var dummyControls = new THREE.TrackballControls(dummyCamera);
+                dummyControls.target.set(val.target.x, val.target.y, val.target.z);
+                dummyControls.update();
+
+                // Save the initial quaternion so that we can use it as a
+                // starting point for the slerp.
+                var startQuaternion = camera.quaternion.clone();
+
+
+                new TWEEN.Tween(controls.target)
+                    .to(val.target, 1000)
+                    .onUpdate(function (timestamp) {
+                    // Slerp the camera quaternion as well.
+                    // timestamp is the eased time value from the tween.
+                    THREE.Quaternion.slerp(startQuaternion, dummyCamera.quaternion, camera.quaternion, timestamp);
+                }).start();
+
+                new TWEEN.Tween(camera.up)
+                    .to(val.up, 1000)
+                    .onUpdate(function () {
+                    camera.up.normalize();
+                }).start();
             }
         }
         firebaseView.bind(watchFunction, watchCallback, dbChangeCallback);
