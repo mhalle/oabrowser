@@ -13,8 +13,8 @@
         <span class="glyphicon glyphicon-eye-close slice-controls-false" aria-hidden="true" ng-if="!slice.mesh.visible"></span>
     </button>
     <button type="button" class="btn btn-default btn-sm" aria-label="Crosshair" ng-click="toggleCrosshair($event)">
-        <span class="glyphicon glyphicon-screenshot slice-controls-true" aria-hidden="true" ng-if="displayCrosshair"></span>
-        <span class="glyphicon glyphicon-screenshot slice-controls-false" aria-hidden="true" ng-if="!displayCrosshair"></span>
+        <span class="glyphicon glyphicon-screenshot slice-controls-true" aria-hidden="true" ng-if="view.displayCrosshair"></span>
+        <span class="glyphicon glyphicon-screenshot slice-controls-false" aria-hidden="true" ng-if="!view.displayCrosshair"></span>
     </button>
     <div class="btn-group btn-sm" uib-dropdown>
         <button id="single-button" type="button" class="btn btn-default btn-sm" uib-dropdown-toggle>

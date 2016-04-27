@@ -4,11 +4,11 @@ var FirebaseView = (function () {
         $location,
         $firebaseObject,
         $firebaseAuth,
-        unlink,
         unwatch,
         pathRegExp = /view\/([\w-]+)/,
         uuid,
-        obj;
+        obj,
+        mainApp;
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -31,6 +31,12 @@ var FirebaseView = (function () {
         }
         init();
 
+    };
+
+    singleton.setMainApp = function (mA) {
+        if (!mainApp) {
+            mainApp = mA;
+        }
     };
 
     function setWatcher () {
@@ -108,10 +114,19 @@ var FirebaseView = (function () {
         singleton.obj = obj;
         singleton.ref = ref;
 
+        ref.on('value', function () {
+            //skip one frame to be sure that all the copies have been done
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    mainApp.emit('firebaseView.viewChanged');
+                });
+            });
+        });
+
         //var auth = $firebaseAuth(ref);
     }
 
-    singleton.bind = function (watchFunction, watchCallback, dbChangeCallback) {
+    singleton.customBind = function (watchCallback, dbChangeCallback) {
         singleton.ref.on('value', dbChangeCallback);
         function temp () {
             watchCallback($root.view);
@@ -120,16 +135,60 @@ var FirebaseView = (function () {
         requestAnimationFrame(temp);
     };
 
+    singleton.bind = function (obj, key, path) {
+        var pathArray = path !== '' ? path.split('.') : [],
+            i,
+            ref = singleton.ref,
+            dbObj,
+            temp;
+        for (i = 0; i < pathArray.length; i++) {
+            ref = ref.child(pathArray[i]);
+        }
+        if (typeof key === 'string') {
+            ref.on('value', function (snapshot) {
+                var val = snapshot.val();
+                obj[key] = val[key];
+            });
+
+            dbObj = $firebaseObject(ref);
+            temp = function () {
+                dbObj[key] = obj[key];
+                requestAnimationFrame(temp);
+            };
+            requestAnimationFrame(temp);
+        }
+        else {
+            ref.on('value', function (snapshot) {
+                var val = snapshot.val();
+                for (var i = 0 ; i<key.length;i++) {
+                    obj[key[i]] = val[key[i]];
+                }
+            });
+
+            dbObj = $firebaseObject(ref);
+            temp = function () {
+                for (var i = 0 ; i<key.length;i++) {
+                    dbObj[key[i]] = obj[key[i]];
+                }
+                requestAnimationFrame(temp);
+            };
+            requestAnimationFrame(temp);
+        }
+        //TODO : provide an unbind mechanism
+    };
+
 
     return function () {return singleton;};
 
 })();
 
-angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', '$firebaseObject', '$firebaseAuth', function ($root, $location, $firebaseObject, $firebaseAuth) {
+angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', '$firebaseObject', '$firebaseAuth', 'volumesManager', 'mainApp', function ($root, $location, $firebaseObject, $firebaseAuth, volumesManager, mainApp) {
     'use strict';
     var fv = FirebaseView();
     fv.setLocation($location);
     fv.setRootScope($root);
     fv.setFirebase($firebaseObject, $firebaseAuth);
+    fv.setMainApp(mainApp);
+    volumesManager.setFirebaseView(fv);
     return fv;
 }]);

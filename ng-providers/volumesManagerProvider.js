@@ -12,6 +12,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             axial : null
         },
         nrrdLoader = new THREE.NRRDLoader(),
+        firebaseView,
         singleton = {
             slicesLinked : true
         };
@@ -104,6 +105,10 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             gui.add( compositingSlices.coronal, "index", 0, volume.RASDimensions[1], 1 ).name( "index Coronal" ).listen().onChange( function () {compositingSlices.coronal.repaint(true);} );
             gui.add( compositingSlices.axial, "index", 0, volume.RASDimensions[2], 1 ).name( "index Axial" ).listen().onChange( function () {compositingSlices.axial.repaint(true);} );
 
+            if (firebaseView) {
+                setFirebaseSlicesBinding();
+            }
+
         }
         //only the first background has a full opacity, the others start with an opacity of 0
         opacity = treatAsBackground ? 1 : 0.5;
@@ -156,6 +161,8 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         addToCompositingSlices(sliceSet, treatAsBackground);
 
         slices.push(sliceSet);
+
+        setFirebaseVolumeBinding(volume);
 
         mainApp.emit('volumesManager.volumeAdded');
 
@@ -274,6 +281,30 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         compositingSlices.sagittal.setOpacity(volume,value);
     }
 
+    function setFirebaseView (fv) {
+        if (!firebaseView) {
+            firebaseView = fv;
+            if (compositingSlices.axial) {
+                setFirebaseSlicesBinding();
+            }
+        }
+    }
+
+    function setFirebaseSlicesBinding () {
+        firebaseView.bind(compositingSlices.axial, ['index', 'opacities', 'visibilities'], 'axial.slice');
+        firebaseView.bind(compositingSlices.coronal, ['index', 'opacities', 'visibilities'], 'coronal.slice');
+        firebaseView.bind(compositingSlices.sagittal, ['index', 'opacities', 'visibilities'], 'sagittal.slice');
+    }
+
+    function setFirebaseVolumeBinding (volume) {
+        var nameRegexp = /([0-9a-zA-Z_\-]+)\.\w+$/;
+        var name = volume.datasource.source.match(nameRegexp)[1];
+        firebaseView.bind(volume, ['lowerThreshold', 'upperThreshold', 'windowLow', 'windowHigh'], 'volumes.'+name);
+        mainApp.on('firebaseView.viewChanged', function () {
+            repaintCompositingSlices(true);
+        });
+    }
+
 
     singleton.volumes = volumes;
     singleton.setScene = setScene;
@@ -286,6 +317,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     singleton.setCompositingSlicesVisibility = setCompositingSlicesVisibility;
     singleton.getStructuresAtRASPosition = getStructuresAtRASPosition;
     singleton.setVolumeOpacityInCompositingSlices = setVolumeOpacityInCompositingSlices;
+    singleton.setFirebaseView = setFirebaseView;
 
     //methods accessible from outside by injecting volumesManager
     this.$get = function () {

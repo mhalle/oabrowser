@@ -4,10 +4,11 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
         restrict: 'A',
         templateUrl: 'ng-templates/slicePanel.html',
         scope: { sliceId : '=sliceid' },
-        controller: function ( $scope, $element, mainApp, volumesManager, crosshair ) {
+        controller: function ( $scope, $element, mainApp, volumesManager, crosshair, firebaseView ) {
 
+            $scope.view = $scope.$root.view;
             $scope.sliceId = $element.attr('sliceid');
-            $scope.displayCrosshair = false;
+            $scope.view.displayCrosshair = false;
             $scope.controls = {
                 backgrounds : [],
                 labelMaps : []
@@ -22,22 +23,30 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 background = null,
                 initialWindow,
                 initialLevel,
-                initialOffset,
+                initialOffset = {},
                 initialZoom,
-                globalZoom = 1,
-                globalOffset = new THREE.Vector2(0,0),
+                exportableParams = {
+                    globalZoom : 1,
+                    globalOffset : {
+                        x : 0,
+                        y : 0
+                    }
+                },
                 mouseAction,
                 canvasOffset,
                 currentMatrix = new THREE.Matrix4(),
                 currentInverseMatrix = new THREE.Matrix4(),
                 ctx;
 
+            firebaseView.bind(exportableParams, ['globalZoom', 'globalOffset'], $scope.sliceId);
+            firebaseView.bind($scope.slice.mesh, 'visible', $scope.sliceId+'.mesh');
+
             $scope.toggleLink = function () {
                 volumesManager.slicesLinked = !volumesManager.slicesLinked;
             };
 
-            $scope.toggleCrosshair = function ($event) {
-                $scope.displayCrosshair = ! $scope.displayCrosshair;
+            $scope.toggleCrosshair = function () {
+                $scope.view.displayCrosshair = ! $scope.view.displayCrosshair;
                 $scope.repaint();
             };
 
@@ -168,6 +177,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 }
             });
 
+            mainApp.on('firebaseView.viewChanged', $scope.repaint);
+
 
             $scope.repaint = function () {
 
@@ -185,10 +196,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         c = 0,
                         d = 0;
 
-                    var zoom = globalZoom * Math.min(canvas.width/image.width, canvas.height/image.height);
+                    var zoom = exportableParams.globalZoom * Math.min(canvas.width/image.width, canvas.height/image.height);
 
                     ctx.save();
-                    ctx.translate(canvas.width/2+globalOffset.x, canvas.height/2+globalOffset.y);
+                    ctx.translate(canvas.width/2+exportableParams.globalOffset.x, canvas.height/2+exportableParams.globalOffset.y);
                     if ($scope.sliceId === 'axial') {
 
                         ctx.scale(-1,1);
@@ -224,7 +235,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
 
                     var crosshairIntersection = crosshair.getFixedCrosshair($scope.sliceId);
-                    if (crosshairIntersection && $scope.displayCrosshair) {
+                    if (crosshairIntersection && $scope.view.displayCrosshair) {
                         ctx.strokeStyle = "#ffef00";
                         ctx.lineWidth = 1;
                         ctx.beginPath();
@@ -252,8 +263,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 var pos = new THREE.Vector4(),
                     canvas = $scope.canvas,
                     image = $scope.slice.canvas;
-                pos.x = x-canvas.width/2-globalOffset.x;
-                pos.y = y-canvas.height/2-globalOffset.y;
+                pos.x = x-canvas.width/2-exportableParams.globalOffset.x;
+                pos.y = y-canvas.height/2-exportableParams.globalOffset.y;
                 pos.applyMatrix4(currentInverseMatrix);
                 pos.x += image.width/2;
                 pos.y += image.height/2;
@@ -278,7 +289,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     //right button -> zoom
                     $(document.body).on('mouseup', mouseUp);
                     $(document.body).on('mousemove', mouseMoveAction);
-                    initialZoom = globalZoom;
+                    initialZoom = exportableParams.globalZoom;
                     mouseAction = "zoom";
                     event.preventDefault();
                     event.stopImmediatePropagation();
@@ -288,7 +299,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     //middle button ->translation
                     $(document.body).on('mouseup', mouseUp);
                     $(document.body).on('mousemove', mouseMoveAction);
-                    initialOffset = globalOffset.clone();
+                    initialOffset.x = exportableParams.globalOffset.x;
+                    initialOffset.y = exportableParams.globalOffset.y;
                     mouseAction = "translation";
                     event.preventDefault();
                     event.stopImmediatePropagation();
@@ -325,13 +337,13 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     volumesManager.repaintCompositingSlices(false);
                 }
                 else if (mouseAction === "zoom") {
-                    globalZoom = initialZoom * Math.exp(mouse.y/$scope.canvas.height);
+                    exportableParams.globalZoom = initialZoom * Math.exp(mouse.y/$scope.canvas.height);
                     $scope.repaint();
                     event.preventDefault();
                 }
                 else if (mouseAction === "translation") {
-                    globalOffset.x = initialOffset.x + mouse.x;
-                    globalOffset.y = initialOffset.y + mouse.y;
+                    exportableParams.globalOffset.x = initialOffset.x + mouse.x;
+                    exportableParams.globalOffset.y = initialOffset.y + mouse.y;
                     $scope.repaint();
                     event.preventDefault();
                 }
