@@ -149,7 +149,7 @@ var FirebaseView = (function () {
         }
         ref.on('value', function (snapshot) {
             var val = snapshot.val();
-            if (typeof val === 'object') {
+            if (typeof val === 'object' && val !== null) {
                 for (var i = 0 ; i<key.length;i++) {
                     obj[key[i]] = val[key[i]];
                 }
