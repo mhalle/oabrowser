@@ -1,3 +1,5 @@
+<div class="slice-container">
+</div>
 <span class="slice-controls">
     <!-- link is not used anymore but keeping it just in case
     <button type="button" class="btn btn-default btn-sm" aria-label="Link" ng-click="toggleLink()">
@@ -24,7 +26,7 @@
             <li class="dropdown-header">Background</li>
 
             <li role="menuitem" ng-repeat="item in controls.backgrounds" ng-click="toggleVisibility(item)">
-                <a href="#">
+                <a>
                     {{item.name}}
                     <span ng-if="item.visible" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                 </a>
@@ -33,7 +35,7 @@
             <li class="dropdown-header">Label map</li>
 
             <li role="menuitem" ng-repeat="item in controls.labelMaps" ng-click="toggleVisibility(item)">
-                <a href="#">
+                <a>
                     {{item.name}}
                     <span ng-if="item.visible" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                 </a>
@@ -44,5 +46,4 @@
         <input type="range" min="0" max="{{slice.maxIndex}}" ng-model="controls.index"/>
     </div>
 </span>
-<div class="slice-container">
-</div>
+

@@ -8,6 +8,12 @@
     width: 100%;
     padding-right: 10px;
     overflow: auto;
+    font-size: 11px;
+}
+
+#structureList input[type=checkbox] {
+    transform: scale(0.9);
+    font-size: 11px;
 }
 
 #breadcrumbsList {
