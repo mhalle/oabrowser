@@ -4,7 +4,8 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
         volumesManager = volumesManagerProvider.$get(),
         mainApp = mainAppProvider.$get(),
         crosshairPosition = {},
-        needUpdate =true;
+        needUpdate =true,
+        visible = false;
 
 
     function computeCrosshairPosition () {
@@ -32,6 +33,17 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
 
     mainApp.on('insertSlice', function (data) {
         data.slice.onUpdateGeometry(null, computeCrosshairPosition);
+    });
+
+
+    Object.defineProperty(singleton, 'visible', {
+        get : function () {
+            return visible;
+        },
+        set : function (value) {
+            visible = value;
+            mainApp.emit('crosshair.visibilityChanged');
+        }
     });
 
 

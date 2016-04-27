@@ -43,6 +43,7 @@
         <script src="ng-directives/insertTreeDirective.js"></script>
         <script src="ng-directives/insertBreadcrumbs.js"></script>
         <script src="ng-directives/insertSliceDirective.js"></script>
+        <script src="ng-directives/mainToolbarDirective.js"></script>
         <script src="ng-controllers/layoutController.js"></script>
         <script src="ng-controllers/modalController.js"></script>
         <script src="ng-controllers/headerController.js"></script>
@@ -67,6 +68,9 @@
 
 
         <div ui-layout="{flow: 'row'}" ui-layout-loaded>
+            <div id="topContainer" ui-layout-container size="20px" minSize="20px" maxSize="20px">
+                <div mainToolbar></div>
+            </div>
             <div ui-layout-container>
                 <div ui-layout="config" >
                     <div id="leftSideContainer" ui-layout-container collapsed="layout.leftSide" size="20%">

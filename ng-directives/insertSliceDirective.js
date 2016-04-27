@@ -6,9 +6,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
         scope: { sliceId : '=sliceid' },
         controller: function ( $scope, $element, mainApp, volumesManager, crosshair, firebaseView ) {
 
-            $scope.view = $scope.$root.view;
             $scope.sliceId = $element.attr('sliceid');
-            $scope.view.displayCrosshair = false;
             $scope.controls = {
                 backgrounds : [],
                 labelMaps : []
@@ -40,19 +38,6 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
             firebaseView.bind(exportableParams, ['globalZoom', 'globalOffset'], $scope.sliceId);
 
-            $scope.toggleLink = function () {
-                volumesManager.slicesLinked = !volumesManager.slicesLinked;
-            };
-
-            $scope.toggleCrosshair = function () {
-                $scope.view.displayCrosshair = ! $scope.view.displayCrosshair;
-                $scope.repaint();
-            };
-
-            $scope.toggleVisibility = function (item) {
-                volumesManager.toggleVisibility(item.volume, $scope.slice);
-                mainApp.emit('sliceControls.visibilityChanged');
-            };
 
             $scope.toggleMeshVisibility = function ($event) {
                 var value = !$scope.slice.mesh.visible;
@@ -166,7 +151,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     });
                     mainApp.emit('ui.layout.forcedUpdate');
                     mainApp.on('crosshair.positionChanged', $scope.repaint);
-                    mainApp.on('sliceControls.visibilityChanged', update);
+                    mainApp.on('crosshair.visibilityChanged', $scope.repaint);
+                    mainApp.on('mainToolbar.sliceVisibilityChanged', update);
                     mainApp.on('ui.layout.resize', $scope.repaint);
                     mainApp.on('volumesManager.volumeAdded', update);
                     $scope.slice.onAddSlice(null, update);
@@ -235,7 +221,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
 
                     var crosshairIntersection = crosshair.getFixedCrosshair($scope.sliceId);
-                    if (crosshairIntersection && $scope.view.displayCrosshair) {
+                    if (crosshairIntersection && crosshair.visible) {
                         ctx.strokeStyle = "#ffef00";
                         ctx.lineWidth = 1;
                         ctx.beginPath();
