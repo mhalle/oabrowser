@@ -129,11 +129,16 @@ var FirebaseView = (function () {
         function temp () {
             watchCallback($root.view);
         }
+        var mouseUpTimeoutId;
         $('body').on('mouseup', function () {
-            setTimeout(temp,30);
+            clearTimeout(mouseUpTimeoutId);
+            mouseUpTimeoutId = setTimeout(temp,30);
         });
+
+        var wheelTimeoutId;
         $('body').on('mousewheel', function () {
-            setTimeout(temp,15);
+            clearTimeout(wheelTimeoutId);
+            wheelTimeoutId = setTimeout(temp,100);
         });
     };
 
@@ -165,11 +170,16 @@ var FirebaseView = (function () {
             }
             dbObj.$save();
         };
+        var mouseUpTimeoutId;
         $('body').on('mouseup', function () {
-            setTimeout(temp,30);
+            clearTimeout(mouseUpTimeoutId);
+            mouseUpTimeoutId = setTimeout(temp,30);
         });
+
+        var wheelTimeoutId;
         $('body').on('mousewheel', function () {
-            setTimeout(temp,15);
+            clearTimeout(wheelTimeoutId);
+            wheelTimeoutId = setTimeout(temp,100);
         });
         //TODO : provide an unbind mechanism
     };
