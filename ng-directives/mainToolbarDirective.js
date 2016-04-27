@@ -70,30 +70,33 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
                 $scope.controls.labelMaps = [];
                 $scope.controls.activeBackground = null;
 
-                for (var i = 0; i < volumesDatasource.length; i++) {
-                    datasource = volumesDatasource[i];
-                    match = datasource.source.match(nameRegexp);
-                    visible = $scope.slice.getVisibility(datasource.volume);
-                    opacity = $scope.slice.getOpacity(datasource.volume);
-                    object = {
-                        name : match[1],
-                        visible : visible,
-                        volume : volumes[i],
-                        opacity : opacity
-                    };
-                    if (volumesManager.isBackground(datasource)) {
-                        $scope.controls.backgrounds.push(object);
-                        if (visible) {
-                            $scope.controls.activeBackground = object;
-                            $scope.sliders.options.threshold.floor = volumes[i].min;
-                            $scope.sliders.options.threshold.ceil = volumes[i].max;
+                var slice = volumesManager.compositingSlices.axial;
+                if (slice) {
+                    for (var i = 0; i < volumesDatasource.length; i++) {
+                        datasource = volumesDatasource[i];
+                        match = datasource.source.match(nameRegexp);
+                        visible = slice.getVisibility(datasource.volume);
+                        opacity = slice.getOpacity(datasource.volume);
+                        object = {
+                            name : match[1],
+                            visible : visible,
+                            volume : volumes[i],
+                            opacity : opacity
+                        };
+                        if (volumesManager.isBackground(datasource)) {
+                            $scope.controls.backgrounds.push(object);
+                            if (visible) {
+                                $scope.controls.activeBackground = object;
+                                $scope.sliders.options.threshold.floor = volumes[i].min;
+                                $scope.sliders.options.threshold.ceil = volumes[i].max;
+                            }
                         }
-                    }
-                    else {
-                        object.sliderOptions = Object.assign({},$scope.sliders.options.labelOpacity);
-                        object.sliderOptions.id = $scope.controls.labelMaps.length;
-                        $scope.controls.labelMaps.push(object);
+                        else {
+                            object.sliderOptions = Object.assign({},$scope.sliders.options.labelOpacity);
+                            object.sliderOptions.id = $scope.controls.labelMaps.length;
+                            $scope.controls.labelMaps.push(object);
 
+                        }
                     }
                 }
 
@@ -105,6 +108,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
 
             mainApp.on('mainToolbar.sliceVisibilityChanged', updateControlsScope);
             mainApp.on('volumesManager.volumeAdded', updateControlsScope);
+            mainApp.on('insertSlice', updateControlsScope);
             volumesManager.compositingSlices.axial.onAddSlice(null, updateControlsScope);
             volumesManager.compositingSlices.axial.onRemoveSlice(null, updateControlsScope);
 

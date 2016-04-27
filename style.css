@@ -116,7 +116,7 @@ div#stats {
 }
 
 .slice-index-control {
-    width : calc(100% - 127px);
+    width : calc(100% - 35px);
     display: inline-block;
     vertical-align: middle;
 }
@@ -140,4 +140,10 @@ div#stats {
 [insert-slice] {
     width: 100%;
     height: 100%;
+}
+
+
+#topContainer .btn-sm {
+    padding: 1px 5px;
+    font-size: 11px;
 }
