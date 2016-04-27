@@ -106,7 +106,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
 
             }
 
-            firebaseView.bind(crosshair, 'visible', 'crosshair.visible');
+            firebaseView.bind(crosshair, 'visible', 'crosshair');
 
 
             mainApp.on('mainToolbar.sliceVisibilityChanged', updateControlsScope);
