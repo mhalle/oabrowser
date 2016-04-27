@@ -293,12 +293,12 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         function updateMaterials (key) {
             meshesList.forEach(function (m) {
-                m[key] = materialController[key];
+                m.material[key] = materialController[key];
             });
         }
         menu = gui.addFolder('Material');
         menu.addColor(materialController, 'specular').name('Specular').onChange(function () {updateMaterials('specular');});
-        menu.add(materialController, 'shininess').name('Shininess').onChange(function () {updateMaterials('shininess');});
+        menu.add(materialController, 'shininess',0,100).name('Shininess').onChange(function () {updateMaterials('shininess');});
 
         gui.close();
         setupInset();
