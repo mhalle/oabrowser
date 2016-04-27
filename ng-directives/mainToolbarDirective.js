@@ -109,8 +109,14 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
             mainApp.on('mainToolbar.sliceVisibilityChanged', updateControlsScope);
             mainApp.on('volumesManager.volumeAdded', updateControlsScope);
             mainApp.on('insertSlice', updateControlsScope);
-            volumesManager.compositingSlices.axial.onAddSlice(null, updateControlsScope);
-            volumesManager.compositingSlices.axial.onRemoveSlice(null, updateControlsScope);
+            var once = true;
+            mainApp.on('insertSlice', function () {
+                if (once) {
+                    once = false;
+                    volumesManager.compositingSlices.axial.onAddSlice(null, updateControlsScope);
+                    volumesManager.compositingSlices.axial.onRemoveSlice(null, updateControlsScope);
+                }
+            });
 
         }
     };
