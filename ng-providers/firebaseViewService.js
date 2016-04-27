@@ -161,6 +161,7 @@ var FirebaseView = (function () {
             for (var i = 0 ; i<key.length;i++) {
                 dbObj[key[i]] = obj[key[i]];
             }
+            dbObj.$save();
             requestAnimationFrame(temp);
         };
         requestAnimationFrame(temp);
