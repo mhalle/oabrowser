@@ -12,8 +12,14 @@
 }
 
 #structureList input[type=checkbox] {
-    transform: scale(0.9);
+    transform: scale(0.9) translate(0px, 2px);
     font-size: 11px;
+    margin : 0;
+}
+
+#structureList label {
+    font-weight: normal;
+    margin: 0;
 }
 
 #breadcrumbsList {
