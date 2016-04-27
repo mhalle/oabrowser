@@ -6,7 +6,7 @@
         <span class="glyphicon glyphicon-link" aria-hidden="true" ng-class="{'slice-controls-true': volumesManager.slicesLinked, 'slice-controls-false' : !volumesManager.slicesLinked, }"></span>
     </button>
     -->
-    <button type="button" class="btn btn-default btn-sm" aria-label="Pin" ng-click="togglePopover()" uib-popover-template="'ng-templates/controlsPopover.html'" popover-placement="bottom-left">
+    <button type="button" class="btn btn-default btn-sm" aria-label="Pin" ng-click="togglePopover()" uib-popover-template="'ng-templates/controlsPopover.html'" popover-placement="bottom-left" popover-append-to-body="true">
         <span class="glyphicon glyphicon-collapse-up slice-controls-true" aria-hidden="true" ng-if="popoverIsOpen"></span>
         <span class="glyphicon glyphicon-collapse-down" aria-hidden="true" ng-if="!popoverIsOpen"></span>
     </button>

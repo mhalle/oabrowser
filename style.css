@@ -9,6 +9,7 @@
     padding-right: 10px;
     overflow: auto;
     font-size: 11px;
+    line-height: normal;
 }
 
 #structureList input[type=checkbox] {
@@ -115,7 +116,7 @@ div#stats {
 }
 
 .slice-index-control {
-    width : calc(100% - 173px);
+    width : calc(100% - 127px);
     display: inline-block;
     vertical-align: middle;
 }
@@ -130,6 +131,10 @@ div#stats {
 /*Modify dropdown padding in the slice controls to save space*/
 .slice-controls .btn-group.btn-sm.dropdown {
     padding: 0;
+}
+
+.slice-controls .btn-sm {
+    padding: 1px 5px;
 }
 
 [insert-slice] {
