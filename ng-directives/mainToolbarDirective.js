@@ -25,8 +25,11 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
             };
 
             $scope.toggleVisibility = function (item) {
-                volumesManager.toggleVisibility(item.volume, $scope.slice);
-                mainApp.emit('mainToolbar.sliceVisibilityChanged');
+                var slice = volumesManager.compositingSlices.axial;
+                if (slice) {
+                    volumesManager.toggleVisibility(item.volume, slice);
+                    mainApp.emit('mainToolbar.sliceVisibilityChanged');
+                }
             };
 
             $scope.togglePopover = function () {
