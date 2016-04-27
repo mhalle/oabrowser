@@ -145,35 +145,25 @@ var FirebaseView = (function () {
             ref = ref.child(pathArray[i]);
         }
         if (typeof key === 'string') {
-            ref.on('value', function (snapshot) {
-                var val = snapshot.val();
-                obj[key] = val[key];
-            });
-
-            dbObj = $firebaseObject(ref);
-            temp = function () {
-                dbObj[key] = obj[key];
-                requestAnimationFrame(temp);
-            };
-            requestAnimationFrame(temp);
+            key = [key];
         }
-        else {
-            ref.on('value', function (snapshot) {
-                var val = snapshot.val();
+        ref.on('value', function (snapshot) {
+            var val = snapshot.val();
+            if (typeof val === 'object') {
                 for (var i = 0 ; i<key.length;i++) {
                     obj[key[i]] = val[key[i]];
                 }
-            });
+            }
+        });
 
-            dbObj = $firebaseObject(ref);
-            temp = function () {
-                for (var i = 0 ; i<key.length;i++) {
-                    dbObj[key[i]] = obj[key[i]];
-                }
-                requestAnimationFrame(temp);
-            };
+        dbObj = $firebaseObject(ref);
+        temp = function () {
+            for (var i = 0 ; i<key.length;i++) {
+                dbObj[key[i]] = obj[key[i]];
+            }
             requestAnimationFrame(temp);
-        }
+        };
+        requestAnimationFrame(temp);
         //TODO : provide an unbind mechanism
     };
 

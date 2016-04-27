@@ -39,7 +39,6 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 ctx;
 
             firebaseView.bind(exportableParams, ['globalZoom', 'globalOffset'], $scope.sliceId);
-            firebaseView.bind($scope.slice.mesh, 'visible', $scope.sliceId+'.mesh');
 
             $scope.toggleLink = function () {
                 volumesManager.slicesLinked = !volumesManager.slicesLinked;
@@ -174,6 +173,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     $scope.slice.onRemoveSlice(null, update);
                     $scope.slice.onRepaint(null, $scope.repaint);
                     $scope.repaint();
+
+                    firebaseView.bind($scope.slice.mesh, 'visible', $scope.sliceId+'.mesh');
                 }
             });
 
