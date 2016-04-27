@@ -295,16 +295,9 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         firebaseView.bind(compositingSlices.coronal, ['index', 'opacities', 'visibilities'], 'coronal.slice');
         firebaseView.bind(compositingSlices.sagittal, ['index', 'opacities', 'visibilities'], 'sagittal.slice');
         mainApp.on('firebaseView.viewChanged', function () {
-            if (window.requestIdleCallback) {
-                window.requestIdleCallback(function () {
-                    repaintCompositingSlices(true);
-                });
-            }
-            else {
-                setTimeout(function () {
-                    repaintCompositingSlices(true);
-                });
-            }
+            setTimeout(function () {
+                repaintCompositingSlices(true);
+            },5);
         });
     }
 
