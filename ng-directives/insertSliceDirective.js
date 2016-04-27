@@ -178,7 +178,6 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 }
             });
 
-            mainApp.on('firebaseView.viewChanged', $scope.repaint);
 
 
             $scope.repaint = function () {
@@ -254,6 +253,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
                 }
             };
+
+
+            mainApp.on('firebaseView.viewChanged', $scope.repaint);
+
 
             function preventDefault (e) {
                 e.preventDefault();
