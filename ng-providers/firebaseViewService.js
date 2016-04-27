@@ -116,11 +116,9 @@ var FirebaseView = (function () {
 
         ref.on('value', function () {
             //skip one frame to be sure that all the copies have been done
-            requestAnimationFrame(function () {
                 requestAnimationFrame(function () {
                     mainApp.emit('firebaseView.viewChanged');
                 });
-            });
         });
 
         //var auth = $firebaseAuth(ref);
@@ -130,9 +128,13 @@ var FirebaseView = (function () {
         singleton.ref.on('value', dbChangeCallback);
         function temp () {
             watchCallback($root.view);
-            requestAnimationFrame(temp);
         }
-        requestAnimationFrame(temp);
+        $('body').on('mouseup', function () {
+            setTimeout(temp,30);
+        });
+        $('body').on('mousewheel', function () {
+            setTimeout(temp,15);
+        });
     };
 
     singleton.bind = function (obj, key, path) {
@@ -163,7 +165,12 @@ var FirebaseView = (function () {
             }
             dbObj.$save();
         };
-        $('body').on('mouseup', temp);
+        $('body').on('mouseup', function () {
+            setTimeout(temp,30);
+        });
+        $('body').on('mousewheel', function () {
+            setTimeout(temp,15);
+        });
         //TODO : provide an unbind mechanism
     };
 
