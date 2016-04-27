@@ -55,7 +55,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
             geometry.computeVertexNormals();
 
-            var material = new THREE.MeshLambertMaterial({
+            var material = new THREE.MeshPhongMaterial({
                 wireframe : false,
                 morphTargets : false,
                 side : THREE.DoubleSide,
@@ -288,6 +288,17 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         for (id in lightKit.lights) {
             menu.add(lightKit.longitude, id, -90,90).name(id+' latitude').onChange(function(){lightKit.updatePosition();});
         }
+
+        var materialController = new THREE.MeshPhongMaterial({});
+
+        function updateMaterials (key) {
+            meshesList.forEach(function (m) {
+                m[key] = materialController[key];
+            });
+        }
+        menu = gui.addFolder('Material');
+        menu.addColor(materialController, 'specular').name('Specular').onChange(function () {updateMaterials('specular');});
+        menu.add(materialController, 'shininess').name('Shininess').onChange(function () {updateMaterials('shininess');});
 
         gui.close();
         setupInset();
