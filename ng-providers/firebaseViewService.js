@@ -138,7 +138,7 @@ var FirebaseView = (function () {
         var wheelTimeoutId;
         $('body').on('mousewheel', function () {
             clearTimeout(wheelTimeoutId);
-            wheelTimeoutId = setTimeout(temp,100);
+            wheelTimeoutId = setTimeout(temp,1000);
         });
     };
 
@@ -179,7 +179,7 @@ var FirebaseView = (function () {
         var wheelTimeoutId;
         $('body').on('mousewheel', function () {
             clearTimeout(wheelTimeoutId);
-            wheelTimeoutId = setTimeout(temp,100);
+            wheelTimeoutId = setTimeout(temp,1000);
         });
         //TODO : provide an unbind mechanism
     };
