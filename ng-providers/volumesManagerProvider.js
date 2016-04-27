@@ -294,15 +294,25 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         firebaseView.bind(compositingSlices.axial, ['index', 'opacities', 'visibilities'], 'axial.slice');
         firebaseView.bind(compositingSlices.coronal, ['index', 'opacities', 'visibilities'], 'coronal.slice');
         firebaseView.bind(compositingSlices.sagittal, ['index', 'opacities', 'visibilities'], 'sagittal.slice');
+        mainApp.on('firebaseView.viewChanged', function () {
+            if (window.requestIdleCallback) {
+                window.requestIdleCallback(function () {
+                    repaintCompositingSlices(true);
+                });
+            }
+            else {
+                setTimeout(function () {
+                    repaintCompositingSlices(true);
+                });
+            }
+        });
     }
 
     function setFirebaseVolumeBinding (volume) {
         var nameRegexp = /([0-9a-zA-Z_\-]+)\.\w+$/;
         var name = volume.datasource.source.match(nameRegexp)[1];
         firebaseView.bind(volume, ['lowerThreshold', 'upperThreshold', 'windowLow', 'windowHigh'], 'volumes.'+name);
-        mainApp.on('firebaseView.viewChanged', function () {
-            repaintCompositingSlices(true);
-        });
+
     }
 
 

@@ -162,9 +162,8 @@ var FirebaseView = (function () {
                 dbObj[key[i]] = obj[key[i]];
             }
             dbObj.$save();
-            requestAnimationFrame(temp);
         };
-        requestAnimationFrame(temp);
+        $('body').on('mouseup', temp);
         //TODO : provide an unbind mechanism
     };
 
