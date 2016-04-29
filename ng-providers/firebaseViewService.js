@@ -181,9 +181,12 @@ var FirebaseView = (function () {
 
         ref.on('value', onValue);
         function temp () {
-            watchCallback(obj);
-            obj.lastModifiedBy=singleton.auth.uid;
-            obj.$save();
+            var modified = watchCallback(obj);
+            modified = modified === undefined ? true : modified;
+            if (modified) {
+                obj.lastModifiedBy=singleton.auth.uid;
+                obj.$save();
+            }
         }
         var mouseUpTimeoutId;
         function onMouseUp () {
@@ -233,12 +236,19 @@ var FirebaseView = (function () {
         }
 
         temp = function (dbObj) {
-            var v ;
+            var v,
+                k,
+                modified = false;
             for (var i = 0 ; i<key.length;i++) {
-                v = obj[key[i]];
-                //prevent values to be undefined because firebase does not handle undefined value
-                dbObj[key[i]] = v === undefined ? false : v;
+                k = key[i];
+                v = obj[k];
+                if (dbObj[k] !== obj[k]) {
+                    //prevent values to be undefined because firebase does not handle undefined value
+                    dbObj[k] = v === undefined ? false : v;
+                    modified = true;
+                }
             }
+            return modified;
         };
 
         singleton.customBind(temp, onValue, ref);
