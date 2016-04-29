@@ -140,9 +140,9 @@ var FirebaseView = (function () {
         singleton.obj = dbRootObj;
         singleton.ref = ref;
 
-        function onValueListener () {
+        function onValueListener (snapshotValue) {
             //skip one frame to be sure that all the copies have been done
-            if (singleton.auth.uid !== dbRootObj.lastModifiedBy) {
+            if (singleton.auth.uid !== snapshotValue.lastModifiedBy) {
                 requestAnimationFrame(function () {
                     mainApp.emit('firebaseView.viewChanged');
                 });
@@ -193,14 +193,15 @@ var FirebaseView = (function () {
         wheelTimeoutId = setTimeout(commit,1000);
     }
 
-    function onValue () {
-        onValueListeners.map(fn => fn());
+    function onValue (snapshot) {
+        var val = snapshot.val();
+        onValueListeners.map(fn => fn(val));
     }
 
-    function getDbObj (pathArray) {
+    function getDbObj (pathArray, snapshotValue) {
         //retrieve the right db object from the path array
         // the reference can't be stored in memory because dbRootObj replaces its children by copies from the db
-        var obj = dbRootObj;
+        var obj = snapshotValue || dbRootObj;
         for (var i = 0; i < pathArray.length; i++) {
             if (!obj[pathArray[i]]) {
                 obj[pathArray[i]] = {};
@@ -211,9 +212,9 @@ var FirebaseView = (function () {
     }
 
     singleton.customBind = function (watchCallback, dbChangeCallback, pathArray) {
-        function onValueListener () {
-            var dbObj = getDbObj(pathArray);
-            if (singleton.auth.uid !== dbRootObj.lastModifiedBy) {
+        function onValueListener (snapshotValue) {
+            var dbObj = getDbObj(pathArray, snapshotValue);
+            if (singleton.auth.uid !== snapshotValue.lastModifiedBy) {
                 dbChangeCallback(dbObj);
             }
         }
