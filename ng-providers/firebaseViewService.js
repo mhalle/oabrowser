@@ -233,8 +233,11 @@ var FirebaseView = (function () {
         }
 
         temp = function (dbObj) {
+            var v ;
             for (var i = 0 ; i<key.length;i++) {
-                dbObj[key[i]] = obj[key[i]];
+                v = obj[key[i]];
+                //prevent values to be undefined because firebase does not handle undefined value
+                dbObj[key[i]] = v === undefined ? false : v;
             }
         };
 
