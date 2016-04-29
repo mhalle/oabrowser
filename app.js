@@ -554,7 +554,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 }).start();
             }
         }
-        firebaseView.customBind(watchCallback, dbChangeCallback);
+        var ref = firebaseView.ref.child('camera');
+        firebaseView.customBind(watchCallback, dbChangeCallback, ref);
     }
 
 
