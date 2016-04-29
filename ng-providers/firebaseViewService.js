@@ -130,9 +130,11 @@ var FirebaseView = (function () {
 
         function onValue () {
             //skip one frame to be sure that all the copies have been done
-            requestAnimationFrame(function () {
-                mainApp.emit('firebaseView.viewChanged');
-            });
+            if (singleton.auth.uid !== $root.view.lastModifiedBy) {
+                requestAnimationFrame(function () {
+                    mainApp.emit('firebaseView.viewChanged');
+                });
+            }
         }
         ref.on('value', onValue);
 
@@ -221,11 +223,11 @@ var FirebaseView = (function () {
         }
         function onValue (snapshot) {
             var val = snapshot.val();
-                if (typeof val === 'object' && val !== null) {
-                    for (var i = 0 ; i<key.length;i++) {
-                        obj[key[i]] = val[key[i]];
-                    }
+            if (typeof val === 'object' && val !== null) {
+                for (var i = 0 ; i<key.length;i++) {
+                    obj[key[i]] = val[key[i]];
                 }
+            }
         }
 
         dbObj = $firebaseObject(ref);
