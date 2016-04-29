@@ -7,11 +7,15 @@ var FirebaseView = (function () {
         unwatch,
         pathRegExp = /view\/([\w-]+)/,
         uuid,
-        obj,
+        dbRootObj,
         mainApp,
         $body,
         unbindFunctions = [],
-        bindObjects = [];
+        bindObjects = [],
+        onValueListeners = [],
+        commitListeners = [],
+        mouseUpTimeoutId,
+        wheelTimeoutId;
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -107,108 +111,121 @@ var FirebaseView = (function () {
         }
     }
 
+    function authHandler (authData) {
+        if (authData) {
+            singleton.auth = authData;
+        }
+        else {
+            //get to this part when user log out
+            singleton.auth = null;
+            authAnonymously(singleton.ref);
+        }
+    }
+
     function loadDatabaseConnection () {
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid);
-        if (obj) {
-            obj.$destroy();
+        if (dbRootObj) {
+            dbRootObj.$destroy();
             unbindAll();
         }
-        obj = $firebaseObject(ref);
+        dbRootObj = $firebaseObject(ref);
         // this waits for the data to load and then logs the output.
-        obj.$loaded()
+        dbRootObj.$loaded()
             .then(function() {
-            console.log(obj);
+            console.log(dbRootObj);
         })
             .catch(function(err) {
             console.error(err);
         });
-        obj.$bindTo($root, 'view');
-        $root.view = $root.view || {};
-        singleton.obj = obj;
+        singleton.obj = dbRootObj;
         singleton.ref = ref;
 
-        function onValue (snapshot) {
+        function onValueListener () {
             //skip one frame to be sure that all the copies have been done
-            if (singleton.auth.uid !== snapshot.val().lastModifiedBy) {
+            if (singleton.auth.uid !== dbRootObj.lastModifiedBy) {
                 requestAnimationFrame(function () {
                     mainApp.emit('firebaseView.viewChanged');
                 });
             }
         }
+        onValueListeners.push(onValueListener);
         ref.on('value', onValue);
 
         singleton.auth = ref.getAuth();
         authAnonymously(ref);
 
-        function authHandler (authData) {
-            if (authData) {
-                singleton.auth = authData;
-            }
-            else {
-                singleton.auth = null;
-                authAnonymously(ref);
-            }
-        }
+
         ref.onAuth(authHandler);
-        function onMouseUp () {
-            ref.child('lastModifiedBy').set(singleton.auth.uid);
+
+
+        function commiter () {
+            dbRootObj.lastModifiedBy = singleton.auth.uid;
         }
+        commitListeners.push(commiter);
 
         $body = $('body');
         $body.on('mouseup', onMouseUp);
+        $body.on('mousewheel', onMouseWheel);
 
         function unbind () {
             ref.off();
             ref.offAuth(authHandler);
             $body.off('mouseup', onMouseUp);
-        }
-
-        unbindFunctions.push(unbind);
-
-        recreateAllBindings();
-
-    }
-
-    singleton.customBind = function (watchCallback, dbChangeCallback, ref) {
-        function onValue (snapshot) {
-            if (singleton.auth.uid !== snapshot.val().lastModifiedBy) {
-                dbChangeCallback(snapshot);
-            }
-        }
-        ref = ref || singleton.ref;
-
-        var obj = $firebaseObject(ref);
-
-        ref.on('value', onValue);
-        function temp () {
-            var modified = watchCallback(obj);
-            modified = modified === undefined ? true : modified;
-            if (modified) {
-                obj.lastModifiedBy=singleton.auth.uid;
-                obj.$save();
-            }
-        }
-        var mouseUpTimeoutId;
-        function onMouseUp () {
-            clearTimeout(mouseUpTimeoutId);
-            mouseUpTimeoutId = setTimeout(temp,30);
-        }
-        $body.on('mouseup', onMouseUp);
-
-        var wheelTimeoutId;
-        function onMouseWheel () {
-            clearTimeout(wheelTimeoutId);
-            wheelTimeoutId = setTimeout(temp,1000);
-        }
-        $body.on('mousewheel', onMouseWheel);
-
-        function unbind () {
-            ref.off();
-            $body.off('mouseup', onMouseUp);
             $body.off('mousewheel', onMouseWheel);
         }
 
         unbindFunctions.push(unbind);
+
+    }
+
+    function commit () {
+        commitListeners.map(fn => fn());
+        dbRootObj.$save();
+    }
+
+    function onMouseUp () {
+        clearTimeout(mouseUpTimeoutId);
+        mouseUpTimeoutId = setTimeout(commit,30);
+    }
+
+    function onMouseWheel () {
+        clearTimeout(wheelTimeoutId);
+        wheelTimeoutId = setTimeout(commit,1000);
+    }
+
+    function onValue () {
+        onValueListeners.map(fn => fn());
+    }
+
+    function getDbObj (pathArray) {
+        //retrieve the right db object from the path array
+        // the reference can't be stored in memory because dbRootObj replaces its children by copies from the db
+        var obj = dbRootObj;
+        for (var i = 0; i < pathArray.length; i++) {
+            if (!obj[pathArray[i]]) {
+                obj[pathArray[i]] = {};
+            }
+            obj = obj[pathArray[i]];
+        }
+        return obj;
+    }
+
+    singleton.customBind = function (watchCallback, dbChangeCallback, pathArray) {
+        function onValueListener () {
+            var dbObj = getDbObj(pathArray);
+            if (singleton.auth.uid !== dbRootObj.lastModifiedBy) {
+                dbChangeCallback(dbObj);
+            }
+        }
+        onValueListeners.push(onValueListener);
+        function commiter () {
+            var dbObj = getDbObj(pathArray);
+            var modified = watchCallback(dbObj);
+            modified = modified === undefined ? true : modified;
+            return modified;
+        }
+        commitListeners.push(commiter);
+
     };
 
     function unbindAll () {
@@ -217,25 +234,18 @@ var FirebaseView = (function () {
     }
 
     function createBinding (obj, key, pathArray) {
-        var i,
-            ref = singleton.ref,
-            temp;
-        for (i = 0; i < pathArray.length; i++) {
-            ref = ref.child(pathArray[i]);
-        }
         if (typeof key === 'string') {
             key = [key];
         }
-        function onValue (snapshot) {
-            var val = snapshot.val();
-            if (typeof val === 'object' && val !== null) {
+        function onValueListener (dbObj) {
+            if (typeof dbObj === 'object' && dbObj !== null) {
                 for (var i = 0 ; i<key.length;i++) {
-                    obj[key[i]] = val[key[i]];
+                    obj[key[i]] = dbObj[key[i]];
                 }
             }
         }
 
-        temp = function (dbObj) {
+        function commiter (dbObj) {
             var v,
                 k,
                 modified = false;
@@ -249,9 +259,9 @@ var FirebaseView = (function () {
                 }
             }
             return modified;
-        };
+        }
 
-        singleton.customBind(temp, onValue, ref);
+        singleton.customBind(commiter, onValueListener, pathArray);
 
     }
 

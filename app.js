@@ -539,8 +539,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             obj.target = controls.target;
             obj.up = camera.up;
         }
-        function dbChangeCallback (snapshot) {
-            var val = snapshot.val();
+        function dbChangeCallback (val) {
             if (val) {
                 var cameraStart = camera.position.clone().sub(controls.target),
                     cameraStartLength = cameraStart.length(),
@@ -551,9 +550,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 new TWEEN.Tween(controls.target)
                     .to(val.target, 1000)
                     .onUpdate(function (timestamp) {
-                        var l = (1-timestamp)*cameraStartLength+timestamp*cameraEndLength;
-                        var t = cameraStart.clone().lerp(cameraEnd, timestamp).setLength(l);
-                        camera.position.copy(t.add(controls.target));
+                    var l = (1-timestamp)*cameraStartLength+timestamp*cameraEndLength;
+                    var t = cameraStart.clone().lerp(cameraEnd, timestamp).setLength(l);
+                    camera.position.copy(t.add(controls.target));
                 }).onComplete(function () {
                     controls.target.copy(val.target);
                     camera.position.copy(val.position);
@@ -568,8 +567,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 }).start();
             }
         }
-        var ref = firebaseView.ref.child('camera');
-        firebaseView.customBind(watchCallback, dbChangeCallback, ref);
+        firebaseView.customBind(watchCallback, dbChangeCallback, ['camera']);
     }
 
 
