@@ -108,8 +108,8 @@ var FirebaseView = (function () {
     }
 
     function loadDatabaseConnection () {
-        var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid);
-
+        var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid),
+            blockNextEvent = false;
         if (obj) {
             obj.$destroy();
             unbindAll();
@@ -130,11 +130,12 @@ var FirebaseView = (function () {
 
         function onValue () {
             //skip one frame to be sure that all the copies have been done
-            if (singleton.auth.uid !== $root.view.lastModifiedBy) {
+            if (singleton.auth.uid !== $root.view.lastModifiedBy || blockNextEvent) {
                 requestAnimationFrame(function () {
                     mainApp.emit('firebaseView.viewChanged');
                 });
             }
+            blockNextEvent = false;
         }
         ref.on('value', onValue);
 
@@ -153,6 +154,7 @@ var FirebaseView = (function () {
         ref.onAuth(authHandler);
         function onMouseUp () {
             ref.child('lastModifiedBy').set(singleton.auth.uid);
+            blockNextEvent = true;
         }
 
         $body = $('body');
@@ -171,10 +173,12 @@ var FirebaseView = (function () {
     }
 
     singleton.customBind = function (watchCallback, dbChangeCallback, ref) {
+        var blockNextEvent = false;
         function onValue (snapshot) {
-            if (singleton.auth.uid !== $root.view.lastModifiedBy) {
+            if (singleton.auth.uid !== $root.view.lastModifiedBy || blockNextEvent) {
                 dbChangeCallback(snapshot);
             }
+            blockNextEvent = false;
         }
         ref = ref || singleton.ref;
 
@@ -186,6 +190,7 @@ var FirebaseView = (function () {
         function onMouseUp () {
             clearTimeout(mouseUpTimeoutId);
             mouseUpTimeoutId = setTimeout(temp,30);
+            blockNextEvent = true;
         }
         $body.on('mouseup', onMouseUp);
 
@@ -193,6 +198,7 @@ var FirebaseView = (function () {
         function onMouseWheel () {
             clearTimeout(wheelTimeoutId);
             wheelTimeoutId = setTimeout(temp,1000);
+            blockNextEvent = true;
         }
         $body.on('mousewheel', onMouseWheel);
 
@@ -258,7 +264,7 @@ var FirebaseView = (function () {
     };
 
     function recreateAllBindings () {
-        bindObjects.map(bindObject => createBinding(bindObjects.obj, bindObjects.key, bindObjects.pathArray));
+        bindObjects.map(bindObject => createBinding(bindObject.obj, bindObject.key, bindObject.pathArray));
     }
 
 
