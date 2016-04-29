@@ -130,7 +130,7 @@ var FirebaseView = (function () {
 
         function onValue () {
             //skip one frame to be sure that all the copies have been done
-            if (singleton.auth.uid !== $root.view.lastModifiedBy || blockNextEvent) {
+            if (singleton.auth.uid !== $root.view.lastModifiedBy && !blockNextEvent) {
                 requestAnimationFrame(function () {
                     mainApp.emit('firebaseView.viewChanged');
                 });
@@ -175,7 +175,7 @@ var FirebaseView = (function () {
     singleton.customBind = function (watchCallback, dbChangeCallback, ref) {
         var blockNextEvent = false;
         function onValue (snapshot) {
-            if (singleton.auth.uid !== $root.view.lastModifiedBy || blockNextEvent) {
+            if (singleton.auth.uid !== $root.view.lastModifiedBy && !blockNextEvent) {
                 dbChangeCallback(snapshot);
             }
             blockNextEvent = false;
