@@ -8,7 +8,10 @@ var FirebaseView = (function () {
         pathRegExp = /view\/([\w-]+)/,
         uuid,
         obj,
-        mainApp;
+        mainApp,
+        $body = $('body'),
+        unbindFunctions = [],
+        bindObjects = [];
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -91,15 +94,28 @@ var FirebaseView = (function () {
         }
     }
 
+    function authAnonymously (ref) {
+        if (!singleton.auth) {
+            ref.authAnonymously(function(error, authData) {
+                if (error) {
+                    console.log("Authentication Failed!", error);
+                } else {
+                    console.log("Authenticated successfully with payload:", authData);
+                    singleton.auth = authData;
+                }
+            });
+        }
+    }
+
     function loadDatabaseConnection () {
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid);
 
         if (obj) {
             obj.$destroy();
+            unbindAll();
         }
         obj = $firebaseObject(ref);
-        // this waits for the data to load and then logs the output. Therefore,
-        // data from the server will now appear in the logged output. Use this with care!
+        // this waits for the data to load and then logs the output.
         obj.$loaded()
             .then(function() {
             console.log(obj);
@@ -110,41 +126,89 @@ var FirebaseView = (function () {
         obj.$bindTo($root, 'view');
         $root.view = $root.view || {};
         singleton.view = $root.view;
-        console.log(singleton.view);
         singleton.obj = obj;
         singleton.ref = ref;
 
-        ref.on('value', function () {
+        function onValue () {
             //skip one frame to be sure that all the copies have been done
-                requestAnimationFrame(function () {
-                    mainApp.emit('firebaseView.viewChanged');
-                });
-        });
+            requestAnimationFrame(function () {
+                mainApp.emit('firebaseView.viewChanged');
+            });
+        }
+        ref.on('value', onValue);
 
-        //var auth = $firebaseAuth(ref);
+        singleton.auth = ref.getAuth();
+        authAnonymously(ref);
+
+        function authHandler (authData) {
+            if (authData) {
+                singleton.auth = authData;
+            }
+            else {
+                singleton.auth = null;
+                authAnonymously(ref);
+            }
+        }
+        ref.onAuth(authHandler);
+        function onMouseUp () {
+            ref.child('lastModifiedBy').set(singleton.auth.uid);
+        }
+        $body.on('mouseup', onMouseUp);
+
+        function unbind () {
+            ref.off();
+            ref.offAuth(authHandler);
+            $body.off('mouseup', onMouseUp);
+        }
+
+        unbindFunctions.push(unbind);
+
+        recreateAllBindings();
+
     }
 
-    singleton.customBind = function (watchCallback, dbChangeCallback) {
-        singleton.ref.on('value', dbChangeCallback);
+    singleton.customBind = function (watchCallback, dbChangeCallback, ref) {
+        function onValue (snapshot) {
+            if (singleton.auth.uid !== singleton.view.lastModifiedBy) {
+                dbChangeCallback(snapshot);
+            }
+        }
+        ref = ref || singleton.ref;
+
+        ref.on('value', onValue);
         function temp () {
             watchCallback($root.view);
         }
         var mouseUpTimeoutId;
-        $('body').on('mouseup', function () {
+        function onMouseUp () {
             clearTimeout(mouseUpTimeoutId);
             mouseUpTimeoutId = setTimeout(temp,30);
-        });
+        }
+        $body.on('mouseup', onMouseUp);
 
         var wheelTimeoutId;
-        $('body').on('mousewheel', function () {
+        function onMouseWheel () {
             clearTimeout(wheelTimeoutId);
             wheelTimeoutId = setTimeout(temp,1000);
-        });
+        }
+        $body.on('mousewheel', onMouseWheel);
+
+        function unbind () {
+            ref.off();
+            $body.off('mouseup', onMouseUp);
+            $body.off('mousewheel', onMouseWheel);
+        }
+
+        unbindFunctions.push(unbind);
     };
 
-    singleton.bind = function (obj, key, path) {
-        var pathArray = path !== '' ? path.split('.') : [],
-            i,
+    function unbindAll () {
+        unbindFunctions.map(unbind => unbind());
+        unbindFunctions = [];
+    }
+
+    function createBinding (obj, key, pathArray) {
+        var i,
             ref = singleton.ref,
             dbObj,
             temp;
@@ -154,14 +218,14 @@ var FirebaseView = (function () {
         if (typeof key === 'string') {
             key = [key];
         }
-        ref.on('value', function (snapshot) {
+        function onValue (snapshot) {
             var val = snapshot.val();
-            if (typeof val === 'object' && val !== null) {
-                for (var i = 0 ; i<key.length;i++) {
-                    obj[key[i]] = val[key[i]];
+                if (typeof val === 'object' && val !== null) {
+                    for (var i = 0 ; i<key.length;i++) {
+                        obj[key[i]] = val[key[i]];
+                    }
                 }
-            }
-        });
+        }
 
         dbObj = $firebaseObject(ref);
         temp = function () {
@@ -170,19 +234,30 @@ var FirebaseView = (function () {
             }
             dbObj.$save();
         };
-        var mouseUpTimeoutId;
-        $('body').on('mouseup', function () {
-            clearTimeout(mouseUpTimeoutId);
-            mouseUpTimeoutId = setTimeout(temp,30);
-        });
 
-        var wheelTimeoutId;
-        $('body').on('mousewheel', function () {
-            clearTimeout(wheelTimeoutId);
-            wheelTimeoutId = setTimeout(temp,1000);
-        });
-        //TODO : provide an unbind mechanism
+        singleton.customBind(temp, onValue, ref);
+
+    }
+
+    singleton.bind = function (obj, key, path) {
+        var pathArray = path !== '' ? path.split('.') : [];
+
+        createBinding(obj, key, pathArray);
+
+        var bindObject = {
+            obj : obj,
+            key : key,
+            pathArray : pathArray
+        };
+
+        bindObjects.push(bindObject);
+
     };
+
+    function recreateAllBindings () {
+        bindObjects.map(bindObject => createBinding(bindObjects.obj, bindObjects.key, bindObjects.pathArray));
+    }
+
 
 
     return function () {return singleton;};
