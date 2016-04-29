@@ -108,6 +108,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 }
             }
         }
+        firebaseView.bind(item, ['selected', '_ad_expanded'],'models.'+item['@id']);
+        firebaseView.bind(item.mesh, ['visible'],'models.'+item['@id']+'.mesh');
         return item.mesh;
     }
 
