@@ -108,8 +108,15 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 }
             }
         }
+
+        //coerce to boolean because firebase does not handle undefined
+        item.selected = !!item.selected;
+        item._ad_expanded = !!item._ad_expanded;
+        item.visible = !!item.visible
+        //firebase binding for selection, visibility and visibility in tree
         firebaseView.bind(item, ['selected', '_ad_expanded'],'models.'+item['@id']);
         firebaseView.bind(item.mesh, ['visible'],'models.'+item['@id']+'.mesh');
+
         return item.mesh;
     }
 
