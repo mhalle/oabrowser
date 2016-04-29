@@ -125,7 +125,6 @@ var FirebaseView = (function () {
         });
         obj.$bindTo($root, 'view');
         $root.view = $root.view || {};
-        singleton.view = $root.view;
         singleton.obj = obj;
         singleton.ref = ref;
 
@@ -171,7 +170,7 @@ var FirebaseView = (function () {
 
     singleton.customBind = function (watchCallback, dbChangeCallback, ref) {
         function onValue (snapshot) {
-            if (singleton.auth.uid !== singleton.view.lastModifiedBy) {
+            if (singleton.auth.uid !== $root.view.lastModifiedBy) {
                 dbChangeCallback(snapshot);
             }
         }
