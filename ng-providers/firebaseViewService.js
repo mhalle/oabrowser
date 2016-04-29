@@ -9,7 +9,7 @@ var FirebaseView = (function () {
         uuid,
         obj,
         mainApp,
-        $body = $('body'),
+        $body,
         unbindFunctions = [],
         bindObjects = [];
 
@@ -153,6 +153,8 @@ var FirebaseView = (function () {
         function onMouseUp () {
             ref.child('lastModifiedBy').set(singleton.auth.uid);
         }
+
+        $body = $('body');
         $body.on('mouseup', onMouseUp);
 
         function unbind () {
