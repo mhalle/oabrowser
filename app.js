@@ -526,8 +526,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         }
         function dbChangeCallback (snapshot) {
             var val = snapshot.val();
-            if (val && val.camera) {
-                val = val.camera;
+            if (val) {
                 var cameraStart = camera.position.clone().sub(controls.target),
                     cameraStartLength = cameraStart.length(),
                     cameraEnd = new THREE.Vector3().add(val.position).sub(val.target),
