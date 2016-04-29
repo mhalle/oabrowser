@@ -518,11 +518,10 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
     function initFirebase () {
 
-        function watchCallback (view) {
-            view.camera = view.camera || {};
-            view.camera.position = camera.position;
-            view.camera.target = controls.target;
-            view.camera.up = camera.up;
+        function watchCallback (obj) {
+            obj.position = camera.position;
+            obj.target = controls.target;
+            obj.up = camera.up;
         }
         function dbChangeCallback (snapshot) {
             var val = snapshot.val();

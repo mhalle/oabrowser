@@ -177,10 +177,13 @@ var FirebaseView = (function () {
         }
         ref = ref || singleton.ref;
 
+        var obj = $firebaseObject(ref);
+
         ref.on('value', onValue);
         function temp () {
-            watchCallback($root.view);
-            ref.child('lastModifiedBy').set(singleton.auth.uid);
+            watchCallback(obj);
+            obj.lastModifiedBy=singleton.auth.uid;
+            obj.$save();
         }
         var mouseUpTimeoutId;
         function onMouseUp () {
@@ -213,7 +216,6 @@ var FirebaseView = (function () {
     function createBinding (obj, key, pathArray) {
         var i,
             ref = singleton.ref,
-            dbObj,
             temp;
         for (i = 0; i < pathArray.length; i++) {
             ref = ref.child(pathArray[i]);
@@ -230,12 +232,10 @@ var FirebaseView = (function () {
             }
         }
 
-        dbObj = $firebaseObject(ref);
-        temp = function () {
+        temp = function (dbObj) {
             for (var i = 0 ; i<key.length;i++) {
                 dbObj[key[i]] = obj[key[i]];
             }
-            dbObj.$save();
         };
 
         singleton.customBind(temp, onValue, ref);
