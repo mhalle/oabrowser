@@ -15,7 +15,8 @@ var FirebaseView = (function () {
         onValueListeners = [],
         commitListeners = [],
         mouseUpTimeoutId,
-        wheelTimeoutId;
+        wheelTimeoutId,
+        startingApplication = true;
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -128,6 +129,7 @@ var FirebaseView = (function () {
             dbRootObj.$destroy();
             unbindAll();
         }
+        startingApplication = true;
         dbRootObj = $firebaseObject(ref);
         // this waits for the data to load and then logs the output.
         dbRootObj.$loaded()
@@ -142,7 +144,7 @@ var FirebaseView = (function () {
 
         function onValueListener (snapshotValue) {
             //skip one frame to be sure that all the copies have been done
-            if (singleton.auth.uid !== snapshotValue.lastModifiedBy) {
+            if (singleton.auth.uid !== snapshotValue.lastModifiedBy || startingApplication) {
                 requestAnimationFrame(function () {
                     mainApp.emit('firebaseView.viewChanged');
                 });
@@ -180,6 +182,7 @@ var FirebaseView = (function () {
 
     function commit () {
         commitListeners.map(fn => fn());
+        startingApplication = false;
         dbRootObj.$save();
     }
 
@@ -214,7 +217,7 @@ var FirebaseView = (function () {
     singleton.customBind = function (watchCallback, dbChangeCallback, pathArray) {
         function onValueListener (snapshotValue) {
             var dbObj = getDbObj(pathArray, snapshotValue);
-            if (singleton.auth.uid !== snapshotValue.lastModifiedBy) {
+            if (singleton.auth.uid !== snapshotValue.lastModifiedBy || startingApplication) {
                 dbChangeCallback(dbObj);
             }
         }
