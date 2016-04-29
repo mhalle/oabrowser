@@ -144,10 +144,12 @@ var FirebaseView = (function () {
 
         function onValueListener (snapshotValue) {
             //skip one frame to be sure that all the copies have been done
-            if (singleton.auth.uid !== snapshotValue.lastModifiedBy || startingApplication) {
-                requestAnimationFrame(function () {
-                    mainApp.emit('firebaseView.viewChanged');
-                });
+            if (snapshotValue) {
+                if (singleton.auth.uid !== snapshotValue.lastModifiedBy || startingApplication) {
+                    requestAnimationFrame(function () {
+                        mainApp.emit('firebaseView.viewChanged');
+                    });
+                }
             }
         }
         onValueListeners.push(onValueListener);
@@ -216,9 +218,11 @@ var FirebaseView = (function () {
 
     singleton.customBind = function (watchCallback, dbChangeCallback, pathArray) {
         function onValueListener (snapshotValue) {
-            var dbObj = getDbObj(pathArray, snapshotValue);
-            if (singleton.auth.uid !== snapshotValue.lastModifiedBy || startingApplication) {
-                dbChangeCallback(dbObj);
+            if (snapshotValue) {
+                var dbObj = getDbObj(pathArray, snapshotValue);
+                if (singleton.auth.uid !== snapshotValue.lastModifiedBy || startingApplication) {
+                    dbChangeCallback(dbObj);
+                }
             }
         }
         onValueListeners.push(onValueListener);
