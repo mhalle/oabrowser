@@ -92,6 +92,27 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         });
     }
 
+    function bindHierarchyItemWithFirebase (item) {
+        //fireobject can not sync properties starting with _ so we have to make a proxy
+        if (item.visibleInTree === undefined) {
+            Object.defineProperty(item, 'visibleInTree', {
+                get : function () {
+                    return !!item._ad_expanded;
+                },
+                set : function (value) {
+                    item._ad_expanded = !!value;
+                }
+            });
+        }
+        //firebase binding for selection, visibility and visibility in tree
+        firebaseView.bind(item, ['selected', 'visibleInTree'],'models.'+item['@id']);
+
+        //do not bind 'visible' property with group because they will fetch their property from their child
+        if (item['@type'] !== 'group') {
+            firebaseView.bind(item.mesh, ['visible'],'models.'+item['@id']+'.mesh');
+        }
+    }
+
     function getMesh(item) {
 
         if (item['@type']==='group') {
@@ -109,20 +130,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             }
         }
 
-        //fireobject can not sync properties starting with _ so we have to make a proxy
-        if (item.visibleInTree === undefined) {
-            Object.defineProperty(item, 'visibleInTree', {
-                get : function () {
-                    return !!item._ad_expanded;
-                },
-                set : function (value) {
-                    item._ad_expanded = !!value;
-                }
-            });
-        }
-        //firebase binding for selection, visibility and visibility in tree
-        firebaseView.bind(item, ['selected', 'visibleInTree'],'models.'+item['@id']);
-        firebaseView.bind(item.mesh, ['visible'],'models.'+item['@id']+'.mesh');
+        bindHierarchyItemWithFirebase(item);
 
         return item.mesh;
     }
