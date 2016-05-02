@@ -29,13 +29,16 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
     $scope.done = false;
 
     $scope.safeApply = function(fn) {
-        var phase = this.$root.$$phase;
-        if(phase === '$apply' || phase === '$digest') {
-            if(fn && (typeof(fn) === 'function')) {
-                fn();
+        //if scope has been destroyed, ie if modal has been dismissed, $root is null
+        if (this.$root) {
+            var phase = this.$root.$$phase;
+            if(phase === '$apply' || phase === '$digest') {
+                if(fn && (typeof(fn) === 'function')) {
+                    fn();
+                }
+            } else {
+                this.$apply(fn);
             }
-        } else {
-            this.$apply(fn);
         }
     };
 
