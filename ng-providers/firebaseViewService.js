@@ -351,7 +351,7 @@ var FirebaseView = (function () {
 
     singleton.getOtherViewersId = function () {
         if (dbRootObj && dbRootObj.viewers) {
-            var list = dbRootObj.viewers.keys();
+            var list = Object.keys(dbRootObj.viewers);
             var index = list.indexOf(singleton.auth.uid);
             if (index > -1) {
                 list.splice(index,1);
