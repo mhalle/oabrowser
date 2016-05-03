@@ -297,6 +297,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     event.stopImmediatePropagation();
                 }
 
+                //prevent any element from being selected
+                $(document.body).addClass('unselectable');
 
             }
 
@@ -351,6 +353,9 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 event.stopImmediatePropagation();
                 //detach event blocker with a timeout to block 'contextmenu' which happens after mouse up
                 setTimeout(function () {$(document).off('contextmenu', preventDefault);},100);
+
+                //allow user to select any text when dragging is over
+                $(document.body).removeClass('unselectable');
             }
 
             function mouseWheel (event) {

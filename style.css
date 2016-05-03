@@ -151,3 +151,31 @@ div#stats {
 .dropdown-menu {
     z-index: 1020;
 }
+
+/*
+    prevent an element from being selected on drag or on click
+    will be added to body on mouse down on canvas and removed on mouse up
+*/
+.unselectable {
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}
+
+/*
+    canvas are always unselectable
+*/
+canvas {
+    -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+}
