@@ -39,10 +39,10 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
 
             $scope.toggleViewLock = function () {
                 if (firebaseView.isLocked()){
-                    firebaseView.unlock();
+                    firebaseView.unlockView();
                 }
                 else {
-                    firebaseView.lock();
+                    firebaseView.lockView();
                 }
             };
 
