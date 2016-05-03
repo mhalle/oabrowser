@@ -14,6 +14,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
             $scope.volumesManager = volumesManager;
             $scope.popoverIsOpen = false;
             $scope.crosshair = crosshair;
+            $scope.firebaseView = firebaseView;
 
 
             $scope.toggleLink = function () {
@@ -34,6 +35,15 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
 
             $scope.togglePopover = function () {
                 $scope.popoverIsOpen = ! $scope.popoverIsOpen;
+            };
+
+            $scope.toggleViewLock = function () {
+                if (firebaseView.isLocked()){
+                    firebaseView.unlock();
+                }
+                else {
+                    firebaseView.lock();
+                }
             };
 
             function updateControlsScope () {
@@ -112,6 +122,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
             mainApp.on('mainToolbar.sliceVisibilityChanged', updateControlsScope);
             mainApp.on('volumesManager.volumeAdded', updateControlsScope);
             mainApp.on('insertSlice', updateControlsScope);
+            mainApp.on('firebaseView.viewChanged', updateControlsScope);
             var once = true;
             mainApp.on('insertSlice', function () {
                 if (once) {

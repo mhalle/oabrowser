@@ -307,7 +307,13 @@ var FirebaseView = (function () {
 
     singleton.unlockView = function () {
         dbRootObj.locked = false;
+        //commit changes which happened during the period of lock
+        commit();
         dbRootObj.$save();
+    };
+
+    singleton.isLocked = function () {
+        return !!dbRootObj.locked;
     };
 
 

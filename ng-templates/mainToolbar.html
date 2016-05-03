@@ -3,14 +3,20 @@
 <span class="glyphicon glyphicon-link" aria-hidden="true" ng-class="{'slice-controls-true': volumesManager.slicesLinked, 'slice-controls-false' : !volumesManager.slicesLinked, }"></span>
 </button>
 -->
+
+<!-- POPOVER -->
 <button type="button" class="btn btn-default btn-sm" aria-label="Pin" ng-click="togglePopover()" uib-popover-template="'ng-templates/controlsPopover.html'" popover-placement="bottom-left" popover-append-to-body="true">
     <span class="glyphicon glyphicon-collapse-down slice-controls-true" aria-hidden="true" ng-if="popoverIsOpen"></span>
     <span class="glyphicon glyphicon-collapse-up" aria-hidden="true" ng-if="!popoverIsOpen"></span>
 </button>
+
+<!-- CROSSHAIR -->
 <button type="button" class="btn btn-default btn-sm" aria-label="Crosshair" ng-click="toggleCrosshair($event)">
     <span class="glyphicon glyphicon-screenshot slice-controls-true" aria-hidden="true" ng-if="crosshair.visible"></span>
     <span class="glyphicon glyphicon-screenshot slice-controls-false" aria-hidden="true" ng-if="!crosshair.visible"></span>
 </button>
+
+<!-- LAYERS SELECTION -->
 <div class="btn-group btn-sm" uib-dropdown dropdown-append-to-body="true">
     <button id="single-button" type="button" class="btn btn-default btn-sm" uib-dropdown-toggle>
         <span class="glyphicon glyphicon-list" aria-hidden="true"></span> <span class="caret"></span>
@@ -35,3 +41,8 @@
         </li>
     </ul>
 </div>
+
+<button type="button" class="btn btn-default btn-sm" aria-label="ViewLock" ng-click="toggleViewLock($event)">
+    <span class="glyphicon glyphicon-lock slice-controls-true" aria-hidden="true" ng-if="firebaseView.isLocked()"></span>
+    <span class="glyphicon glyphicon-lock slice-controls-false" aria-hidden="true" ng-if="!firebaseView.isLocked()"></span>
+</button>
