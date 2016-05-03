@@ -261,7 +261,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
                 pos.x += volume.dimensions[0]/2;
                 pos.y += volume.dimensions[1]/2;
                 pos.z += volume.dimensions[2]/2;
-                pos.round();
+                pos.floor();
                 label = volume.getData(pos.x, pos.y, pos.z);
                 if (label) {
                     structure = volume.reverseMapping[label];
