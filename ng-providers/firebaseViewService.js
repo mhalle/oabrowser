@@ -164,10 +164,16 @@ var FirebaseView = (function () {
 
         function commiter () {
             dbRootObj.lastModifiedBy = singleton.auth.uid;
+
+            //add himself to the list of authors
+            if (!dbRootObj.authors || !dbRootObj.authors[singleton.auth.uid]) {
+                dbRootObj.authors = dbRootObj.authors || {};
+                dbRootObj.authors[singleton.auth.uid] = true;
+            }
         }
         commitListeners.push(commiter);
 
-        $body = $('body');
+        $body = $(document.body);
         $body.on('mouseup', onMouseUp);
         $body.on('mousewheel', onMouseWheel);
 
@@ -183,9 +189,11 @@ var FirebaseView = (function () {
     }
 
     function commit () {
-        commitListeners.map(fn => fn());
-        startingApplication = false;
-        dbRootObj.$save();
+        if (!dbRootObj.locked) {
+            commitListeners.map(fn => fn());
+            startingApplication = false;
+            dbRootObj.$save();
+        }
     }
 
     function onMouseUp () {
@@ -291,6 +299,16 @@ var FirebaseView = (function () {
     function recreateAllBindings () {
         bindObjects.map(bindObject => createBinding(bindObject.obj, bindObject.key, bindObject.pathArray));
     }
+
+    singleton.lockView = function () {
+        dbRootObj.locked = true;
+        dbRootObj.$save();
+    };
+
+    singleton.unlockView = function () {
+        dbRootObj.locked = false;
+        dbRootObj.$save();
+    };
 
 
 
