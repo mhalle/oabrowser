@@ -107,8 +107,12 @@ var FirebaseView = (function () {
                 } else {
                     console.log("Authenticated successfully with payload:", authData);
                     singleton.auth = authData;
+                    loadViewerConnection();
                 }
             });
+        }
+        else {
+            loadViewerConnection();
         }
     }
 
@@ -147,7 +151,6 @@ var FirebaseView = (function () {
     }
 
     function loadDatabaseConnection () {
-        loadViewerConnection();
 
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid);
         if (dbRootObj) {
