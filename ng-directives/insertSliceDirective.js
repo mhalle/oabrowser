@@ -55,6 +55,10 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
             function updateControlsScope () {
 
+                if (!$scope.slice) {
+                    return;
+                }
+
                 var volumes = $scope.slice.volumes,
                     volumesDatasource = volumes.map(x=>x.datasource),
                     nameRegexp = /([0-9a-zA-Z_\-]+)\.\w+$/,
