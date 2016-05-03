@@ -124,6 +124,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 $scope.repaint();
             }
 
+            mainApp.on('firebaseView.viewChanged', update);
+
             mainApp.on('insertSlice', function (data) {
                 //we are expecting data to hold two properties :
                 //      - sliceId which identify in which directive you want to insert the slice
@@ -241,7 +243,6 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             };
 
 
-            mainApp.on('firebaseView.viewChanged', $scope.repaint);
 
 
             function preventDefault (e) {
