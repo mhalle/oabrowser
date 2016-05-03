@@ -131,12 +131,13 @@ var FirebaseView = (function () {
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid+"/viewers/"+singleton.auth.uid);
 
         var int = setInterval(function () {
-            ref.child('lastUpdate').set(Date.now);
+            ref.child('lastUpdate').set(Date.now());
         }, 30000);
 
         ref.on('value', function(snapshot) {
             //reload the connection if one of the author give him the edition rights
-            if (snapshot.val().author) {
+            var val = snapshot.val();
+            if (val && val.author) {
                 loadDatabaseConnection();
             }
         });
@@ -349,12 +350,15 @@ var FirebaseView = (function () {
     };
 
     singleton.getOtherViewersId = function () {
-        var list = dbRootObj.viewers.keys();
-        var index = list.indexOf(singleton.auth.uid);
-        if (index > -1) {
-            list.splice(index,1);
+        if (dbRootObj && dbRootObj.viewers) {
+            var list = dbRootObj.viewers.keys();
+            var index = list.indexOf(singleton.auth.uid);
+            if (index > -1) {
+                list.splice(index,1);
+            }
+            return list;
         }
-        return list;
+        return [];
     };
 
 
