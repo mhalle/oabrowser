@@ -57,6 +57,10 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
                     object,
                     opacity;
 
+                if (firebaseView.isAuthor()) {
+                    $scope.otherViewers = firebaseView.getOtherViewersId();
+                }
+
                 $scope.sliders = {};
                 $scope.sliders.options = {
                     labelOpacity : {

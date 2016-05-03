@@ -123,7 +123,32 @@ var FirebaseView = (function () {
         }
     }
 
+    function loadViewerConnection () {
+        var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid+"/viewers/"+singleton.auth.uid);
+
+        var int = setInterval(function () {
+            ref.child('lastUpdate').set(Date.now);
+        }, 30000);
+
+        ref.on('value', function(snapshot) {
+            //reload the connection if one of the author give him the edition rights
+            if (snapshot.val().author) {
+                loadDatabaseConnection();
+            }
+        });
+
+        function unbind () {
+            clearInterval(int);
+        }
+        $(window).unload(function () {
+            ref.remove();
+        });
+        unbindFunctions.push(unbind);
+    }
+
     function loadDatabaseConnection () {
+        loadViewerConnection();
+
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid);
         if (dbRootObj) {
             dbRootObj.$destroy();
@@ -314,6 +339,19 @@ var FirebaseView = (function () {
 
     singleton.isLocked = function () {
         return !!dbRootObj.locked;
+    };
+
+    singleton.isAuthor = function () {
+        return dbRootObj && dbRootObj.camera;
+    };
+
+    singleton.getOtherViewersId = function () {
+        var list = dbRootObj.viewers.keys();
+        var index = list.indexOf(singleton.auth.uid);
+        if (index > -1) {
+            list.splice(index,1);
+        }
+        return list;
     };
 
 
