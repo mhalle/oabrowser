@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Atlas Viewer</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+        <!-- dependencies -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+        <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+
+        <!-- adapt-strap -->
+        <script src="bower_components/adapt-strap/dist/adapt-strap.min.js"></script>
+        <script src="bower_components/adapt-strap/dist/adapt-strap.tpl.min.js"></script>
+        <link rel="stylesheet" href="bower_components/adapt-strap/dist/adapt-strap.min.css"/>
+
+        <link rel="stylesheet" href="libs/ui-layout.css">
+        <link rel="stylesheet" href="libs/rzslicer.css">
+
+        <!-- Firebase -->
+        <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+        <!-- AngularFire -->
+        <script src="https://cdn.firebase.com/libs/angularfire/1.2.0/angularfire.min.js"></script>
+
+
+        <!--- local files -->
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+
+    <body ng-app="atlasDemo" ng-controller="LayoutController" ng-cloak>
+
+
+        <div ui-layout="{flow: 'row'}" ui-layout-loaded>
+            <div id="topContainer" ui-layout-container size="30px" minSize="30px" maxSize="30px">
+                <div main-toolbar></div>
+            </div>
+            <div ui-layout-container>
+                <div ui-layout="config" >
+                    <div id="leftSideContainer" ui-layout-container collapsed="layout.leftSide" size="20%">
+                        <div ui-layout="{flow: 'row'}">
+                            <div ui-layout-container><div insert-slice sliceid="axial"></div></div>
+                            <div ui-layout-container="center"><div insert-slice sliceid="coronal"></div></div>
+                            <div ui-layout-container><div insert-slice sliceid="sagittal"></div></div>
+                        </div>
+                    </div>
+                    <div id="centerContainer" ui-layout-container="center">
+                        <div id="rendererFrame"></div>
+                        <div id="inset"></div>
+                        <div id="gui-container"></div>
+                    </div>
+                    <div id="rightSideContainer" ui-layout-container collapsed="layout.rightSide" size="20%">
+                        <!--- LOGO BOX ---->
+                        <div id="logoBox" ng-controller="HeaderCtrl">
+                            <img src="logo_spl.gif" width="60px" height="48px"><br>
+                            <span>{{data.title}}</span><br>
+                            <span class="tinyText">
+                                <a ng-href="{{data.source}}" href="http://github.com/stity" target=_blank>Source</a>
+                            </span>
+                        </div>
+
+                        <!--- HIERARCHY ----->
+                        <div  insert-tree id="structureList"></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="bottomContainer" ui-layout-container collapsed="layout.bottom" size="50px">
+                <div insert-breadcrumbs id="breadcrumbsList"></div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <script type="text/ng-template" id="treeListDirective">
+            <ad-tree-browser class="ad-border-default"
+                             tree-name="treeDemoBordered"
+                             row-ng-class="{added:item._selected}"
+                             tree-root="data.root"
+                             child-node="members"
+                             children-padding="15"
+                             bordered="true"
+                             node-template-url="ng-templates/treeNode.html">
+            </ad-tree-browser>
+        </script>
+
+        <div ng-controller="ModalDemoCtrl"></div>
+
+        <script src="../configAtlasViewer.js"></script>
+        <script src="dist/all.js"></script>
+    </body>
+</html>
