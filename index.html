@@ -64,10 +64,13 @@
         <script src="libs/Tween.js"></script>
     </head>
 
-    <body ng-app="atlasDemo" ng-controller="LayoutController" ng-cloak>
+    <body ng-app="atlasDemo" ng-controller="LayoutController">
 
 
-        <div ui-layout="{flow: 'row'}" ui-layout-loaded>
+        <!-- This message will disappear as soon as script is loaded -->
+        <div id="waitMessage" style="position: fixed; top: 50%; text-align: center; width: 100%;">Loading...</div>
+
+        <div ui-layout="{flow: 'row'}" ui-layout-loaded ng-cloak>
             <div id="topContainer" ui-layout-container size="30px" minSize="30px" maxSize="30px">
                 <div main-toolbar></div>
             </div>

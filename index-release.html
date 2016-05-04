@@ -6,35 +6,27 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
         <!-- dependencies -->
-        <script src="bower_components/jquery/dist/jquery.js"></script>
-        <script src="bower_components/angular/angular.js"></script>
-        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
-        <script src="bower_components/angular-animate/angular-animate.min.js"></script>
 
         <!-- adapt-strap -->
-        <script src="bower_components/adapt-strap/dist/adapt-strap.min.js"></script>
-        <script src="bower_components/adapt-strap/dist/adapt-strap.tpl.min.js"></script>
         <link rel="stylesheet" href="bower_components/adapt-strap/dist/adapt-strap.min.css"/>
 
         <link rel="stylesheet" href="libs/ui-layout.css">
         <link rel="stylesheet" href="libs/rzslicer.css">
 
-        <!-- Firebase -->
-        <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
-        <!-- AngularFire -->
-        <script src="https://cdn.firebase.com/libs/angularfire/1.2.0/angularfire.min.js"></script>
+        <script src="../configAtlasViewer.js"></script>
 
 
         <!--- local files -->
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
 
-    <body ng-app="atlasDemo" ng-controller="LayoutController" ng-cloak>
+    <body ng-app="atlasDemo" ng-controller="LayoutController">
 
+        <!-- This message will disappear as soon as script is loaded -->
+        <div id="waitMessage" style="position: fixed; top: 50%; text-align: center; width: 100%;">Loading...</div>
 
-        <div ui-layout="{flow: 'row'}" ui-layout-loaded>
+        <div ui-layout="{flow: 'row'}" ui-layout-loaded ng-cloak>
             <div id="topContainer" ui-layout-container size="30px" minSize="30px" maxSize="30px">
                 <div main-toolbar></div>
             </div>
@@ -93,7 +85,7 @@
 
         <div ng-controller="ModalDemoCtrl"></div>
 
-        <script src="../configAtlasViewer.js"></script>
         <script src="dist/all.js"></script>
+
     </body>
 </html>

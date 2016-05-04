@@ -32,6 +32,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         mousedownPosition = new THREE.Vector2(0,0),
         containerOffset;
 
+    //remove the wait message displayed on slow connection before the script load
+    $('#waitMessage').remove();
+
 
     //this function enables us to create a scope and then keep the right item in the callback
     function loadVTKFile(i) {
