@@ -1,5 +1,5 @@
 
-angular.module('atlasDemo').directive( 'insertTree', function ( $compile ) {
+angular.module('atlasDemo').directive( 'insertTree', ['$compile', function ( $compile ) {
     return {
         restrict: 'A',
         scope: { text: '@' },
@@ -23,4 +23,4 @@ angular.module('atlasDemo').directive( 'insertTree', function ( $compile ) {
             });
         }]
     };
-});
+}]);
