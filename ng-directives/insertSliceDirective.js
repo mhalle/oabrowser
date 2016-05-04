@@ -4,7 +4,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
         restrict: 'A',
         templateUrl: 'ng-templates/slicePanel.html',
         scope: { sliceId : '=sliceid' },
-        controller: function ( $scope, $element, mainApp, volumesManager, crosshair, firebaseView ) {
+        controller: ['$scope', '$element', 'mainApp', 'volumesManager', 'crosshair', 'firebaseView', function ( $scope, $element, mainApp, volumesManager, crosshair, firebaseView ) {
 
             $scope.sliceId = $element.attr('sliceid');
             $scope.controls = {
@@ -368,6 +368,6 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
             }
 
 
-        }
+        }]
     };
 });

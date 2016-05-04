@@ -1,4 +1,4 @@
-angular.module('atlasDemo').controller('ModalDemoCtrl', function ($scope, $uibModal) {
+angular.module('atlasDemo').controller('ModalDemoCtrl', ['$scope', '$uibModal', function ($scope, $uibModal) {
 
     $uibModal.open({
         animation: true,
@@ -9,12 +9,12 @@ angular.module('atlasDemo').controller('ModalDemoCtrl', function ($scope, $uibMo
 
 
 
-});
+}]);
 
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $uibModal service used above.
 
-angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, $rootScope, mainApp) {
+angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$rootScope', 'mainApp', function ($scope, $uibModalInstance, $rootScope, mainApp) {
 
     $scope.loadingJSON = true;
     $scope.loadingVTK = false;
@@ -104,4 +104,4 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', function ($scope, $u
         $uibModalInstance.dismiss('cancel');
     };
     */
-});
+}]);

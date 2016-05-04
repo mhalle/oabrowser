@@ -1,4 +1,4 @@
-angular.module('atlasDemo').controller('LayoutController', function($scope, $timeout, mainApp) {
+angular.module('atlasDemo').controller('LayoutController', ['$scope', '$timeout', 'mainApp', function($scope, $timeout, mainApp) {
     $scope.config = {
         flow: 'column'
     };
@@ -38,4 +38,4 @@ angular.module('atlasDemo').controller('LayoutController', function($scope, $tim
         },10);
     });
 
-});
+}]);

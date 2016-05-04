@@ -1,4 +1,4 @@
-angular.module('atlasDemo').controller('HeaderCtrl', function ($scope, mainApp) {
+angular.module('atlasDemo').controller('HeaderCtrl',['$scope', 'mainApp', function ($scope, mainApp) {
 
     $scope.data = {
         title : "",
@@ -10,4 +10,4 @@ angular.module('atlasDemo').controller('HeaderCtrl', function ($scope, mainApp) 
         $scope.data.source = header.contact;
         $scope.$apply();
     });
-});
+}]);

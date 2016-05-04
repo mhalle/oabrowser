@@ -3,7 +3,7 @@ angular.module('atlasDemo').directive( 'insertTree', function ( $compile ) {
     return {
         restrict: 'A',
         scope: { text: '@' },
-        controller: function ( $scope, $element, mainApp, objectSelector ) {
+        controller: ['$scope', '$element', 'mainApp', 'objectSelector', function ( $scope, $element, mainApp, objectSelector ) {
             $scope.select = function (item) {
                 if (item.selected) {
                     objectSelector.removeFromSelection(item);
@@ -21,6 +21,6 @@ angular.module('atlasDemo').directive( 'insertTree', function ( $compile ) {
                 var el = $compile( template )( $scope );
                 $element.append( el );
             });
-        }
+        }]
     };
 });

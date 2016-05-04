@@ -4,7 +4,7 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
         restrict: 'A',
         scope: {},
         templateUrl : "ng-templates/breadcrumbs.html",
-        controller: function ( $scope, $element, mainApp ) {
+        controller: ['$scope', '$element', 'mainApp', function ( $scope, $element, mainApp ) {
 
             function getAllTheHierarchyPaths(object) {
                 var result = [];
@@ -90,6 +90,6 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
                 $scope.data.breadcrumbs = $scope.data.selectedBreadcrumbs;
                 $scope.safeApply();
             });
-        }
+        }]
     };
 }]);

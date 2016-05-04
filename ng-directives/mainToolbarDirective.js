@@ -4,7 +4,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
         restrict: 'A',
         templateUrl: 'ng-templates/mainToolbar.html',
         scope: {},
-        controller: function ( $scope, $element, mainApp, volumesManager, crosshair, firebaseView ) {
+        controller: ['$scope', '$element', 'mainApp', 'volumesManager', 'crosshair', 'firebaseView', function ( $scope, $element, mainApp, volumesManager, crosshair, firebaseView ) {
 
             $scope.controls = {
                 backgrounds : [],
@@ -136,6 +136,6 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
                 }
             });
 
-        }
+        }]
     };
 });
