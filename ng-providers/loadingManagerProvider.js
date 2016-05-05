@@ -6,8 +6,8 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         nrrdLoader = new THREE.NRRDLoader(),
         vtkLoader = new THREE.VTKLoader(),
         singleton = {
-            numbersOfModelsLoaded : 0,
-            numbersOfVolumesLoaded : 0
+            numberOfModelsLoaded : 0,
+            numberOfVolumesLoaded : 0
         },
         volumesLoaded = {},
         volumesProgress = {},
@@ -88,7 +88,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             mesh.atlasStructure = item;
 
             modelsLoaded[file] = true;
-            singleton.numbersOfModelsLoaded++;
+            singleton.numberOfModelsLoaded++;
 
             //signal to the modal
             mainApp.emit('loadingManager.modelLoaded', file);
