@@ -59,6 +59,7 @@ const babelFiles = [
         "ng-providers/objectSelectorProvider.js",
         "ng-providers/volumesManagerProvider.js",
         "ng-providers/crosshairProvider.js",
+        "ng-providers/loadingManagerProvider.js",
         "ng-providers/firebaseViewService.js",
         "ng-directives/insertTreeDirective.js",
         "ng-directives/insertBreadcrumbs.js",

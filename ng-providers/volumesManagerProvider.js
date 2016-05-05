@@ -11,7 +11,6 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             sagittal : null,
             axial : null
         },
-        nrrdLoader = new THREE.NRRDLoader(),
         firebaseView,
         singleton = {
             slicesLinked : true
@@ -131,6 +130,8 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             sliceY,
             sliceZ;
 
+        treatAsBackground = treatAsBackground === undefined ? isBackground(datasource) : treatAsBackground;
+
         setupCubeHelper(volume);
 
         if (treatAsBackground) {
@@ -172,31 +173,6 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     function isBackground (datasource) {
         var backgroundImages = mainApp.atlasStructure.header.backgroundImages;
         return backgroundImages === datasource || backgroundImages.includes(datasource);
-    }
-
-    function loadVolume(datasource, treatAsBackground) {
-
-        treatAsBackground = treatAsBackground === undefined ? isBackground(datasource) : treatAsBackground;
-
-        var nrrdFileLocation = datasource.source;
-
-        var onProgress = function ( xhr ) {
-            if ( xhr.lengthComputable ) {
-                var percentComplete = Math.round(xhr.loaded / xhr.total * 100);
-                mainApp.emit('volumesManager.loadingProgress', {filename : nrrdFileLocation, progress : percentComplete});
-            }
-        };
-
-        var onSuccess = function (volume) {
-            mainApp.emit('volumesManager.loadingEnd', nrrdFileLocation);
-
-            addVolume(volume, datasource, treatAsBackground);
-        };
-
-        mainApp.emit('volumesManager.loadingStart', nrrdFileLocation);
-
-        nrrdLoader.load( nrrdFileLocation, onSuccess, onProgress );
-
     }
 
     function toggleVisibilityInCompositing (volume, slice) {
@@ -311,7 +287,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
 
     singleton.volumes = volumes;
     singleton.setScene = setScene;
-    singleton.loadVolume = loadVolume;
+    singleton.addVolume = addVolume;
     singleton.toggleVisibility = toggleVisibilityInCompositing;
     singleton.compositingSlices = compositingSlices;
     singleton.isVolumeABackground = isVolumeABackground;

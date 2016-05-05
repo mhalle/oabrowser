@@ -16,7 +16,9 @@ var FirebaseView = (function () {
         commitListeners = [],
         mouseUpTimeoutId,
         wheelTimeoutId,
-        startingApplication = true;
+        loadingNewView = true,
+        loadingManager,
+        initiated = false;
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -44,6 +46,12 @@ var FirebaseView = (function () {
     singleton.setMainApp = function (mA) {
         if (!mainApp) {
             mainApp = mA;
+        }
+    };
+
+    singleton.setLoadingManager = function (lm) {
+        if (!loadingManager) {
+            loadingManager = lm;
         }
     };
 
@@ -86,6 +94,10 @@ var FirebaseView = (function () {
     }
 
     function init () {
+        //init () can only be run once
+        if (initiated) {
+            return;
+        }
         setWatcher();
         if ($location && $firebaseObject) {
             var initialPath = parsePath($location.path());
@@ -97,6 +109,7 @@ var FirebaseView = (function () {
                 loadDatabaseConnection();
             }
         }
+        initiated = true;
     }
 
     function authAnonymously (ref) {
@@ -158,6 +171,7 @@ var FirebaseView = (function () {
             dbRootObj.$destroy();
             unbindAll();
         }
+        loadingNewView = true;
         dbRootObj = $firebaseObject(ref);
         // this waits for the data to load and then logs the output.
         dbRootObj.$loaded()
@@ -213,9 +227,10 @@ var FirebaseView = (function () {
 
     function commit () {
         if (!dbRootObj.locked) {
-            commitListeners.map(fn => fn());
-            startingApplication = false;
-            dbRootObj.$save();
+            if (!loadingManager.isLoading()){
+                commitListeners.map(fn => fn());
+                dbRootObj.$save();
+            }
         }
     }
 
@@ -231,16 +246,18 @@ var FirebaseView = (function () {
 
     function onValue (snapshot) {
         var snapshotValue = snapshot.val();
-        if (snapshotValue === null) {
-            startingApplication = true;
-        }
-        else {
-            startingApplication = false;
-        }
         if (snapshotValue) {
-            if (singleton.auth.uid !== snapshotValue.lastModifiedBy || startingApplication) {
+            if (loadingManager.isLoading()) {
+                mainApp.on('loadingManager.loadingEnd', function () {
+                    requestAnimationFrame(function () {
+                        onValueListeners.map(fn => fn(snapshotValue));
+                    });
+                });
+            }
+            else if (singleton.auth.uid !== snapshotValue.lastModifiedBy || loadingNewView) {
                 onValueListeners.map(fn => fn(snapshotValue));
             }
+            loadingNewView = false;
         }
     }
 
@@ -371,9 +388,10 @@ var FirebaseView = (function () {
 
 })();
 
-angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', '$firebaseObject', '$firebaseAuth', 'volumesManager', 'mainApp', function ($root, $location, $firebaseObject, $firebaseAuth, volumesManager, mainApp) {
+angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', '$firebaseObject', '$firebaseAuth', 'volumesManager', 'mainApp', 'loadingManager', function ($root, $location, $firebaseObject, $firebaseAuth, volumesManager, mainApp, loadingManager) {
     'use strict';
     var fv = FirebaseView();
+    fv.setLoadingManager(loadingManager);
     fv.setLocation($location);
     fv.setRootScope($root);
     fv.setFirebase($firebaseObject, $firebaseAuth);

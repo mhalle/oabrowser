@@ -14,7 +14,7 @@ angular.module('atlasDemo').controller('ModalDemoCtrl', ['$scope', '$uibModal', 
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $uibModal service used above.
 
-angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$rootScope', 'mainApp', function ($scope, $uibModalInstance, $rootScope, mainApp) {
+angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$rootScope', 'mainApp', 'loadingManager', function ($scope, $uibModalInstance, $rootScope, mainApp, loadingManager) {
 
     $scope.loadingJSON = true;
     $scope.loadingVTK = false;
@@ -42,15 +42,15 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModa
         }
     };
 
-    mainApp.on('modal.JSONLoaded', function (numberOfVTKFiles) {
+    mainApp.on('loadingManager.atlasStructureLoaded', function () {
         $scope.loadingJSON = false;
         $scope.loadingVTK = true;
-        $scope.numberOfVTKFiles = numberOfVTKFiles;
+        $scope.numberOfVTKFiles = loadingManager.totalNumberOfModels;
         $scope.safeApply();
     });
 
-    mainApp.on('modal.fileLoaded', function (loaded) {
-        $scope.loadedVTKFiles = loaded;
+    mainApp.on('loadingManager.modelLoaded', function () {
+        $scope.loadedVTKFiles = loadingManager.numberOfModelsLoaded;
         if ($scope.loadedVTKFiles === $scope.numberOfVTKFiles) {
             $scope.loadingVTK = false;
             $scope.loadingHierarchy = true;
@@ -64,7 +64,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModa
         $scope.safeApply();
     });
 
-    mainApp.on('volumesManager.loadingStart', function (filename) {
+    mainApp.on('loadingManager.volumeStart', function (filename) {
         $scope.backgroundFiles.push({
             filename : filename,
             progress : 0
@@ -72,7 +72,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModa
         $scope.safeApply();
     });
 
-    mainApp.on('volumesManager.loadingEnd', function (filename) {
+    mainApp.on('loadingManager.volumeEnd', function (filename) {
         var backgroundObject = $scope.backgroundFiles.find(o => o.filename === filename);
         backgroundObject.progress = 100;
         var everyBackgroundLoadingFinished = $scope.backgroundFiles.every(o => o.progress === 100);
@@ -82,7 +82,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModa
         $scope.safeApply();
     });
 
-    mainApp.on('volumesManager.loadingProgress', function (event) {
+    mainApp.on('loadingManager.volumeProgress', function (event) {
         var backgroundObject = $scope.backgroundFiles.find(o => o.filename === event.filename);
         if (!backgroundObject) {
             backgroundObject = {

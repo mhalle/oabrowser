@@ -2,7 +2,7 @@ if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
 }
 
-angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volumesManager", "firebaseView", function (mainApp, objectSelector, atlasJson, volumesManager, firebaseView) {
+angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volumesManager", "firebaseView", "loadingManager", function (mainApp, objectSelector, atlasJson, volumesManager, firebaseView, loadingManager) {
 
     var container,
         stats,
@@ -10,11 +10,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         controls,
         scene,
         renderer,
-        atlasStructure,
-        loader,
-        loadedFile,
-        numberOfFilesToLoad,
-        vtkStructures,
         mouse,
         raycaster,
         meshesList = [],
@@ -30,70 +25,22 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         header,
         mousedownDate,
         mousedownPosition = new THREE.Vector2(0,0),
-        containerOffset;
+        containerOffset,
+        lightKit;
 
     //remove the wait message displayed on slow connection before the script load
     $('#waitMessage').remove();
 
+    mainApp.on('loadingManager.newMesh', function (mesh) {
+        meshesList.push(mesh);
+        meshesAndSlicesList.push(mesh);
+        scene.add(mesh);
+    });
 
-    //this function enables us to create a scope and then keep the right item in the callback
-    function loadVTKFile(i) {
-        var file;
-        if (Array.isArray(vtkStructures[i].sourceSelector)) {
-            var geometrySelector = vtkStructures[i].sourceSelector.find(selector => selector['@type'].includes('geometrySelector'));
-            if (geometrySelector) {
-                file = geometrySelector.dataSource.source;
-            }
-            else {
-                throw 'In case of multiple selectors, VTK selector should have an array as @type which includes "geometrySelector"';
-            }
-        }
-        else {
-            file = vtkStructures[i].sourceSelector.dataSource.source;
-        }
-
-        loader.load(file, function (geometry) {
-
-            var item = vtkStructures[i];
-
-            geometry.computeVertexNormals();
-
-            var material = new THREE.MeshPhongMaterial({
-                wireframe : false,
-                morphTargets : false,
-                side : THREE.DoubleSide,
-                color : item.renderOptions.color >> 8 //get rid of alpha
-            });
-
-            material.opacity = (item.renderOptions.color & 0xff)/255;
-            material.visible = true;
-
-
-            if (material.opacity < 1) {
-                material.transparent = true;
-            }
-
-
-            var mesh = new THREE.Mesh(geometry, material);
-            mesh.name = item.annotation && item.annotation.name || '';
-            mesh.renderOrder = 1;
-            meshesList.push(mesh);
-            meshesAndSlicesList.push(mesh);
-            item.mesh = mesh;
-            mesh.atlasStructure = item;
-            scene.add(mesh);
-            loadedFile++;
-
-            //signal to the modal
-            mainApp.emit('modal.fileLoaded', loadedFile);
-
-            if (loadedFile === numberOfFilesToLoad) {
-                //put it in an immediate timeout to give the browser the opportunity to refresh the modal
-                setTimeout(createHierarchy, 0);
-            }
-
-        });
-    }
+    mainApp.on('loadingManager.everyModelLoaded', function () {
+        //put it in an immediate timeout to give the browser the opportunity to refresh the modal
+        setTimeout(createHierarchy, 0);
+    });
 
     function bindHierarchyItemWithFirebase (item) {
         //fireobject can not sync properties starting with _ so we have to make a proxy
@@ -150,52 +97,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
     }
 
-    function dealWithAtlasStructure(data) {
-        var i;
-        atlasStructure = atlasJson.parse(data);
-        mainApp.atlasStructure = atlasStructure;
-
-        header = atlasStructure.header;
-        if (header) {
-            mainApp.emit('headerData',header);
-        }
-
-        vtkStructures = atlasStructure.structure.filter(item => {
-            if (Array.isArray(item.sourceSelector)) {
-                return item.sourceSelector.some(selector => /\.vtk$/.test(selector.dataSource.source));
-            }
-            else {
-                return /\.vtk$/.test(item.sourceSelector.dataSource.source);
-            }
-        });
-
-
-        //Load all the vtk files
-        loader = new THREE.VTKLoader();
-        loadedFile = 0;
-        numberOfFilesToLoad = vtkStructures.length;
-
-        //send the modal a signal to give the number of vtk files to load
-        mainApp.emit('modal.JSONLoaded', numberOfFilesToLoad);
-
-        //add this event in case the json is loaded before angular compilation is finished
-        angular.element(document).ready(function () {
-            mainApp.emit('modal.JSONLoaded', numberOfFilesToLoad);
-        });
-
-
-        for (i = 0; i<vtkStructures.length; i++) {
-            loadVTKFile(i);
-        }
-
-        //load labelmap and background
-
-        var nrrdDatasource = atlasStructure.datasource.filter(datasource => /\.nrrd$/.test(datasource.source));
-        for (i = 0; i < nrrdDatasource.length; i++) {
-            volumesManager.loadVolume(nrrdDatasource[i]);
-        }
-
-
+    function finishSceneSetup() {
         // renderer
 
         camera.aspect = container.clientWidth / container.clientHeight;
@@ -208,17 +110,25 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         container.appendChild( renderer.domElement );
 
+
+        // setup stats
         stats = new Stats();
         stats.domElement.style.position = 'absolute';
         stats.domElement.style.top = '0px';
         container.appendChild( stats.domElement );
 
+
+        //save slices mesh in a list with model meshes for the pickup feature
         mainApp.on('insertSlice', function (data) {
             if (!meshesAndSlicesList.includes(data.slice.mesh)) {
                 meshesAndSlicesList.push(data.slice.mesh);
             }
         });
 
+
+        //setup resize feature
+
+        //debounce resize to keep it fluid
         function setResizeTimeout () {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(onWindowResize, 100);
@@ -228,13 +138,19 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         mainApp.on('ui.layout.resize', setResizeTimeout);
         mainApp.on('ui.layout.resize', setResizeTimeout);
 
-        container.addEventListener('mousemove', onSceneMouseMove, false);
 
+        //register events for the pickup and selection
+        container.addEventListener('mousemove', onSceneMouseMove, false);
         container.addEventListener('mousedown', onSceneMouseDown);
         container.addEventListener('mouseup', onSceneMouseUp);
+
+        //init offset
         containerOffset = $(container).offset();
 
+        //start animating the 3D view
         animate();
+
+        //start the binding of the camera
         initFirebase();
 
     }
@@ -268,8 +184,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         // light
 
-        /*
-
+        /* simple light was replaced by lightkit
         var dirLight = new THREE.DirectionalLight( 0xffffff );
         dirLight.position.set( 200, 200, 1000 ).normalize();
 
@@ -277,17 +192,28 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         camera.add( dirLight.target );
         */
 
-        var lightKit = new LightKit(camera, controls);
+        lightKit = new LightKit(camera, controls);
 
 
         //fetch atlas structure
-        jQuery.ajax({
-            dataType: "json",
-            url: window.globalViewerParameters.atlasStructurePath,
-            async: true,
-            success: dealWithAtlasStructure
-        });
+        if (window.globalViewerParameters && window.globalViewerParameters.atlasStructurePath) {
+        loadingManager.loadAtlasStructure(window.globalViewerParameters.atlasStructurePath);
+        }
+        else {
+            throw 'Atlas structure path is not defined in global parameters';
+        }
 
+
+
+        setupGUI();
+        setupInset();
+
+        mainApp.on('loadingManager.atlasStructureLoaded', finishSceneSetup);
+
+
+    }
+
+    function setupGUI () {
         gui = new dat.GUI({autoPlace : false});
         var guiContainer = document.getElementById('gui-container');
         guiContainer.appendChild(gui.domElement);
@@ -328,9 +254,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         menu.add(materialController, 'shininess',0,100).name('Shininess').onChange(function () {updateMaterials('shininess');});
 
         gui.close();
-        setupInset();
-
-
     }
 
     function onWindowResize() {
@@ -366,8 +289,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         TWEEN.update(time);
 
     }
-
-
 
     function displayPickup() {
         if (needPickupUpdate) {
