@@ -42,6 +42,10 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         setTimeout(createHierarchy, 0);
     });
 
+    mainApp.on('loadingManager.atlasStructureLoaded', function (atlasStructure) {
+        header = atlasStructure.header;
+    });
+
     function bindHierarchyItemWithFirebase (item) {
         //fireobject can not sync properties starting with _ so we have to make a proxy
         if (item.visibleInTree === undefined) {
