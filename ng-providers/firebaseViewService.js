@@ -158,7 +158,6 @@ var FirebaseView = (function () {
             dbRootObj.$destroy();
             unbindAll();
         }
-        startingApplication = true;
         dbRootObj = $firebaseObject(ref);
         // this waits for the data to load and then logs the output.
         dbRootObj.$loaded()
@@ -171,17 +170,12 @@ var FirebaseView = (function () {
         singleton.obj = dbRootObj;
         singleton.ref = ref;
 
-        function onValueListener (snapshotValue) {
-            //skip one frame to be sure that all the copies have been done
-            if (snapshotValue) {
-                if (singleton.auth.uid !== snapshotValue.lastModifiedBy || startingApplication) {
-                    requestAnimationFrame(function () {
-                        mainApp.emit('firebaseView.viewChanged');
-                    });
-                }
-            }
+        function onValueFireEvent () {
+            requestAnimationFrame(function () {
+                mainApp.emit('firebaseView.viewChanged');
+            });
         }
-        onValueListeners.push(onValueListener);
+        onValueListeners.push(onValueFireEvent);
         ref.on('value', onValue);
 
         singleton.auth = ref.getAuth();
@@ -236,8 +230,18 @@ var FirebaseView = (function () {
     }
 
     function onValue (snapshot) {
-        var val = snapshot.val();
-        onValueListeners.map(fn => fn(val));
+        var snapshotValue = snapshot.val();
+        if (snapshotValue === null) {
+            startingApplication = true;
+        }
+        else {
+            startingApplication = false;
+        }
+        if (snapshotValue) {
+            if (singleton.auth.uid !== snapshotValue.lastModifiedBy || startingApplication) {
+                onValueListeners.map(fn => fn(snapshotValue));
+            }
+        }
     }
 
     function getDbObj (pathArray, snapshotValue) {
@@ -257,7 +261,7 @@ var FirebaseView = (function () {
         function onValueListener (snapshotValue) {
             if (snapshotValue) {
                 var dbObj = getDbObj(pathArray, snapshotValue);
-                if (singleton.auth.uid !== snapshotValue.lastModifiedBy || startingApplication) {
+                if (dbObj) {
                     dbChangeCallback(dbObj);
                 }
             }
