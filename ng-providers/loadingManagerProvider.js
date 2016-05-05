@@ -176,14 +176,14 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
     singleton.modelsLoaded = modelsLoaded;
     singleton.isLoading = isLoading;
 
-    Object.defineProperty('numberOfModelsLoaded', {
+    Object.defineProperty(singleton, 'numberOfModelsLoaded', {
         get : function () {
             return Object.keys(modelsLoaded).length;
         },
         set : function () {}
     });
 
-    Object.defineProperty('numberOfVolumesLoaded', {
+    Object.defineProperty(singleton, 'numberOfVolumesLoaded', {
         get : function () {
             return Object.keys(volumesLoaded).length;
         },
