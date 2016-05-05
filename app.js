@@ -551,7 +551,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             obj.up = camera.up;
         }
         function dbChangeCallback (val) {
-            if (val) {
+            if (val && val.position) {
                 var cameraStart = camera.position.clone().sub(controls.target),
                     cameraStartLength = cameraStart.length(),
                     cameraEnd = new THREE.Vector3().add(val.position).sub(val.target),
