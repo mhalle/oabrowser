@@ -108,8 +108,8 @@ var FirebaseView = (function () {
                 uuid = initialPath;
                 loadDatabaseConnection();
             }
+            initiated = true;
         }
-        initiated = true;
     }
 
     function authAnonymously (ref) {
@@ -363,7 +363,7 @@ var FirebaseView = (function () {
     };
 
     singleton.isLocked = function () {
-        return !!dbRootObj.locked;
+        return dbRootObj && !!dbRootObj.locked;
     };
 
     singleton.isAuthor = function () {
