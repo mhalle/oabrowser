@@ -18,3 +18,8 @@ To use the viewer :
 * fill `configAtlasViewer.js`with your own parameters
 * run a server at the root of your initial repository (you can do this with `npm install -g http-server` followed with `http-server`)
 * now you can open your browser and enjoy the viewer (if you used `http-server` command, the URL will be http://localhost:8080/path-to-submodule)
+
+To build the release files (dist directory) :
+* run `npm install -g gulp-cli` to install gulp
+* run `npm install --dev` to install the dev dependencies
+* run `gulp` or `npm build`
