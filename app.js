@@ -98,6 +98,10 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
     }
 
     function finishSceneSetup() {
+
+        if (finishSceneSetup.done) {
+            return;
+        }
         // renderer
 
         camera.aspect = container.clientWidth / container.clientHeight;
@@ -152,6 +156,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         //start the binding of the camera
         initFirebase();
+
+        finishSceneSetup.done = true;
 
     }
 

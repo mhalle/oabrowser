@@ -5,7 +5,10 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         volumesManager = volumesManagerProvider.$get(),
         nrrdLoader = new THREE.NRRDLoader(),
         vtkLoader = new THREE.VTKLoader(),
-        singleton = {},
+        singleton = {
+            numbersOfModelsLoaded : 0,
+            numbersOfVolumesLoaded : 0
+        },
         volumesLoaded = {},
         volumesProgress = {},
         modelsLoaded = {};
@@ -24,6 +27,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
         var onSuccess = function (volume) {
             volumesLoaded[nrrdFileLocation] = true;
+            singleton.numberOfVolumesLoaded++;
 
             volumesManager.addVolume(volume, datasource, treatAsBackground);
 
@@ -84,6 +88,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             mesh.atlasStructure = item;
 
             modelsLoaded[file] = true;
+            singleton.numbersOfModelsLoaded++;
 
             //signal to the modal
             mainApp.emit('loadingManager.modelLoaded', file);
@@ -176,12 +181,6 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
     singleton.modelsLoaded = modelsLoaded;
     singleton.isLoading = isLoading;
 
-    Object.defineProperty(singleton, 'numberOfModelsLoaded', {
-        get : function () {
-            return Object.keys(modelsLoaded).length;
-        },
-        set : function () {}
-    });
 
     Object.defineProperty(singleton, 'numberOfVolumesLoaded', {
         get : function () {
