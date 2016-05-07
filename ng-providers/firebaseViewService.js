@@ -333,7 +333,7 @@ var FirebaseView = (function () {
         if (!namespaces[namespace]) {
             namespaces[namespace] = {
                 listeners : [],
-                committers : []
+                commiters : []
             };
         }
     }
