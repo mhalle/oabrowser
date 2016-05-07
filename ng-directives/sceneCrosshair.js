@@ -62,16 +62,18 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                 var object = evt.object,
                     point = evt.point;
 
-                $scope.style.display = "none";
+                if (firebaseView.isLastModifier()) {
+                    $scope.style.display = "none";
 
-                if (!object) {
-                    $scope.style.point = false;
+                    if (!object) {
+                        $scope.style.point = false;
+                    }
+                    else {
+                        $scope.style.point = point;
+                        $scope.style.stroke = getOppositeColorOfMesh(object);
+                    }
+                    debouncedCommit();
                 }
-                else {
-                    $scope.style.point = point;
-                    $scope.style.stroke = getOppositeColorOfMesh(object);
-                }
-                debouncedCommit();
             }
 
             function displayCrosshair () {
