@@ -460,7 +460,7 @@ var FirebaseView = (function () {
 
 })();
 
-angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', '$firebaseObject', '$firebaseAuth', 'volumesManager', 'mainApp', 'loadingManager', function ($root, $location, $firebaseObject, $firebaseAuth, volumesManager, mainApp, loadingManager) {
+angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', '$firebaseObject', '$firebaseAuth', 'volumesManager', 'mainApp', 'loadingManager', 'crosshair', function ($root, $location, $firebaseObject, $firebaseAuth, volumesManager, mainApp, loadingManager, crosshair) {
     'use strict';
     var fv = FirebaseView();
     fv.setLoadingManager(loadingManager);
@@ -469,5 +469,6 @@ angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', 
     fv.setFirebase($firebaseObject, $firebaseAuth);
     fv.setMainApp(mainApp);
     volumesManager.setFirebaseView(fv);
+    crosshair.setFirebaseView(fv);
     return fv;
 }]);
