@@ -29,7 +29,10 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                         y: ( - pos.y + 1) * canvas.height() / 2 + canvas.offset().top };
             }
 
-            function onMouseOverObject (object, point) {
+            function onMouseOverScene (evt) {
+                var object = evt.object,
+                    point = evt.point;
+
                 if (!object) {
                     $scope.style.display = "none";
                 }
@@ -41,7 +44,7 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                 }
             }
 
-            mainApp.on('mouseOverObject', onMouseOverObject);
+            mainApp.on('mouseOverScene', onMouseOverScene);
 
 
         }]

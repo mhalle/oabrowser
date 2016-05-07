@@ -325,7 +325,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                     }
                 }
             }
-            mainApp.emit('mouseOverObject', object, point);
+            mainApp.emit('mouseOverScene', {object:object, point :point});
+            mainApp.emit('mouseOverObject', object);
             needPickupUpdate = false;
         }
 
