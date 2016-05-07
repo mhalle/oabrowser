@@ -17,8 +17,7 @@ var FirebaseView = (function () {
         initiated = false,
         createdView = false,
         namespaces = {},
-        undoRedoManager,
-        stateNeedsToBeSaved;
+        undoRedoManager;
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -280,10 +279,6 @@ var FirebaseView = (function () {
                     dbRootObj.$save();
                     createdView = false;
                 }
-                //state must be save
-                if (namespace === undefined) {
-                    stateNeedsToBeSaved = true;
-                }
             }
         }
     }
@@ -325,9 +320,8 @@ var FirebaseView = (function () {
                     }
                 }
             }
-            else if (singleton.auth.uid === dbRootObj.lastModifiedBy && namespace !== 'root' && namespace !== 'viewers' && namespace !== 'sceneCrosshair' && namespace !== 'authors' && stateNeedsToBeSaved) {
+            else if (singleton.auth.uid === dbRootObj.lastModifiedBy && namespace !== 'root' && namespace !== 'viewers' && namespace !== 'sceneCrosshair' && namespace !== 'authors') {
                 undoRedoManager.saveState(snapshot, namespace);
-                stateNeedsToBeSaved = false;
             }
         }
     }

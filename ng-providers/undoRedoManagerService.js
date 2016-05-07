@@ -8,8 +8,7 @@ var UndoRedoManager = (function () {
         uuid,
         mainApp,
         firebaseView,
-        states = {},
-        preventNextSave = false;
+        states = {};
 
     singleton.setFirebaseView = function (fv) {
         if (!firebaseView) {
@@ -74,7 +73,6 @@ var UndoRedoManager = (function () {
             uuid = generateUUID();
             var path = $location.path().replace(/(?:\/?state(?:\/[\w-]*)?)?\/?$/, '/state/'+uuid);
             $location.path(path);
-            preventNextSave = true;
         }
     }
 
@@ -97,9 +95,8 @@ var UndoRedoManager = (function () {
     }
 
     function saveState (snapshot, namespace) {
-        if (preventNextSave) {
-            preventNextSave = false;
-            return;
+        if (!isDifferentFromCurrentState(snapshot, namespace)) {
+            return ;
         }
         setNewPath();
         var state = {
@@ -107,6 +104,30 @@ var UndoRedoManager = (function () {
             namespace : namespace
         };
         states[uuid] = state;
+    }
+
+    function isDifferentFromCurrentState (snapshot, namespace) {
+        var obj = namespace === 'root' ? firebaseView.obj : firebaseView.obj[namespace];
+
+        function isDifferent (val, o) {
+            var result = false;
+            if (Array.isArray(val)) {
+                for (var i = 0; i<val.length; i++) {
+                    result = result || isDifferent(val[i], o[i]);
+                }
+            }
+            else if (typeof val === 'object') {
+                for (var key in val) {
+                    result = result || isDifferent(val[key], o[key]);
+                }
+            }
+            else {
+                result = val === o;
+            }
+            return result;
+        }
+
+        return isDifferent(snapshot.val(), obj);
     }
 
     singleton.saveState = saveState;
