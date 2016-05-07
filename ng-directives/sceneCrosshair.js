@@ -14,11 +14,7 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
 
 
             var canvas = $('#rendererFrame canvas'),
-                debouncedCommit = (function () {
-                    firebaseView.commit('sceneCrosshair');
-                    //call authors too to force the last modified by field to be registered
-                    firebaseView.commit('authors');
-                }).debounce(150);
+                debouncedCommit = firebaseView.commit.debounce(150);
 
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null
