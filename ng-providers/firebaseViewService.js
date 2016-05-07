@@ -450,6 +450,10 @@ var FirebaseView = (function () {
         return [];
     };
 
+    singleton.isLastModifier = function () {
+        return singleton.auth && singleton.auth.uid === dbRootObj.lastModifiedBy;
+    };
+
     singleton.commit = commit;
 
     return function () {return singleton;};

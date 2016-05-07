@@ -14,7 +14,11 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
 
 
             var canvas = $('#rendererFrame canvas'),
-                debouncedCommit = firebaseView.commit.debounce(150);
+                debouncedCommit = (function () {
+                    if (firebaseView.isLastModifier()) {
+                        firebaseView.commit('sceneCrosshair');
+                    }
+                }).debounce(150);
 
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null
@@ -65,7 +69,7 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                 }
                 else {
                     $scope.style.point = point;
-                    $scope.stroke = getOppositeColorOfMesh(object);
+                    $scope.style.stroke = getOppositeColorOfMesh(object);
                 }
                 debouncedCommit();
             }
