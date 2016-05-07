@@ -25,7 +25,8 @@ var FirebaseView = (function () {
             root : {},
             sagittal : {},
             sceneCrosshair : {},
-            viewers : {}
+            viewers : {},
+            volumes : {}
         };
 
     singleton.setRootScope = function (root) {
