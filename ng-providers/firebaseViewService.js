@@ -281,7 +281,9 @@ var FirebaseView = (function () {
                     createdView = false;
                 }
                 //state must be save
-                stateNeedsToBeSaved = true;
+                if (namespace === undefined) {
+                    stateNeedsToBeSaved = true;
+                }
             }
         }
     }
