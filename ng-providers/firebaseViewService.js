@@ -321,6 +321,7 @@ var FirebaseView = (function () {
             }
             else if (singleton.auth.uid === snapshotValue.lastModifiedBy && namespace === 'root' && stateNeedsToBeSaved) {
                 undoRedoManager.saveState(snapshot);
+                stateNeedsToBeSaved = false;
             }
         }
     }
