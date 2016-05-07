@@ -306,7 +306,7 @@ var FirebaseView = (function () {
                     },500);
                 });
             }
-            else if (singleton.auth.uid !== snapshotValue.lastModifiedBy || loadingNewView) {
+            else if (singleton.auth.uid !== dbRootObj.lastModifiedBy || loadingNewView) {
                 // if we are loading a new view, child changed is not called and therefore we need to call every listeners on value
                 if (namespace === 'root' && loadingNewView) {
                     undoRedoManager.saveState(snapshot);
@@ -325,8 +325,8 @@ var FirebaseView = (function () {
                     }
                 }
             }
-            else if (singleton.auth.uid === snapshotValue.lastModifiedBy && namespace !== 'root' && namespace !== 'viewers' && namespace !== 'sceneCrosshair' && namespace !== 'authors' && stateNeedsToBeSaved) {
-                undoRedoManager.saveState(snapshot);
+            else if (singleton.auth.uid === dbRootObj.lastModifiedBy && namespace !== 'root' && namespace !== 'viewers' && namespace !== 'sceneCrosshair' && namespace !== 'authors' && stateNeedsToBeSaved) {
+                undoRedoManager.saveState(snapshot, namespace);
                 stateNeedsToBeSaved = false;
             }
         }
@@ -478,9 +478,9 @@ var FirebaseView = (function () {
 
     singleton.commit = commit;
 
-    singleton.loadState = function (state) {
+    singleton.loadState = function (state, namespace) {
         loadingNewView = true;
-        onValue(state, 'root');
+        onValue(state, namespace);
     };
 
     return function () {return singleton;};
