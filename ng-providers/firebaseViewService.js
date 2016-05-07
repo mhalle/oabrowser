@@ -16,18 +16,7 @@ var FirebaseView = (function () {
         loadingManager,
         initiated = false,
         createdView = false,
-        namespaces = {
-            authors : {},
-            axial : {},
-            camera : {},
-            coronal : {},
-            models : {},
-            root : {},
-            sagittal : {},
-            sceneCrosshair : {},
-            viewers : {},
-            volumes : {}
-        };
+        namespaces = {};
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -128,13 +117,15 @@ var FirebaseView = (function () {
             return;
         }
 
+        createNamespace('root');
+        createNamespace('authors');
+
         //propagate event on value
         function onValueFireEvent () {
             requestAnimationFrame(function () {
                 mainApp.emit('firebaseView.viewChanged');
             });
         }
-        namespaces.root.listeners = namespaces.root.listeners || [];
         namespaces.root.listeners.push(onValueFireEvent);
 
         //always try to add himself as author
@@ -147,7 +138,6 @@ var FirebaseView = (function () {
                 dbRootObj.authors[singleton.auth.uid] = true;
             }
         }
-        namespaces.authors.commiters = namespaces.authors.commiters || [];
         namespaces.authors.commiters.push(addHimselfAsAuthor);
 
         initRootListenersAndCommiters.done = true;
@@ -339,9 +329,19 @@ var FirebaseView = (function () {
         return obj;
     }
 
+    function createNamespace (namespace) {
+        if (!namespaces[namespace]) {
+            namespace[namespace] = {
+                listeners : [],
+                committers : []
+            };
+        }
+    }
+
     singleton.customBind = function (watchCallback, dbChangeCallback, pathArray) {
 
         var namespace = pathArray.shift() || 'root';
+        createNamespace(namespace);
 
         function onValueListener (snapshotValue) {
             if (snapshotValue) {
@@ -352,7 +352,6 @@ var FirebaseView = (function () {
             }
         }
 
-        namespaces[namespace].listeners = namespaces[namespace].listeners || [];
         namespaces[namespace].listeners.push(onValueListener);
 
 
@@ -362,7 +361,7 @@ var FirebaseView = (function () {
             modified = modified === undefined ? true : modified;
             return modified;
         }
-        namespaces[namespace].commiters = namespaces[namespace].commiters || [];
+
         namespaces[namespace].commiters.push(commiter);
 
     };
