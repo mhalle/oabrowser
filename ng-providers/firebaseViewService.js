@@ -241,8 +241,12 @@ var FirebaseView = (function () {
         initRootListenersAndCommiters();
 
 
-        var onMouseUp = commit.debounce(30);
-        var onMouseWheel = commit.debounce(1000);
+        var onMouseUp = (function () {
+            commit();
+        }).debounce(30);
+        var onMouseWheel = (function () {
+            commit();
+        }).debounce(1000);
         $body = $(document.body);
         $body.on('mouseup', onMouseUp);
         $body.on('mousewheel', onMouseWheel);
