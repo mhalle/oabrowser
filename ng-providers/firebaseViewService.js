@@ -16,7 +16,8 @@ var FirebaseView = (function () {
         loadingManager,
         initiated = false,
         createdView = false,
-        namespaces = {};
+        namespaces = {},
+        undoRedoManager;
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -53,6 +54,12 @@ var FirebaseView = (function () {
         }
     };
 
+    singleton.setUndoRedoManager = function (uRM) {
+        if (!undoRedoManager) {
+            undoRedoManager = uRM;
+        }
+    };
+
     function setWatcher () {
         if ($root && $location && !unwatch) {
             unwatch = $root.$watch(function () { return $location.path();}, function (newValue) {
@@ -86,7 +93,8 @@ var FirebaseView = (function () {
     function setNewPath () {
         if ($location) {
             uuid = generateUUID();
-            $location.path('view/'+uuid);
+            var path = $location.path().replace(/view\/[\w-]+/, 'view/'+uuid);
+            $location.path(path);
             createdView = true;
             loadDatabaseConnection();
         }
@@ -292,6 +300,7 @@ var FirebaseView = (function () {
             else if (singleton.auth.uid !== snapshotValue.lastModifiedBy || loadingNewView) {
                 // if we are loading a new view, child changed is not called and therefore we need to call every listeners on value
                 if (namespace === 'root' && loadingNewView) {
+                    undoRedoManager.saveState(snapshot);
                     for (name in namespaces) {
                         if (namespaces[name].listeners) {
                             var val = name === 'root' ? snapshotValue : snapshotValue[name];
@@ -306,6 +315,9 @@ var FirebaseView = (function () {
                         namespaces[namespace].listeners.map(fn => fn(snapshotValue));
                     }
                 }
+            }
+            else if (singleton.auth.uid === snapshotValue.lastModifiedBy && namespace === 'root') {
+                undoRedoManager.saveState(snapshot);
             }
         }
     }
@@ -456,11 +468,16 @@ var FirebaseView = (function () {
 
     singleton.commit = commit;
 
+    singleton.loadState = function (state) {
+        loadingNewView = true;
+        onValue(state, 'root');
+    };
+
     return function () {return singleton;};
 
 })();
 
-angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', '$firebaseObject', '$firebaseAuth', 'volumesManager', 'mainApp', 'loadingManager', 'crosshair', function ($root, $location, $firebaseObject, $firebaseAuth, volumesManager, mainApp, loadingManager, crosshair) {
+angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', '$firebaseObject', '$firebaseAuth', 'volumesManager', 'mainApp', 'loadingManager', 'crosshair', 'undoRedoManager', function ($root, $location, $firebaseObject, $firebaseAuth, volumesManager, mainApp, loadingManager, crosshair, undoRedoManager) {
     'use strict';
     var fv = FirebaseView();
     fv.setLoadingManager(loadingManager);
@@ -468,7 +485,9 @@ angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', 
     fv.setRootScope($root);
     fv.setFirebase($firebaseObject, $firebaseAuth);
     fv.setMainApp(mainApp);
+    fv.setUndoRedoManager(undoRedoManager);
     volumesManager.setFirebaseView(fv);
     crosshair.setFirebaseView(fv);
+    undoRedoManager.setFirebaseView(fv);
     return fv;
 }]);
