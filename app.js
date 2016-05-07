@@ -171,6 +171,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.05, 1e8 );
         camera.position.z = 300;
+        mainApp.camera = camera;
 
         controls = new THREE.TrackballControls( camera, container );
 
@@ -186,6 +187,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         scene = new THREE.Scene();
         volumesManager.setScene(scene);
+        mainApp.scene = scene;
 
         scene.add( camera );
 
@@ -207,7 +209,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         //fetch atlas structure
         if (window.globalViewerParameters && window.globalViewerParameters.atlasStructurePath) {
-        loadingManager.loadAtlasStructure(window.globalViewerParameters.atlasStructurePath);
+            loadingManager.loadAtlasStructure(window.globalViewerParameters.atlasStructurePath);
         }
         else {
             throw 'Atlas structure path is not defined in global parameters';
@@ -308,11 +310,12 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             var intersects = raycaster.intersectObjects( meshesAndSlicesList );
 
             var object = null;
+            var point;
             if (intersects.length > 0) {
                 object = intersects[0].object;
+                point = intersects[0].point;
                 //pick up in the 3D slices
                 if (object.geometry instanceof THREE.PlaneGeometry) {
-                    var point = intersects[0].point;
                     var structures = volumesManager.getStructuresAtRASPosition(point);
                     if (structures[0]) {
                         object = structures[0].mesh;
@@ -322,7 +325,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                     }
                 }
             }
-            mainApp.emit('mouseOverObject', object);
+            mainApp.emit('mouseOverObject', object, point);
             needPickupUpdate = false;
         }
 

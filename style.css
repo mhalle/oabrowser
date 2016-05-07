@@ -68,6 +68,7 @@ body, html {
     left: 0px;
     bottom: 0px;
     z-index: 100;
+    pointer-events: none;
 }
 .dg {
     z-index: 10 !important;
