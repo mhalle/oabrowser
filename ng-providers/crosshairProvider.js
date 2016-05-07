@@ -1,17 +1,18 @@
-angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesManagerProvider", function (mainAppProvider, volumesManagerProvider) {
+angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesManagerProvider", "firebaseView", function (mainAppProvider, volumesManagerProvider, firebaseView) {
 
     var singleton = {},
         volumesManager = volumesManagerProvider.$get(),
         mainApp = mainAppProvider.$get(),
         crosshairPosition = {},
         needUpdate =true,
-        visible = false;
+        visible = false,
+        mouseOverCrosshair = {};
 
 
     function computeCrosshairPosition () {
         var sagittal = volumesManager.compositingSlices.sagittal,
-                coronal = volumesManager.compositingSlices.coronal,
-                axial = volumesManager.compositingSlices.axial;
+            coronal = volumesManager.compositingSlices.coronal,
+            axial = volumesManager.compositingSlices.axial;
         if (axial && sagittal && coronal) {
             var dimensions = volumesManager.volumes[0].RASDimensions;
             crosshairPosition =  {
@@ -46,8 +47,25 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
         }
     });
 
+    singleton.setMouseOverCrosshair = function (i, j, orientation) {
+        if (firebaseView.isLastModifier()) {
+            mouseOverCrosshair.i = i;
+            mouseOverCrosshair.j = j;
+            mouseOverCrosshair.orientation = orientation;
+        }
+    };
 
-               this.$get = function () {
+    firebaseView.bind(mouseOverCrosshair, ['i','j','orientation'], 'crosshair.mouseOver');
+
+    singleton.getMouseOverCrosshair = function (orientation) {
+        if (orientation !== mouseOverCrosshair.orientation || firebaseView.isLastModifier()) {
+            return null;
+        }
+        return mouseOverCrosshair;
+    };
+
+
+    this.$get = function () {
         return singleton;
     };
 }]);
