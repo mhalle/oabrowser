@@ -331,7 +331,7 @@ var FirebaseView = (function () {
 
     function createNamespace (namespace) {
         if (!namespaces[namespace]) {
-            namespace[namespace] = {
+            namespaces[namespace] = {
                 listeners : [],
                 committers : []
             };
