@@ -1,4 +1,4 @@
-angular.module('atlasDemo').directive( 'sceneCrossair', [function () {
+angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
     return {
         restrict: 'EA',
         scope: {},
