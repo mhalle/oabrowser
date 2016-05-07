@@ -12,14 +12,21 @@ var FirebaseView = (function () {
         $body,
         unbindFunctions = [],
         bindObjects = [],
-        onValueListeners = [],
-        commitListeners = [],
-        mouseUpTimeoutId,
-        wheelTimeoutId,
         loadingNewView = true,
         loadingManager,
         initiated = false,
-        createdView = false;
+        createdView = false,
+        namespaces = {
+            authors : {},
+            axial : {},
+            camera : {},
+            coronal : {},
+            models : {},
+            root : {},
+            sagittal : {},
+            sceneCrosshair : {},
+            viewers : {}
+        };
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -114,6 +121,37 @@ var FirebaseView = (function () {
         }
     }
 
+    function initRootListenersAndCommiters () {
+        //only called once
+        if (initRootListenersAndCommiters.done) {
+            return;
+        }
+
+        //propagate event on value
+        function onValueFireEvent () {
+            requestAnimationFrame(function () {
+                mainApp.emit('firebaseView.viewChanged');
+            });
+        }
+        namespaces.root.listeners = namespaces.root.listeners || [];
+        namespaces.root.listeners.push(onValueFireEvent);
+
+        //always try to add himself as author
+        function addHimselfAsAuthor () {
+            dbRootObj.lastModifiedBy = singleton.auth.uid;
+
+            //add himself to the list of authors
+            if (!dbRootObj.authors || !dbRootObj.authors[singleton.auth.uid]) {
+                dbRootObj.authors = dbRootObj.authors || {};
+                dbRootObj.authors[singleton.auth.uid] = true;
+            }
+        }
+        namespaces.authors.commiters = namespaces.authors.commiters || [];
+        namespaces.authors.commiters.push(addHimselfAsAuthor);
+
+        initRootListenersAndCommiters.done = true;
+    }
+
     function authAnonymously (ref) {
         if (!singleton.auth) {
             ref.authAnonymously(function(error, authData) {
@@ -169,10 +207,13 @@ var FirebaseView = (function () {
     function loadDatabaseConnection () {
 
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid);
+
+        //if dbRootObj is defined then we are changing view and need to destroy previous references
         if (dbRootObj) {
             dbRootObj.$destroy();
             unbindAll();
         }
+
         loadingNewView = true;
         dbRootObj = $firebaseObject(ref);
         // this waits for the data to load and then logs the output.
@@ -186,13 +227,9 @@ var FirebaseView = (function () {
         singleton.obj = dbRootObj;
         singleton.ref = ref;
 
-        function onValueFireEvent () {
-            requestAnimationFrame(function () {
-                mainApp.emit('firebaseView.viewChanged');
-            });
-        }
-        onValueListeners.push(onValueFireEvent);
-        ref.on('value', onValue);
+
+        ref.on('value', function (snapshot) {onValue(snapshot, 'root');});
+        ref.on('child_changed', function (snapshot) {onValue(snapshot, snapshot.key());});
 
         singleton.auth = ref.getAuth();
         authAnonymously(ref);
@@ -200,18 +237,12 @@ var FirebaseView = (function () {
 
         ref.onAuth(authHandler);
 
+        //handle event propagation listener and author commiter
+        initRootListenersAndCommiters();
 
-        function commiter () {
-            dbRootObj.lastModifiedBy = singleton.auth.uid;
 
-            //add himself to the list of authors
-            if (!dbRootObj.authors || !dbRootObj.authors[singleton.auth.uid]) {
-                dbRootObj.authors = dbRootObj.authors || {};
-                dbRootObj.authors[singleton.auth.uid] = true;
-            }
-        }
-        commitListeners.push(commiter);
-
+        var onMouseUp = commit.debounce(30);
+        var onMouseWheel = commit.debounce(1000);
         $body = $(document.body);
         $body.on('mouseup', onMouseUp);
         $body.on('mousewheel', onMouseWheel);
@@ -227,47 +258,77 @@ var FirebaseView = (function () {
 
     }
 
-    function commit () {
+    function commit (namespace) {
         if (!dbRootObj.locked) {
             if (!loadingManager.isLoading() || createdView){
-                commitListeners.map(fn => fn());
-                dbRootObj.$save();
-                createdView = false;
+                //if there is a namespace, commit only the namespace
+                if (namespace && namespaces[namespace] && namespaces[namespace].commiters) {
+                    namespaces[namespace].commiters.map(fn => fn());
+                    singleton.ref.child(namespace).set(dbRootObj[namespace]);
+                }
+                //if no namespace is defined then commit is for all namespaces
+                else {
+                    for (var name in namespaces) {
+                        if (namespaces[name].commiters) {
+                            namespaces[name].commiters.map(fn => fn());
+                        }
+                    }
+                    dbRootObj.$save();
+                    createdView = false;
+                }
             }
         }
     }
 
-    function onMouseUp () {
-        clearTimeout(mouseUpTimeoutId);
-        mouseUpTimeoutId = setTimeout(commit,30);
-    }
-
-    function onMouseWheel () {
-        clearTimeout(wheelTimeoutId);
-        wheelTimeoutId = setTimeout(commit,1000);
-    }
-
-    function onValue (snapshot) {
-        var snapshotValue = snapshot.val();
-        if (snapshotValue && !createdView) {
-            if (loadingManager.isLoading()) {
+    function onValue (snapshot, namespace) {
+        var snapshotValue = snapshot.val(),
+            name;
+        if (snapshotValue && !createdView && namespaces[namespace] && namespaces[namespace].listeners) {
+            if (loadingManager.isLoading() && namespace === 'root') {
+                //wait for the application to be loaded and then call every listeners to copy db values
                 mainApp.on('loadingManager.loadingEnd', function () {
                     requestAnimationFrame(function () {
-                        onValueListeners.map(fn => fn(snapshotValue));
+                        for (name in namespaces) {
+                            if (namespaces[name].listeners) {
+                                var val = name === 'root' ? snapshotValue : snapshotValue[name];
+                                namespaces[name].listeners.map(fn => fn(val));
+                            }
+                        }
+                        loadingNewView = false;
                     });
                 });
             }
             else if (singleton.auth.uid !== snapshotValue.lastModifiedBy || loadingNewView) {
-                onValueListeners.map(fn => fn(snapshotValue));
+                // if we are loading a new view, child changed is not called and therefore we need to call every listeners on value
+                if (namespace === 'root' && loadingNewView) {
+                    for (name in namespaces) {
+                        if (namespaces[name].listeners) {
+                            var val = name === 'root' ? snapshotValue : snapshotValue[name];
+                            namespaces[name].listeners.map(fn => fn(val));
+                        }
+                    }
+                    loadingNewView = false;
+                }
+                // child changed event received therefore we only call the corresponding listeners
+                else {
+                    if (namespaces[namespace] && namespaces[namespace].listeners) {
+                        namespaces[namespace].listeners.map(fn => fn(snapshotValue));
+                    }
+                }
             }
-            loadingNewView = false;
         }
     }
 
-    function getDbObj (pathArray, snapshotValue) {
+    function getDbObj (pathArray, snapshotValue, namespace) {
         //retrieve the right db object from the path array
         // the reference can't be stored in memory because dbRootObj replaces its children by copies from the db
         var obj = snapshotValue || dbRootObj;
+        if (namespace) {
+            if (!obj[namespace]) {
+                obj[namespace] = {};
+            }
+            obj = obj[namespace];
+        }
         for (var i = 0; i < pathArray.length; i++) {
             if (!obj[pathArray[i]]) {
                 obj[pathArray[i]] = {};
@@ -278,6 +339,9 @@ var FirebaseView = (function () {
     }
 
     singleton.customBind = function (watchCallback, dbChangeCallback, pathArray) {
+
+        var namespace = pathArray.shift() || 'root';
+
         function onValueListener (snapshotValue) {
             if (snapshotValue) {
                 var dbObj = getDbObj(pathArray, snapshotValue);
@@ -286,14 +350,19 @@ var FirebaseView = (function () {
                 }
             }
         }
-        onValueListeners.push(onValueListener);
+
+        namespaces[namespace].listeners = namespaces[namespace].listeners || [];
+        namespaces[namespace].listeners.push(onValueListener);
+
+
         function commiter () {
-            var dbObj = getDbObj(pathArray);
+            var dbObj = getDbObj(pathArray, null, namespace);
             var modified = watchCallback(dbObj);
             modified = modified === undefined ? true : modified;
             return modified;
         }
-        commitListeners.push(commiter);
+        namespaces[namespace].commiters = namespaces[namespace].commiters || [];
+        namespaces[namespace].commiters.push(commiter);
 
     };
 
@@ -349,10 +418,6 @@ var FirebaseView = (function () {
 
     };
 
-    function recreateAllBindings () {
-        bindObjects.map(bindObject => createBinding(bindObject.obj, bindObject.key, bindObject.pathArray));
-    }
-
     singleton.lockView = function () {
         dbRootObj.locked = true;
         dbRootObj.$save();
@@ -385,7 +450,7 @@ var FirebaseView = (function () {
         return [];
     };
 
-
+    singleton.commit = commit;
 
     return function () {return singleton;};
 
