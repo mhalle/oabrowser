@@ -121,6 +121,9 @@ var UndoRedoManager = (function () {
                     result = result || isDifferent(val[key], o[key]);
                 }
             }
+            else if (typeof val === 'number') {
+                return Math.abs(val-o)>0.001;
+            }
             else {
                 result = val === o;
             }
