@@ -18,7 +18,8 @@ var FirebaseView = (function () {
         wheelTimeoutId,
         loadingNewView = true,
         loadingManager,
-        initiated = false;
+        initiated = false,
+        createdView = false;
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -89,6 +90,7 @@ var FirebaseView = (function () {
         if ($location) {
             uuid = generateUUID();
             $location.path('view/'+uuid);
+            createdView = true;
             loadDatabaseConnection();
         }
     }
@@ -227,9 +229,10 @@ var FirebaseView = (function () {
 
     function commit () {
         if (!dbRootObj.locked) {
-            if (!loadingManager.isLoading()){
+            if (!loadingManager.isLoading() || createdView){
                 commitListeners.map(fn => fn());
                 dbRootObj.$save();
+                createdView = false;
             }
         }
     }
@@ -246,7 +249,7 @@ var FirebaseView = (function () {
 
     function onValue (snapshot) {
         var snapshotValue = snapshot.val();
-        if (snapshotValue) {
+        if (snapshotValue && !createdView) {
             if (loadingManager.isLoading()) {
                 mainApp.on('loadingManager.loadingEnd', function () {
                     requestAnimationFrame(function () {
