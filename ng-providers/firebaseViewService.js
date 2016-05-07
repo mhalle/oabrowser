@@ -278,7 +278,7 @@ var FirebaseView = (function () {
             if (loadingManager.isLoading() && namespace === 'root') {
                 //wait for the application to be loaded and then call every listeners to copy db values
                 mainApp.on('loadingManager.loadingEnd', function () {
-                    requestAnimationFrame(function () {
+                    setTimeout(function () {
                         for (name in namespaces) {
                             if (namespaces[name].listeners) {
                                 var val = name === 'root' ? snapshotValue : snapshotValue[name];
@@ -286,7 +286,7 @@ var FirebaseView = (function () {
                             }
                         }
                         loadingNewView = false;
-                    });
+                    },500);
                 });
             }
             else if (singleton.auth.uid !== snapshotValue.lastModifiedBy || loadingNewView) {
