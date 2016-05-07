@@ -71,7 +71,7 @@ var UndoRedoManager = (function () {
     function setNewPath () {
         if ($location) {
             uuid = generateUUID();
-            var path = $location.path().replace(/state(?:\/[\w-]*)?\/?$/, 'state/'+uuid);
+            var path = $location.path().replace(/(?:\/?state(?:\/[\w-]*)?)?\/?$/, '/state/'+uuid);
             $location.path(path);
         }
     }

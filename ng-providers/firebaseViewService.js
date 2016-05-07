@@ -17,7 +17,8 @@ var FirebaseView = (function () {
         initiated = false,
         createdView = false,
         namespaces = {},
-        undoRedoManager;
+        undoRedoManager,
+        stateNeedsToBeSaved;
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -275,6 +276,8 @@ var FirebaseView = (function () {
                     dbRootObj.$save();
                     createdView = false;
                 }
+                //state must be save
+                stateNeedsToBeSaved = true;
             }
         }
     }
@@ -316,7 +319,7 @@ var FirebaseView = (function () {
                     }
                 }
             }
-            else if (singleton.auth.uid === snapshotValue.lastModifiedBy && namespace === 'root') {
+            else if (singleton.auth.uid === snapshotValue.lastModifiedBy && namespace === 'root' && stateNeedsToBeSaved) {
                 undoRedoManager.saveState(snapshot);
             }
         }
