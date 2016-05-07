@@ -8,7 +8,8 @@ var UndoRedoManager = (function () {
         uuid,
         mainApp,
         firebaseView,
-        states = {};
+        states = {},
+        preventNextSave = false;
 
     singleton.setFirebaseView = function (fv) {
         if (!firebaseView) {
@@ -73,6 +74,7 @@ var UndoRedoManager = (function () {
             uuid = generateUUID();
             var path = $location.path().replace(/(?:\/?state(?:\/[\w-]*)?)?\/?$/, '/state/'+uuid);
             $location.path(path);
+            preventNextSave = true;
         }
     }
 
@@ -95,6 +97,10 @@ var UndoRedoManager = (function () {
     }
 
     function saveState (snapshot, namespace) {
+        if (preventNextSave) {
+            preventNextSave = false;
+            return;
+        }
         setNewPath();
         var state = {
             snapshot : snapshot,

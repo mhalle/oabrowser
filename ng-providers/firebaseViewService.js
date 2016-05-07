@@ -309,7 +309,7 @@ var FirebaseView = (function () {
             else if (singleton.auth.uid !== dbRootObj.lastModifiedBy || loadingNewView) {
                 // if we are loading a new view, child changed is not called and therefore we need to call every listeners on value
                 if (namespace === 'root' && loadingNewView) {
-                    undoRedoManager.saveState(snapshot);
+                    undoRedoManager.saveState(snapshot, namespace);
                     for (name in namespaces) {
                         if (namespaces[name].listeners) {
                             var val = name === 'root' ? snapshotValue : snapshotValue[name];
