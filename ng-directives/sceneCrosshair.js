@@ -16,6 +16,20 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
             var canvas = $('#rendererFrame canvas'),
                 debouncedCommit = (function () {firebaseView.commit('sceneCrosshair');}).debounce(150);
 
+            $scope.safeApply = function(fn) {
+                //if scope has been destroyed, ie if modal has been dismissed, $root is null
+                if (this.$root) {
+                    var phase = this.$root.$$phase;
+                    if(phase === '$apply' || phase === '$digest') {
+                        if(fn && (typeof(fn) === 'function')) {
+                            fn();
+                        }
+                    } else {
+                        this.$apply(fn);
+                    }
+                }
+            };
+
             function getOppositeColorOfMesh (mesh) {
                 var color = mesh.material && mesh.material.color,
                     oppositeColor = new THREE.Color("white");
@@ -68,6 +82,7 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                 else{
                     $scope.style.display = "none";
                 }
+                $scope.safeApply();
             }
 
             mainApp.on('mouseOverScene', onMouseOverScene);
