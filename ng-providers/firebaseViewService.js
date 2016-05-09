@@ -310,7 +310,7 @@ var FirebaseView = (function () {
             else if (singleton.auth.uid !== dbRootObj.lastModifiedBy || loadingNewView) {
                 // if we are loading a new view, child changed is not called and therefore we need to call every listeners on value
                 if (namespace === 'root' && loadingNewView) {
-                    undoRedoManager.saveState(snapshot, namespace);
+                    undoRedoManager.saveState(snapshot, namespace, dbRootObj.lastModifiedAt);
                     for (name in namespaces) {
                         if (namespaces[name].listeners) {
                             var val = name === 'root' ? snapshotValue : snapshotValue[name];
@@ -326,7 +326,7 @@ var FirebaseView = (function () {
                     }
                 }
             }
-            else if (singleton.auth.uid === dbRootObj.lastModifiedBy && namespace !== 'root' && namespace !== 'viewers' && namespace !== 'sceneCrosshair' && namespace !== 'authors') {
+            else if (singleton.auth.uid === dbRootObj.lastModifiedBy && namespace !== 'root' && namespace !== 'viewers' && namespace !== 'sceneCrosshair' && namespace !== 'authors' && namespace !== 'crosshair') {
                 undoRedoManager.saveState(snapshot, namespace, dbRootObj.lastModifiedAt);
             }
         }

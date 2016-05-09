@@ -95,7 +95,7 @@ var UndoRedoManager = (function () {
     }
 
     function saveState (snapshot, namespace, timestamp) {
-        if (timestamp === states[uuid].timestamp) {
+        if (states[uuid] && timestamp === states[uuid].timestamp) {
             return ;
         }
         setNewPath();
