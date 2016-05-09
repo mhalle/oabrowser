@@ -102,6 +102,7 @@ var FirebaseView = (function () {
             else {
                 path = 'view/'+uuid+'/'+currentPath;
             }
+            path.replace('//','/');
             $location.path(path);
             createdView = true;
             loadDatabaseConnection();
