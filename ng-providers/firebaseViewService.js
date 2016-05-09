@@ -481,6 +481,11 @@ var FirebaseView = (function () {
     singleton.loadState = function (state, namespace) {
         loadingNewView = true;
         onValue(state, namespace);
+        var ref = singleton.ref;
+        if (namespace !== 'root') {
+            ref = ref.child(namespace);
+        }
+        ref.set(state.val());
     };
 
     return function () {return singleton;};
