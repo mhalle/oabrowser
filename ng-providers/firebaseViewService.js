@@ -93,7 +93,15 @@ var FirebaseView = (function () {
     function setNewPath () {
         if ($location) {
             uuid = generateUUID();
-            var path = $location.path().replace(/view\/[\w-]+/, 'view/'+uuid);
+            var currentPath = $location.path(),
+                viewRegExp = /view\/[\w-]+/,
+                path;
+            if (viewRegExp.test(currentPath)) {
+                path = $location.path().replace(viewRegExp, 'view/'+uuid);
+            }
+            else {
+                path = 'view/'+uuid+'/'+currentPath;
+            }
             $location.path(path);
             createdView = true;
             loadDatabaseConnection();
