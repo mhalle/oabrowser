@@ -481,13 +481,16 @@ var FirebaseView = (function () {
     singleton.loadState = function (state, namespace, timestamp) {
         loadingNewView = true;
         onValue(state, namespace);
-        var obj = dbRootObj;
+        //commit the loaded state to propagate new state
         if (namespace !== 'root') {
-            obj = obj[namespace];
+            dbRootObj[namespace] = state.val();
+            dbRootObj.lastModifiedAt = timestamp;
+            dbRootObj.lastModifiedBy = singleton.auth.uuid;
+            dbRootObj.$save();
         }
-        obj = state.val();
-        dbRootObj.lastModifiedAt = timestamp;
-        dbRootObj.$save();
+        else {
+            singleton.ref.set(state.val());
+        }
     };
 
     return function () {return singleton;};
