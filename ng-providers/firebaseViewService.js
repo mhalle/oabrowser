@@ -136,9 +136,15 @@ var FirebaseView = (function () {
         }
         namespaces.root.listeners.push(onValueFireEvent);
 
+        function registerLastModification () {
+            dbRootObj.lastModifiedBy = singleton.auth.uid;
+            dbRootObj.lastModifiedAt = Date.now();
+        }
+
+        namespaces.root.commiters.push(registerLastModification);
+
         //always try to add himself as author
         function addHimselfAsAuthor () {
-            dbRootObj.lastModifiedBy = singleton.auth.uid;
 
             //add himself to the list of authors
             if (!dbRootObj.authors || !dbRootObj.authors[singleton.auth.uid]) {
@@ -321,7 +327,7 @@ var FirebaseView = (function () {
                 }
             }
             else if (singleton.auth.uid === dbRootObj.lastModifiedBy && namespace !== 'root' && namespace !== 'viewers' && namespace !== 'sceneCrosshair' && namespace !== 'authors') {
-                undoRedoManager.saveState(snapshot, namespace);
+                undoRedoManager.saveState(snapshot, namespace, dbRootObj.lastModifiedAt);
             }
         }
     }

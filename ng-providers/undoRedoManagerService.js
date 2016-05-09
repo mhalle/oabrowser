@@ -94,14 +94,15 @@ var UndoRedoManager = (function () {
         firebaseView.commit();
     }
 
-    function saveState (snapshot, namespace) {
-        if (!isDifferentFromCurrentState(snapshot, namespace)) {
+    function saveState (snapshot, namespace, timestamp) {
+        if (timestamp === states[uuid].timestamp) {
             return ;
         }
         setNewPath();
         var state = {
             snapshot : snapshot,
-            namespace : namespace
+            namespace : namespace,
+            timestamp : timestamp
         };
         states[uuid] = state;
     }
