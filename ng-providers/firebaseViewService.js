@@ -485,7 +485,7 @@ var FirebaseView = (function () {
         if (namespace !== 'root') {
             dbRootObj[namespace] = state.val();
             dbRootObj.lastModifiedAt = timestamp;
-            dbRootObj.lastModifiedBy = singleton.auth.uuid;
+            dbRootObj.lastModifiedBy = singleton.auth.uid;
             dbRootObj.$save();
         }
         else {
