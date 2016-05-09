@@ -478,14 +478,16 @@ var FirebaseView = (function () {
 
     singleton.commit = commit;
 
-    singleton.loadState = function (state, namespace) {
+    singleton.loadState = function (state, namespace, timestamp) {
         loadingNewView = true;
         onValue(state, namespace);
-        var ref = singleton.ref;
+        var obj = dbRootObj;
         if (namespace !== 'root') {
-            ref = ref.child(namespace);
+            obj = obj[namespace];
         }
-        ref.set(state.val());
+        obj = state.val();
+        dbRootObj.lastModifiedAt = timestamp;
+        dbRootObj.$save();
     };
 
     return function () {return singleton;};

@@ -90,7 +90,7 @@ var UndoRedoManager = (function () {
 
     function loadState () {
         var state = states[uuid];
-        firebaseView.loadState(state.snapshot, state.namespace);
+        firebaseView.loadState(state.snapshot, state.namespace, state.timestamp);
     }
 
     function saveState (snapshot, namespace, timestamp) {
