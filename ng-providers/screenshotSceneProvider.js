@@ -49,11 +49,23 @@ angular.module('atlasDemo').provider('screenshotScene', [function () {
         resizeBase64Img(canvas.toDataURL(), canvas.width, canvas.height, size, size).then(commitScreenshot);
     }
 
-    function downloadScreenshot () {
-        var canvas = document.querySelector('#rendererFrame canvas');
+    function getBase64WithBackground (originalCanvas) {
+        var canvas = document.createElement("canvas");
+        canvas.width = originalCanvas.width;
+        canvas.height = originalCanvas.height;
+        var context = canvas.getContext("2d");
+        drawLinearGradient(context, canvas);
+        var deferred = $.Deferred();
+        $("<img/>").attr("src",  originalCanvas.toDataURL()).load(function() {
+            context.drawImage(this, 0,0);
+            deferred.resolve(canvas.toDataURL());
+        });
+        return deferred.promise();
+    }
 
+    function triggerDownload (screenshot) {
         var link = document.createElement('a');
-        link.href = canvas.toDataURL();
+        link.href = screenshot;
         link.download = 'screenshot.png';
         document.body.appendChild(link);
         link.click();
@@ -62,6 +74,12 @@ angular.module('atlasDemo').provider('screenshotScene', [function () {
         setTimeout(function () {
             document.body.removeChild(link);
         },10);
+    }
+
+
+    function downloadScreenshot () {
+        var canvas = document.querySelector('#rendererFrame canvas');
+        getBase64WithBackground(canvas).then(triggerDownload);
     }
 
     singleton.setFirebaseView = setFirebaseView;
