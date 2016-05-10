@@ -248,9 +248,9 @@ var FirebaseView = (function () {
 
         //wait for the next animation frame to be sure that dbRootObject has the right value
         ref.on('child_changed', function (snapshot) {
-            requestAnimationFrame(function () {
+            setTimeout(function () {
                 onValue(snapshot, snapshot.key());
-            });
+            },100);
         });
 
         singleton.auth = ref.getAuth();
