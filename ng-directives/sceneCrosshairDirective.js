@@ -18,7 +18,7 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                     if (firebaseView.isLastModifier()) {
                         firebaseView.commit('sceneCrosshair');
                     }
-                }).debounce(150);
+                }).throttle(150);
 
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null
