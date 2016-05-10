@@ -16,6 +16,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
             $scope.crosshair = crosshair;
             $scope.firebaseView = firebaseView;
             $scope.saveScreenshot = screenshotScene.saveScreenshot;
+            $scope.downloadScreenshot = screenshotScene.downloadScreenshot;
 
 
             $scope.toggleLink = function () {
