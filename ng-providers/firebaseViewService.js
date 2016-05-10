@@ -242,12 +242,11 @@ var FirebaseView = (function () {
         singleton.ref = ref;
 
 
-        //wait for the next animation frame to be sure that dbRootObject has the right value
         ref.on('value', function (snapshot) {
-            requestAnimationFrame(function () {
-                onValue(snapshot, 'root');
-            })
+            onValue(snapshot, 'root');
         });
+
+        //wait for the next animation frame to be sure that dbRootObject has the right value
         ref.on('child_changed', function (snapshot) {
             requestAnimationFrame(function () {
                 onValue(snapshot, snapshot.key());
