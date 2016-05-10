@@ -4,7 +4,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
         restrict: 'A',
         templateUrl: 'ng-templates/mainToolbar.html',
         scope: {},
-        controller: ['$scope', '$element', 'mainApp', 'volumesManager', 'crosshair', 'firebaseView', function ( $scope, $element, mainApp, volumesManager, crosshair, firebaseView ) {
+        controller: ['$scope', '$element', 'mainApp', 'volumesManager', 'crosshair', 'firebaseView', 'screenshotScene', function ( $scope, $element, mainApp, volumesManager, crosshair, firebaseView, screenshotScene) {
 
             $scope.controls = {
                 backgrounds : [],
@@ -15,6 +15,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
             $scope.popoverIsOpen = false;
             $scope.crosshair = crosshair;
             $scope.firebaseView = firebaseView;
+            $scope.saveScreenshot = screenshotScene.saveScreenshot;
 
 
             $scope.toggleLink = function () {

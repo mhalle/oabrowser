@@ -514,7 +514,7 @@ var FirebaseView = (function () {
 
 })();
 
-angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', '$firebaseObject', '$firebaseAuth', 'volumesManager', 'mainApp', 'loadingManager', 'crosshair', 'undoRedoManager', function ($root, $location, $firebaseObject, $firebaseAuth, volumesManager, mainApp, loadingManager, crosshair, undoRedoManager) {
+angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', '$firebaseObject', '$firebaseAuth', 'volumesManager', 'mainApp', 'loadingManager', 'crosshair', 'undoRedoManager', 'screenshotScene', function ($root, $location, $firebaseObject, $firebaseAuth, volumesManager, mainApp, loadingManager, crosshair, undoRedoManager, screenshotScene) {
     'use strict';
     var fv = FirebaseView();
     fv.setLoadingManager(loadingManager);
@@ -526,5 +526,6 @@ angular.module('atlasDemo').service('firebaseView',[ '$rootScope', '$location', 
     volumesManager.setFirebaseView(fv);
     crosshair.setFirebaseView(fv);
     undoRedoManager.setFirebaseView(fv);
+    screenshotScene.setFirebaseView(fv);
     return fv;
 }]);
