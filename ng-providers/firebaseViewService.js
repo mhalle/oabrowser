@@ -242,8 +242,17 @@ var FirebaseView = (function () {
         singleton.ref = ref;
 
 
-        ref.on('value', function (snapshot) {onValue(snapshot, 'root');});
-        ref.on('child_changed', function (snapshot) {onValue(snapshot, snapshot.key());});
+        //wait for the next animation frame to be sure that dbRootObject has the right value
+        ref.on('value', function (snapshot) {
+            requestAnimationFrame(function () {
+                onValue(snapshot, 'root');
+            })
+        });
+        ref.on('child_changed', function (snapshot) {
+            requestAnimationFrame(function () {
+                onValue(snapshot, snapshot.key());
+            });
+        });
 
         singleton.auth = ref.getAuth();
         authAnonymously(ref);
