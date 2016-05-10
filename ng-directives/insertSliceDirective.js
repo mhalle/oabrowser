@@ -242,7 +242,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     }
 
                     var mouseOverCrosshair = crosshair.getMouseOverCrosshair($scope.sliceId);
-                    if (mouseOverCrosshair && Number.isInteger(mouseOverCrosshair.i)) {
+                    if (mouseOverCrosshair && mouseOverCrosshair.i !== false) {
                         ctx.strokeStyle = "#ff0000";
                         ctx.lineWidth = 1;
                         ctx.beginPath();
