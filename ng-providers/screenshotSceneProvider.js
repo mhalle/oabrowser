@@ -2,11 +2,15 @@
 angular.module('atlasDemo').provider('screenshotScene', [function () {
 
     var singleton = {},
-        firebaseView;
+        firebaseView,
+        exportable = {
+            base64 : ""
+        };
 
     function setFirebaseView (fv) {
         if (!firebaseView) {
             firebaseView = fv;
+            firebaseView.bind(exportable, "base64", "screenshot");
         }
     }
 
@@ -25,11 +29,12 @@ angular.module('atlasDemo').provider('screenshotScene', [function () {
     }
 
     function commitScreenshot (screenshot) {
-        var ref = firebaseView.ref.child('screenshot');
-        ref.set(screenshot);
+        exportable.base64 = screenshot;
+        firebaseView.commit('screenshot');
     }
 
     function saveScreenshot (size) {
+        size = size || 128;
         var canvas = document.querySelector('#rendererFrame canvas');
         resizeBase64Img(canvas.toDataURL(), canvas.width, canvas.height, size, size).then(commitScreenshot);
     }
