@@ -144,6 +144,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         $(canvas).on('mousedown', mouseDown);
                         $(canvas).on('mousemove', mouseMove);
                         $(canvas).on('mousewheel', mouseWheel);
+                        $(canvas).on('mouseout', mouseOut);
                     }
                     updateControlsScope();
                     Object.defineProperty($scope.controls, 'index', {
@@ -241,7 +242,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     }
 
                     var mouseOverCrosshair = crosshair.getMouseOverCrosshair($scope.sliceId);
-                    if (mouseOverCrosshair) {
+                    if (mouseOverCrosshair && Number.isInteger(mouseOverCrosshair.i)) {
                         ctx.strokeStyle = "#ff0000";
                         ctx.lineWidth = 1;
                         ctx.beginPath();
@@ -383,6 +384,11 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                 index = Math.max(index, 0);
                 $scope.slice.index = index;
                 $scope.slice.repaint(true);
+            }
+
+            function mouseOut () {
+                //set coordinates to false to prevent rendering when mouse is not over
+                crosshair.setMouseOverCrosshair(false, false, $scope.sliceId);
             }
 
 
