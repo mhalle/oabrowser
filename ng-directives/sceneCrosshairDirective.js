@@ -92,7 +92,7 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                 }
 
                 //display breadcrumbs
-                mainApp.emit('distantMouseOverScene', $scope.objectId);
+                mainApp.emit('distantMouseOverObject', $scope.objectId);
 
                 $scope.safeApply();
             }

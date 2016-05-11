@@ -188,9 +188,9 @@ canvas {
 /*
     links inside the distant breadcrumbs
 */
-.breadcrumbs.alert-warning a, .breadcrumbs.alert-warning a:visited {
+.breadcrumb.alert-warning a, .breadcrumbs.alert-warning a:visited {
     color : #730E0E;
 }
-.breadcrumbs.alert-warning a:hover, .breadcrumbs.alert-warning a:focus {
+.breadcrumb.alert-warning a:hover, .breadcrumbs.alert-warning a:focus {
     color : #730E0E;
 }
