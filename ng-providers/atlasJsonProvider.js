@@ -227,7 +227,11 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
         return JSON.stringify(result, map, espace);
     }
 
+    function getObjectFromId (id) {
+        return ids && ids[id];
+    }
+
     this.$get = function () {
-        return {parse : parse, stringify : stringify};
+        return {parse : parse, stringify : stringify, getObjectId : getObjectFromId};
     };
 }]);

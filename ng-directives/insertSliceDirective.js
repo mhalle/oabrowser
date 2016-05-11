@@ -327,7 +327,6 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                     var x = event.clientX-canvasOffset.left,
                         y = event.clientY-canvasOffset.top;
                     var IJ = getIJPosition(x,y);
-                    crosshair.setMouseOverCrosshair(IJ.x, IJ.y, $scope.sliceId);
                     var structures = $scope.slice.getStructuresAtPosition(IJ.x, IJ.y);
                     if (structures[0]) {
                         mainApp.emit('mouseOverObject', structures[0].mesh);
@@ -336,6 +335,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
                         //free the breadcrumbs
                         mainApp.emit('mouseOverObject', null);
                     }
+
+                    crosshair.setMouseOverCrosshair(IJ.x, IJ.y, $scope.sliceId, structures[0] || null);
 
                 }
             }

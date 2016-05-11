@@ -53,11 +53,12 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
         }
     });
 
-    singleton.setMouseOverCrosshair = function (i, j, orientation) {
+    singleton.setMouseOverCrosshair = function (i, j, orientation, hoveredStructure) {
         if (firebaseView.isLastModifier()) {
             mouseOverCrosshair.i = i;
             mouseOverCrosshair.j = j;
             mouseOverCrosshair.orientation = orientation;
+            mouseOverCrosshair.objectId = (hoveredStructure && hoveredStructure['@id']) || false;
             debouncedCommit();
         }
     };
@@ -73,9 +74,16 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
     singleton.setFirebaseView = function (fv) {
         if (!firebaseView) {
             firebaseView = fv;
-            firebaseView.bind(mouseOverCrosshair, ['i','j','orientation'], 'crosshair.mouseOver');
+            firebaseView.bind(mouseOverCrosshair, ['i','j','orientation', 'objectId'], 'crosshair.mouseOver');
         }
     };
+
+    //handle distant mouse over return and send it to breadcrumbs to display
+    function sendDistantToBreadcrumbs () {
+        mainApp.emit('distantMouseOverObject',mouseOverCrosshair.objectId || false);
+    }
+
+    mainApp.on('firebaseView.viewChanged', sendDistantToBreadcrumbs);
 
 
     this.$get = function () {

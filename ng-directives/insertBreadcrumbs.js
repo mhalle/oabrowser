@@ -4,7 +4,7 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
         restrict: 'A',
         scope: {},
         templateUrl : "ng-templates/breadcrumbs.html",
-        controller: ['$scope', '$element', 'mainApp', function ( $scope, $element, mainApp ) {
+        controller: ['$scope', '$element', 'mainApp', 'atlasJson', function ( $scope, $element, mainApp, atlasJson ) {
 
             function getAllTheHierarchyPaths(object) {
                 var result = [];
@@ -62,6 +62,19 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
                 }
                 else {
                     $scope.data.breadcrumbs = $scope.data.selectedBreadcrumbs;
+                }
+                $scope.safeApply();
+            });
+
+            mainApp.on('distantMouseOverObject', function (objectId) {
+
+                $scope.data.distantBreadcrumbs = null;
+                if (objectId) {
+                    var object = atlasJson.getObjectFromId(objectId);
+                    if (object && object.mesh) {
+                        var breadcrumbs = getAllTheHierarchyPaths(object.mesh);
+                        $scope.data.distantBreadcrumbs = breadcrumbs;
+                    }
                 }
                 $scope.safeApply();
             });

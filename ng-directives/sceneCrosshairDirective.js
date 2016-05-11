@@ -67,10 +67,12 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
 
                     if (!object) {
                         $scope.style.point = false;
+                        $scope.objectId = false;
                     }
                     else {
                         $scope.style.point = point;
                         $scope.style.stroke = getOppositeColorOfMesh(object);
+                        $scope.objectId = object['@id'];
                     }
                     debouncedCommit();
                 }
@@ -88,13 +90,17 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                 else{
                     $scope.style.display = "none";
                 }
+
+                //display breadcrumbs
+                mainApp.emit('distantMouseOverScene', $scope.objectId);
+
                 $scope.safeApply();
             }
 
             mainApp.on('mouseOverScene', onMouseOverScene);
 
             firebaseView.bind($scope.style, ['stroke', 'point'], 'sceneCrosshair');
-
+            firebaseView.bind($scope, 'objectId', 'sceneCrosshair');
             mainApp.on('firebaseView.viewChanged', displayCrosshair);
 
 

@@ -1,3 +1,11 @@
+<!-- distant mouse --->
+<ol ng-repeat="arr in data.distantBreadcrumbs track by $index" class="breadcrumb alert-warning">
+  <li ng-repeat="object in arr track by $index" ng-class="{active : $last}">
+      <a ng-if="!$last" href="#" ng-click="select(object)">{{object.annotation.name}}</a><span ng-if="$last">{{object.annotation.name}}</span>
+    </li>
+</ol>
+
+<!-- local mouse -->
 <ol ng-repeat="arr in data.breadcrumbs track by $index" class="breadcrumb">
   <li ng-repeat="object in arr track by $index" ng-class="{active : $last}">
       <a ng-if="!$last" href="#" ng-click="select(object)">{{object.annotation.name}}</a><span ng-if="$last">{{object.annotation.name}}</span>
