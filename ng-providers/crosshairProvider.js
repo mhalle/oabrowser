@@ -60,6 +60,7 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
             mouseOverCrosshair.orientation = orientation;
             mouseOverCrosshair.objectId = (hoveredStructure && hoveredStructure['@id']) || false;
             debouncedCommit();
+            mainApp.emit('distantMouseOverObject',false);
         }
     };
 

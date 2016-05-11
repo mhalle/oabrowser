@@ -75,6 +75,8 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                         $scope.objectId = object.atlasStructure && object.atlasStructure['@id'];
                     }
                     debouncedCommit();
+
+                    mainApp.emit('distantMouseOverObject', false);
                 }
             }
 
