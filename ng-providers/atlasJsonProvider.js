@@ -232,6 +232,6 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
     }
 
     this.$get = function () {
-        return {parse : parse, stringify : stringify, getObjectId : getObjectFromId};
+        return {parse : parse, stringify : stringify, getObjectFromId : getObjectFromId};
     };
 }]);

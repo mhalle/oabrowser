@@ -72,7 +72,7 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                     else {
                         $scope.style.point = point;
                         $scope.style.stroke = getOppositeColorOfMesh(object);
-                        $scope.objectId = object['@id'];
+                        $scope.objectId = object.atlasStructure && object.atlasStructure['@id'];
                     }
                     debouncedCommit();
                 }
