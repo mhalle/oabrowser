@@ -232,7 +232,7 @@ var FirebaseView = (function () {
                     user.profileImageURL = singleton.auth[singleton.auth.provider].profileImageURL || null;
                     user.email = singleton.auth[singleton.auth.provider].email || null;
                 }
-                user.modifier = Firebase.ServerValue.TIMESTAMP;
+                user.modified = Firebase.ServerValue.TIMESTAMP;
                 ref.set(user);
             }
             else {
@@ -565,7 +565,7 @@ var FirebaseView = (function () {
         }
     };
 
-    singleton.auth = function (provider) {
+    singleton.authWithProvider = function (provider) {
         var authObj = $firebaseAuth(singleton.ref);
         authObj.$authWithOAuthPopup(provider).then(function(authData) {
             console.log("Logged in as:", authData.uid);

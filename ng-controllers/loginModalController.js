@@ -16,7 +16,7 @@ angular.module('atlasDemo').controller('LoginModalController', ['$scope', '$uibM
     };
 
     $scope.auth = function (provider) {
-        firebaseView.auth(provider);
+        firebaseView.authWithProvider(provider);
         $scope.ok();
     };
 
