@@ -151,7 +151,13 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             objLoader.setPath( objDirectory );
             objLoader.load( objFile, function ( object ) {
 
-                onNewMesh(structure, object, objFile);
+                object.traverse(function (child) {
+
+                    if (child instanceof THREE.Mesh) {
+                        onNewMesh(structure, child, objFile);
+                    }
+                });
+
 
             }, function () {}, function () {} );
 
