@@ -87,7 +87,9 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
         var renderOptions;
         for (var i = 0; i < structures.length; i++) {
             renderOptions = structures[i].renderOptions;
-            renderOptions.color = colorToHex(renderOptions.color, renderOptions.opacity);
+            if (renderOptions.color) {
+                renderOptions.color = colorToHex(renderOptions.color, renderOptions.opacity);
+            }
         }
     }
 
