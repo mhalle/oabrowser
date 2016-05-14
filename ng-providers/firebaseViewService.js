@@ -600,6 +600,10 @@ var FirebaseView = (function () {
         });
     };
 
+    singleton.unauth = function () {
+        singleton.ref.unauth();
+    };
+
     return function () {return singleton;};
 
 })();

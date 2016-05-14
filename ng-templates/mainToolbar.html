@@ -80,7 +80,13 @@
 </button>
 
 <!-- LOGIN -->
-<button type="button" class="btn btn-default btn-sm" aria-label="Login" ng-click="openLoginModal()">
+<button ng-if="!firebaseView.auth || firebaseView.auth.provider === 'anonymous'" type="button" class="btn btn-default btn-sm" aria-label="Login" ng-click="openLoginModal()">
     <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
     <span>Login</span>
+</button>
+
+<!-- LOGOUT -->
+<button ng-if="firebaseView.auth && firebaseView.auth.provider !== 'anonymous'" type="button" class="btn btn-default btn-sm" aria-label="Login" ng-click="firebaseView.unauth()">
+    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+    <span>Logout</span>
 </button>
