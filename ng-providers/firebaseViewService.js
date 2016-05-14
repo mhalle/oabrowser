@@ -287,7 +287,7 @@ var FirebaseView = (function () {
                 authorsObj.$save();
             }
         }
-
+        createNamespace('authors');
         namespaces.authors.commiters.push(commit);
 
         function unbind () {
