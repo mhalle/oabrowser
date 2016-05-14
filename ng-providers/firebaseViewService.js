@@ -169,7 +169,7 @@ var FirebaseView = (function () {
         function addHimselfAsAuthor () {
 
             //add himself to the list of authors
-            if (!dbRootObj.authors || !dbRootObj.authors[singleton.auth.uid]) {
+            if (!dbRootObj.authors || singleton.auth && !dbRootObj.authors[singleton.auth.uid]) {
                 dbRootObj.authors = dbRootObj.authors || {};
                 dbRootObj.authors[singleton.auth.uid] = true;
             }
