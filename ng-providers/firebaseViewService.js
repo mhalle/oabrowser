@@ -403,7 +403,7 @@ var FirebaseView = (function () {
                     },500);
                 });
             }
-            else if (singleton.auth.uid !== dbRootObj.lastModifiedBy || loadingNewView) {
+            else if (singleton.auth && singleton.auth.uid !== dbRootObj.lastModifiedBy || loadingNewView) {
                 // if we are loading a new view, child changed is not called and therefore we need to call every listeners on value
                 if (namespace === 'root' && loadingNewView) {
                     undoRedoManager.saveState(snapshot, namespace, dbRootObj.lastModifiedAt);
