@@ -159,8 +159,10 @@ var FirebaseView = (function () {
         namespaces.root.listeners.push(onValueFireEvent);
 
         function registerLastModification () {
-            dbRootObj.lastModifiedBy = singleton.auth.uid;
-            dbRootObj.lastModifiedAt = Date.now();
+            if (singleton.auth) {
+                dbRootObj.lastModifiedBy = singleton.auth.uid;
+                dbRootObj.lastModifiedAt = Date.now();
+            }
         }
 
         namespaces.root.commiters.push(registerLastModification);
