@@ -4,7 +4,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
         restrict: 'A',
         templateUrl: 'ng-templates/mainToolbar.html',
         scope: {},
-        controller: ['$scope', '$element', 'mainApp', 'volumesManager', 'crosshair', 'firebaseView', 'screenshotScene', function ( $scope, $element, mainApp, volumesManager, crosshair, firebaseView, screenshotScene) {
+        controller: ['$scope', '$element', '$uibModal', 'mainApp', 'volumesManager', 'crosshair', 'firebaseView', 'screenshotScene', function ( $scope, $element, $uibModal, mainApp, volumesManager, crosshair, firebaseView, screenshotScene) {
 
             $scope.controls = {
                 backgrounds : [],
@@ -121,6 +121,15 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
 
 
             }
+
+            $scope.openLoginModal = function () {
+                $uibModal.open({
+                    animation: true,
+                    templateUrl: 'ng-templates/loginModal.html',
+                    controller: 'LoginModalController',
+                    resolve: {}
+                });
+            };
 
             firebaseView.bind(crosshair, 'visible', 'crosshair');
 

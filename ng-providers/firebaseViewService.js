@@ -90,6 +90,19 @@ var FirebaseView = (function () {
         return uuid;
     }
 
+    function generateToken() {
+        var characters = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','?','!'],
+            length = 64,
+            i,
+            r = '';
+
+        for (i = 0; i < length; i++) {
+            r += characters[Math.floor(Math.random()*64)];
+        }
+
+        return r;
+    }
+
     function setNewPath () {
         if ($location) {
             uuid = generateUUID();
@@ -175,11 +188,13 @@ var FirebaseView = (function () {
                     console.log("Authenticated successfully with payload:", authData);
                     singleton.auth = authData;
                     loadViewerConnection();
+                    loadUserConnection();
                 }
             });
         }
         else {
             loadViewerConnection();
+            loadUserConnection();
         }
     }
 
@@ -192,6 +207,45 @@ var FirebaseView = (function () {
             singleton.auth = null;
             authAnonymously(singleton.ref);
         }
+    }
+
+    function loadUserConnection () {
+        if (!singleton.auth || !singleton.auth.uid) {
+            return ;
+        }
+        var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid);
+
+        ref.once('value', function(snapshot) {
+            //reload the connection if one of the author give him the edition rights
+            var val = snapshot.val();
+            if (!val) {
+                //user did not existed and need to be created
+                var user = {};
+                user.bookmarks = {};
+                user.bookmarks[uuid] = true;
+                user.tmp_token = sessionStorage.get('firebase.token') || null;
+                var newToken = generateToken();
+                sessionStorage.set('firebase.token', newToken);
+                user.token = newToken;
+                if (singleton.auth.provider && singleton.auth.provider !== 'anonymous') {
+                    user.name = singleton.auth[singleton.auth.provider].displayName || null;
+                    user.profileImageURL = singleton.auth[singleton.auth.provider].profileImageURL || null;
+                    user.email = singleton.auth[singleton.auth.provider].email || null;
+                }
+                user.modifier = Firebase.ServerValue.TIMESTAMP;
+                ref.set(user);
+            }
+            else {
+                var currentToken = sessionStorage.get('firebase.token') || null;
+                if (currentToken !== val.token) {
+                    val.tmp_token = currentToken;
+                    sessionStorage.set('firebase.token', val.token);
+                    val.modified = Firebase.ServerValue.TIMESTAMP;
+                    ref.set(val);
+                }
+            }
+        });
+
     }
 
     function loadViewerConnection () {
@@ -211,6 +265,7 @@ var FirebaseView = (function () {
 
         function unbind () {
             clearInterval(int);
+            ref.remove();
         }
         $(window).unload(function () {
             ref.remove();
@@ -508,6 +563,17 @@ var FirebaseView = (function () {
         else {
             singleton.ref.set(state.val());
         }
+    };
+
+    singleton.auth = function (provider) {
+        var authObj = $firebaseAuth(singleton.ref);
+        authObj.$authWithOAuthPopup(provider).then(function(authData) {
+            console.log("Logged in as:", authData.uid);
+            singleton.auth = authData;
+            loadUserConnection();
+        }).catch(function(error) {
+            console.error("Authentication failed:", error);
+        });
     };
 
     return function () {return singleton;};
