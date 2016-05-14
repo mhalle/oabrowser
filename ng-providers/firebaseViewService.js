@@ -223,9 +223,9 @@ var FirebaseView = (function () {
                 var user = {};
                 user.bookmarks = {};
                 user.bookmarks[uuid] = true;
-                user.tmp_token = sessionStorage.get('firebase.token') || null;
+                user.tmp_token = sessionStorage.getItem('firebase.token') || null;
                 var newToken = generateToken();
-                sessionStorage.set('firebase.token', newToken);
+                sessionStorage.setItem('firebase.token', newToken);
                 user.token = newToken;
                 if (singleton.auth.provider && singleton.auth.provider !== 'anonymous') {
                     user.name = singleton.auth[singleton.auth.provider].displayName || null;
@@ -236,10 +236,10 @@ var FirebaseView = (function () {
                 ref.set(user);
             }
             else {
-                var currentToken = sessionStorage.get('firebase.token') || null;
+                var currentToken = sessionStorage.getItem('firebase.token') || null;
                 if (currentToken !== val.token) {
                     val.tmp_token = currentToken;
-                    sessionStorage.set('firebase.token', val.token);
+                    sessionStorage.setItem('firebase.token', val.token);
                     val.modified = Firebase.ServerValue.TIMESTAMP;
                     ref.set(val);
                 }
