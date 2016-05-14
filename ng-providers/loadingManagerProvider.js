@@ -44,7 +44,27 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
     }
 
-    function loadModel(structure) {
+    function onNewMesh (structure, mesh, fileName) {
+        mesh.name = structure.annotation && structure.annotation.name || '';
+        mesh.renderOrder = 1;
+        structure.mesh = mesh;
+        mesh.atlasStructure = structure;
+
+        modelsLoaded[fileName] = true;
+        singleton.numberOfModelsLoaded++;
+
+        //signal to the modal
+        mainApp.emit('loadingManager.modelLoaded', fileName);
+
+        mainApp.emit('loadingManager.newMesh', mesh);
+
+        if (singleton.numberOfModelsLoaded === singleton.totalNumberOfModels) {
+            mainApp.emit('loadingManager.everyModelLoaded');
+            testIfLoadingIsFinished();
+        }
+    }
+
+    function loadVTKModel(structure) {
         var file;
         if (Array.isArray(structure.sourceSelector)) {
             var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('geometrySelector'));
@@ -82,25 +102,62 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
 
             var mesh = new THREE.Mesh(geometry, material);
-            mesh.name = item.annotation && item.annotation.name || '';
-            mesh.renderOrder = 1;
-            item.mesh = mesh;
-            mesh.atlasStructure = item;
 
-            modelsLoaded[file] = true;
-            singleton.numberOfModelsLoaded++;
-
-            //signal to the modal
-            mainApp.emit('loadingManager.modelLoaded', file);
-
-            mainApp.emit('loadingManager.newMesh', mesh);
-
-            if (singleton.numberOfModelsLoaded === singleton.totalNumberOfModels) {
-                mainApp.emit('loadingManager.everyModelLoaded');
-                testIfLoadingIsFinished();
-            }
+            onNewMesh(item, mesh, file);
 
         });
+    }
+
+    function loadOBJModel(structure) {
+        var objFile,
+            objDirectory,
+            mtlFile,
+            mtlDirectory,
+            mtlLoader = new THREE.MTLLoader();
+
+        if (Array.isArray(structure.sourceSelector)) {
+            var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('geometrySelector'));
+            if (geometrySelector) {
+                objFile = geometrySelector.dataSource.source;
+            }
+            else {
+                throw 'In case of multiple selectors, VTK selector should have an array as @type which includes "geometrySelector"';
+            }
+        }
+        else {
+            objFile = structure.sourceSelector.dataSource.source;
+        }
+        //split the path into a directory and a filename to be able to load dependant file in the same directory (textures)
+        objDirectory = objFile.split('/');
+        objFile = objDirectory.pop();
+        objDirectory = objDirectory.join('/')+'/';
+
+
+        //split the path into a directory and a filename to be able to load dependant file in the same directory (textures)
+        mtlFile = structure.renderOptions.material.source;
+        mtlDirectory = mtlFile.split('/');
+        mtlFile = mtlDirectory.pop();
+        mtlDirectory = mtlDirectory.join('/')+'/';
+
+        mtlLoader.setBaseUrl( mtlDirectory );
+        mtlLoader.setPath( mtlDirectory );
+
+        mtlLoader.load( mtlFile, function( materials ) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials( materials );
+            objLoader.setPath( objDirectory );
+            objLoader.load( objFile, function ( object ) {
+
+                onNewMesh(structure, object, objFile);
+
+            }, function () {}, function () {} );
+
+        });
+
+
     }
 
     function dealWithAtlasStructure(data) {
@@ -114,7 +171,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             mainApp.emit('headerData',header);
         }
 
-        //load the models
+        //load the models (only VTK and OBJ are supported for now)
 
         var vtkStructures = atlasStructure.structure.filter(item => {
             if (Array.isArray(item.sourceSelector)) {
@@ -125,11 +182,24 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             }
         });
 
-        singleton.totalNumberOfModels = vtkStructures.length;
+        var objStructures = atlasStructure.structure.filter(item => {
+            if (Array.isArray(item.sourceSelector)) {
+                return item.sourceSelector.some(selector => /\.obj$/.test(selector.dataSource.source));
+            }
+            else {
+                return /\.obj$/.test(item.sourceSelector.dataSource.source);
+            }
+        });
+
+        singleton.totalNumberOfModels = vtkStructures.length + objStructures.length;
 
 
         for (i = 0; i<vtkStructures.length; i++) {
-            loadModel(vtkStructures[i]);
+            loadVTKModel(vtkStructures[i]);
+        }
+
+        for (i = 0; i < objStructures.length; i++) {
+            loadOBJModel(objStructures[i]);
         }
 
 
@@ -165,7 +235,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
     function testIfLoadingIsFinished () {
         if (singleton.numberOfModelsLoaded === singleton.totalNumberOfModels && singleton.totalNumberOfVolumes === singleton.numberOfVolumesLoaded) {
-                mainApp.emit('loadingManager.loadingEnd');
+            mainApp.emit('loadingManager.loadingEnd');
         }
     }
 
@@ -174,7 +244,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
     }
 
     singleton.loadVolume = loadVolume;
-    singleton.loadModel = loadModel;
+    singleton.loadVTKModel = loadVTKModel;
     singleton.loadAtlasStructure = loadAtlasStructure;
     singleton.volumesLoaded = volumesLoaded;
     singleton.volumesProgress = volumesProgress;

@@ -47,6 +47,8 @@ const filesList = [
         "babel/MultiVolumesSlice.js",
         "babel/NRRDLoader.js",
         "babel/VTKLoader.js",
+        "libs/MTLLoader.js",
+        "libs/OBJLoader.js",
         "libs/Detector.js",
         "libs/stats.min.js",
         "libs/zlib_and_gzip.min.js",
