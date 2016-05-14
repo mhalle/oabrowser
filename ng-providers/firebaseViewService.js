@@ -273,6 +273,29 @@ var FirebaseView = (function () {
         unbindFunctions.push(unbind);
     }
 
+    function loadAuthorConnection () {
+        var ref = new Firebase("https://atlas-viewer.firebaseio.com/authors/"+uuid);
+
+        var authorsObj = $firebaseObject(ref);
+        authorsObj.$loaded();
+
+        function commit () {
+            //add himself to the list of authors
+            var token = sessionStorage.getItem('firebase.token');
+            if (token && !authorsObj[token]) {
+                authorsObj[token] = true;
+                authorsObj.$save();
+            }
+        }
+
+        namespaces.authors.commiters.push(commit);
+
+        function unbind () {
+            authorsObj.$destroy();
+        }
+        unbindFunctions.push(unbind);
+    }
+
     function loadDatabaseConnection () {
 
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid);
@@ -314,6 +337,7 @@ var FirebaseView = (function () {
 
         ref.onAuth(authHandler);
 
+        loadAuthorConnection();
         //handle event propagation listener and author commiter
         initRootListenersAndCommiters();
 
