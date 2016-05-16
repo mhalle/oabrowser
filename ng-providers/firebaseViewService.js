@@ -23,14 +23,12 @@ var FirebaseView = (function () {
         if (!$root) {
             $root = root;
         }
-        init();
     };
 
     singleton.setLocation = function (location) {
         if (!$location) {
             $location = location;
         }
-        init();
     };
 
     singleton.setFirebase = function (firebaseObject, firebaseAuth) {
@@ -38,13 +36,13 @@ var FirebaseView = (function () {
             $firebaseObject = firebaseObject;
             $firebaseAuth = firebaseAuth;
         }
-        init();
 
     };
 
     singleton.setMainApp = function (mA) {
         if (!mainApp) {
             mainApp = mA;
+            mainApp.on('loadingManager.loadingEnd', init);
         }
     };
 
@@ -539,11 +537,17 @@ var FirebaseView = (function () {
     };
 
     singleton.lockView = function () {
+        if (!dbRootObj) {
+            return;
+        }
         dbRootObj.locked = true;
         dbRootObj.$save();
     };
 
     singleton.unlockView = function () {
+        if (!dbRootObj) {
+            return;
+        }
         dbRootObj.locked = false;
         //commit changes which happened during the period of lock
         commit();
