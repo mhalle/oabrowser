@@ -154,7 +154,12 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
                 object.traverse(function (child) {
 
                     if (child instanceof THREE.Mesh) {
-                        onNewMesh(structure, child, objFile);
+                        // onNewMesh will remove the mesh from its current group to put directly in the scene
+                        // we need to use a timeout for object.traverse to finish correctly
+                        // or else child gets removed, children length changes and for instruction fails
+                        setTimeout(function () {
+                            onNewMesh(structure, child, objFile);
+                        },0);
                     }
                 });
 
@@ -241,6 +246,11 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
     function testIfLoadingIsFinished () {
         if (singleton.numberOfModelsLoaded === singleton.totalNumberOfModels && singleton.totalNumberOfVolumes === singleton.numberOfVolumesLoaded) {
+
+            //need to call forced update in case there has been no volume loaded
+            mainApp.emit('ui.layout.forcedUpdate');
+
+            //signal that the loading has ended
             mainApp.emit('loadingManager.loadingEnd');
         }
     }

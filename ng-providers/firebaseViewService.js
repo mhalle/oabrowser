@@ -287,7 +287,7 @@ var FirebaseView = (function () {
         namespaces.authors.commiters.push(commit);
 
         function unbind () {
-            // remove commiter from the list when connexion change (another one will be created)
+            // remove commiter from the list when connection change (another one will be created)
             var index = namespaces.authors.commiters.indexOf(commit);
             if (index > -1) {
                 namespaces.authors.commiters.splice(index,1);
