@@ -252,7 +252,7 @@ var FirebaseView = (function () {
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid+"/viewers/"+singleton.auth.uid);
 
         var int = setInterval(function () {
-            ref.child('lastUpdate').set(Date.now());
+            ref.update({lastUpdate : Firebase.ServerValue.TIMESTAMP, token : sessionStorage.getItem('firebase.token')});
         }, 30000);
 
         ref.on('value', function(snapshot) {
@@ -276,22 +276,22 @@ var FirebaseView = (function () {
     function loadAuthorConnection () {
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/authors/"+uuid);
 
-        var authorsObj = $firebaseObject(ref);
-        authorsObj.$loaded();
-
         function commit () {
             //add himself to the list of authors
             var token = sessionStorage.getItem('firebase.token');
-            if (token && !authorsObj[token]) {
-                authorsObj[token] = true;
-                authorsObj.$save();
-            }
+            var obj = {};
+            obj[token] = true;
+            ref.update(obj);
         }
         createNamespace('authors');
         namespaces.authors.commiters.push(commit);
 
         function unbind () {
-            authorsObj.$destroy();
+            // remove commiter from the list when connexion change (another one will be created)
+            var index = namespaces.authors.commiters.indexOf(commit);
+            if (index > -1) {
+                namespaces.authors.commiters.splice(index,1);
+            }
         }
         unbindFunctions.push(unbind);
     }
