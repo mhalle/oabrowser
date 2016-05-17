@@ -361,6 +361,8 @@ var FirebaseView = (function () {
 
         unbindFunctions.push(unbind);
 
+        mainApp.emit('firebaseView.connectionSetup');
+
     }
 
     function commit (namespace) {
@@ -608,6 +610,33 @@ var FirebaseView = (function () {
 
     singleton.unauth = function () {
         singleton.ref.unauth();
+    };
+
+    singleton.getViewThumbnail = function (viewId, callback) {
+        var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid+"/screenshot/base64");
+
+        ref.on('value', function (snapshot) {
+            var val = snapshot.val();
+            callback(val);
+        });
+    };
+
+    singleton.getUserBookmarks = function (valueCallback, childCallback) {
+        if (singleton.auth) {
+            var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/screenshot/base64");
+            ref.once('value', function (snapshot) {
+                var val = snapshot.val();
+                valueCallback(val);
+            });
+
+            ref.on('child_changed', function (snapshot) {
+                childCallback(snapshot.val(), snapshot.key());
+            });
+
+            ref.on('child_removed', function (oldSnapshot) {
+                childCallback(false, oldSnapshot.key());
+            });
+        }
     };
 
     return function () {return singleton;};
