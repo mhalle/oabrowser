@@ -12,14 +12,14 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Your Bookmarks</h4>
             </div>
-            <div class="modal-body">
-                <div class="media" ng-repeat="(key,value) in bookmarks">
-                    <div class="media-left">
+            <div class="modal-body container">
+                <div class="row" ng-repeat="(key,value) in bookmarks" style="margin-bottom:10px;">
+                    <div class="col-xs-1">
                         <a href="#">
-                            <img class="media-object" ng-src="{{value && value.thumbnail || imgPlaceholder}}" alt="thumbnail" style="width:64px;height:64px;">
+                            <img class="img-responsive" ng-src="{{value && value.thumbnail || imgPlaceholder}}" alt="thumbnail" style="width:64px;height:64px;">
                         </a>
                     </div>
-                    <div class="media-body">
+                    <div class="col-xs-11">
                         <h4 class="media-heading">{{key}}</h4>
                         Description
                     </div>
