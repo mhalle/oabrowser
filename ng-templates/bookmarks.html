@@ -13,7 +13,7 @@
                 <h4 class="modal-title" id="myModalLabel">Your Bookmarks</h4>
             </div>
             <div class="modal-body">
-                <div class="media">
+                <div class="media" ng-repeat="(key,value) in bookmarks">
                     <div class="media-left">
                         <a href="#">
                             <img class="media-object" ng-src="{{value && value.thumbnail || imgPlaceholder}}" alt="thumbnail" style="width:64px;height:64px;">
