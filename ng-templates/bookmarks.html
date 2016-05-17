@@ -13,19 +13,17 @@
                 <h4 class="modal-title" id="myModalLabel">Your Bookmarks</h4>
             </div>
             <div class="modal-body">
-                <ul class="media-list">
-                    <li class="media" ng-repeat="(key,value) in bookmarks">
-                        <div class="media-left">
-                            <a href="#">
-                                <img class="media-object" ng-src="{{value && value.thumbnail || imgPlaceholder}}" alt="thumbnail" style="width:64px;height:64px;">
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <h4 class="media-heading">{{key}}</h4>
-                            Description
-                        </div>
-                    </li>
-                </ul>
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object" ng-src="{{value && value.thumbnail || imgPlaceholder}}" alt="thumbnail" style="width:64px;height:64px;">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">{{key}}</h4>
+                        Description
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
