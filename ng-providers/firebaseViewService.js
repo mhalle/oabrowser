@@ -249,13 +249,23 @@ var FirebaseView = (function () {
     }
 
     function loadViewerConnection () {
-        var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid+"/viewers/"+singleton.auth.uid);
+        var viewerRef = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid+"/viewers/"+singleton.auth.uid);
 
-        var int = setInterval(function () {
-            ref.update({lastUpdate : Firebase.ServerValue.TIMESTAMP, token : sessionStorage.getItem('firebase.token')});
-        }, 30000);
+        //simple boolean to know if user is online
+        var amOnline = new Firebase('https://atlas-viewer.firebaseio.com/.info/connected');
 
-        ref.on('value', function(snapshot) {
+        amOnline.on('value', function(snapshot) {
+            if (snapshot.val()) {
+                viewerRef.onDisconnect().remove();
+                viewerRef.set({
+                    lastUpdate : Firebase.ServerValue.TIMESTAMP,
+                    token : sessionStorage.getItem('firebase.token'), //useful to pass the author right
+                    name : singleton.auth && singleton.auth.provider !== 'anonymous' && singleton.auth[singleton.auth.provider].displayName || null
+                });
+            }
+        });
+
+        viewerRef.on('value', function(snapshot) {
             //reload the connection if one of the author give him the edition rights
             var val = snapshot.val();
             if (val && val.author) {
@@ -264,12 +274,9 @@ var FirebaseView = (function () {
         });
 
         function unbind () {
-            clearInterval(int);
-            ref.remove();
+            viewerRef.remove();
+            amOnline.off();
         }
-        $(window).unload(function () {
-            ref.remove();
-        });
         unbindFunctions.push(unbind);
     }
 
@@ -640,9 +647,23 @@ var FirebaseView = (function () {
     };
 
     singleton.saveBookmark = function () {
+        var bookmarkUuid = generateUUID();
+
+        //copy the current view in a new
+        singleton.ref.once('value', function (snapshot) {
+            var bookmarkRef = new Firebase("https://atlas-viewer.firebaseio.com/views/"+bookmarkUuid);
+            var view = snapshot.val();
+            view.locked = true;
+            view.authors = null;
+            bookmarkRef.set(snapshot.val());
+
+            //will prevent anyone from having the rights to change the view and thus making it immutable
+            var authorsRef = new Firebase("https://atlas-viewer.firebaseio.com/authors/"+bookmarkUuid);
+            authorsRef.set({nobody : true});
+        });
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks");
         var obj = {};
-        obj[uuid] = true;
+        obj[bookmarkUuid] = true;
         ref.update(obj);
     };
 
