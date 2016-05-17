@@ -623,7 +623,7 @@ var FirebaseView = (function () {
 
     singleton.getUserBookmarks = function (valueCallback, childCallback) {
         if (singleton.auth) {
-            var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/screenshot/base64");
+            var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks");
             ref.once('value', function (snapshot) {
                 var val = snapshot.val();
                 valueCallback(val);
