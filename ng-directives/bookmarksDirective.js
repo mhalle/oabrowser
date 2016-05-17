@@ -71,7 +71,7 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
             mainApp.on('firebaseView.connectionSetup', fetchBookmarks);
 
             $scope.openBookmarks = function () {
-                $('bookmarksModal').modal('show');
+                $('#bookmarksModal').modal('show');
             };
 
         }]
