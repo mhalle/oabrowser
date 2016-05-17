@@ -424,7 +424,7 @@ var FirebaseView = (function () {
                     }
                 }
             }
-            else if (singleton.auth.uid === dbRootObj.lastModifiedBy && namespace !== 'root' && namespace !== 'viewers' && namespace !== 'sceneCrosshair' && namespace !== 'authors' && namespace !== 'crosshair') {
+            else if (singleton.auth && singleton.auth.uid === dbRootObj.lastModifiedBy && namespace !== 'root' && namespace !== 'viewers' && namespace !== 'sceneCrosshair' && namespace !== 'authors' && namespace !== 'crosshair') {
                 undoRedoManager.saveState(snapshot, namespace, dbRootObj.lastModifiedAt);
             }
         }
@@ -636,6 +636,20 @@ var FirebaseView = (function () {
             ref.on('child_removed', function (oldSnapshot) {
                 childCallback(false, oldSnapshot.key());
             });
+        }
+    };
+
+    singleton.saveBookmark = function () {
+        var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks");
+        var obj = {};
+        obj[uuid] = true;
+        ref.update(obj);
+    };
+
+    singleton.deleteBookmark = function (viewId) {
+        if (viewId && typeof viewId === 'string' && viewId.length >0) {
+            var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks/"+viewId);
+            ref.remove();
         }
     };
 
