@@ -613,7 +613,7 @@ var FirebaseView = (function () {
     };
 
     singleton.getViewThumbnail = function (viewId, callback) {
-        var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid+"/screenshot/base64");
+        var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+viewId+"/screenshot/base64");
 
         ref.on('value', function (snapshot) {
             var val = snapshot.val();
