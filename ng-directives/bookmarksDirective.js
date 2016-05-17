@@ -29,10 +29,10 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
             function fetchAllThumbnails (specificId) {
                 var uid;
 
-                function createCallback (uid) {
+                function createCallback (id) {
                     function callback (thumbnail) {
-                        $scope.bookmarks[uid] = $scope.bookmarks[uid] || {};
-                        $scope.bookmarks[uid].thumbnail = thumbnail;
+                        $scope.bookmarks[id] = $scope.bookmarks[id] || {};
+                        $scope.bookmarks[id].thumbnail = thumbnail;
                         $scope.safeApply();
                     }
                     return callback;
