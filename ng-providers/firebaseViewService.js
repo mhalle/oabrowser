@@ -672,9 +672,11 @@ var FirebaseView = (function () {
 
         //register the bookmark in the user profile
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks");
-        var obj = {};
-        obj[bookmarkUuid] = true;
-        ref.update(obj);
+        ref.once('value', function (snapshot) {
+            var value = snapshot.val() || {};
+            value[bookmarkUuid] = true;
+            ref.set(value);
+        });
 
         //require screenshot
         mainApp.emit('firebaseView.requireScreenshot');
