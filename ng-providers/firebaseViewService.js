@@ -654,7 +654,7 @@ var FirebaseView = (function () {
                 var view = snapshot.val();
                 view.locked = true;
                 view.authors = null;
-                bookmarkRef.set(snapshot.val());
+                bookmarkRef.set(view);
 
                 //will prevent anyone from having the rights to change the view and thus making it immutable
                 var authorsRef = new Firebase("https://atlas-viewer.firebaseio.com/authors/"+bookmarkUuid);

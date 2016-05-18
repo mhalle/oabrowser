@@ -198,3 +198,8 @@ canvas {
 .modal .bookmark-button {
     font-size: 2em;
 }
+
+.modal .bookmark-button:hover {
+    font-size: 2em;
+    cursor: pointer;
+}
