@@ -638,6 +638,10 @@ var FirebaseView = (function () {
                 childCallback(snapshot.val(), snapshot.key());
             });
 
+            ref.on('child_added', function (snapshot) {
+                childCallback(snapshot.val(), snapshot.key());
+            });
+
             ref.on('child_removed', function (oldSnapshot) {
                 childCallback(false, oldSnapshot.key());
             });
