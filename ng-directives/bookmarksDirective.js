@@ -65,6 +65,11 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
                 }
                 function onChildChanged (val, key) {
                     if (val) {
+                        //in case child changed event arrive before value
+                        if (!$scope.bookmarksObject) {
+                            $scope.bookmarksObject = {};
+                            $scope.bookmarksObject[key] = val;
+                        }
                         fetchAllThumbnails(key);
                     }
                     else {
