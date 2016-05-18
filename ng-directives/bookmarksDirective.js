@@ -72,6 +72,10 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
                         $scope.bookmarks[key] = undefined;
                         //undefined is not enough for angular
                         delete $scope.bookmarks[key];
+                        delete $scope.bookmarksObject[key];
+                        if ( Object.keys($scope.bookmarks).length === 0) {
+                            $scope.noBookmark = true;
+                        }
                         $scope.safeApply();
                     }
                 }
