@@ -663,7 +663,7 @@ var FirebaseView = (function () {
         }
 
         //wait for the screenshot to be updated to copy the current view (should be short)
-        mainApp.on('screenshot.commited', copyCurrentView);
+        mainApp.on('screenshotScene.commited', copyCurrentView);
 
 
         //register the bookmark in the user profile
