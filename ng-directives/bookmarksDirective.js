@@ -11,6 +11,10 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
 
             $scope.bookmarks = {};
 
+            $scope.noBookmark = true;
+
+            $scope.firebaseView = firebaseView;
+
 
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null
@@ -40,6 +44,7 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
                 if (specificId && $scope.bookmarksObject[specificId] && !alreadyFetched[specificId] ) {
                     firebaseView.getViewThumbnail(specificId, createCallback(specificId));
                     alreadyFetched[specificId] = true;
+                    $scope.noBookmark = false;
                 }
                 else {
                     for (uid in $scope.bookmarksObject) {
@@ -47,6 +52,7 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
                             firebaseView.getViewThumbnail(uid, createCallback(uid));
                             alreadyFetched[uid] = true;
                         }
+                        $scope.noBookmark = false;
                     }
                 }
             }

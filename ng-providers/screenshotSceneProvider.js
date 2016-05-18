@@ -1,11 +1,14 @@
 
-angular.module('atlasDemo').provider('screenshotScene', [function () {
+angular.module('atlasDemo').provider('screenshotScene', ['mainAppProvider', function (mainAppProvider) {
 
     var singleton = {},
         firebaseView,
         exportable = {
             base64 : ""
-        };
+        },
+        mainApp = mainAppProvider.$get();
+
+    mainApp.on('firebaseView.requireScreenshot', saveScreenshot);
 
     function setFirebaseView (fv) {
         if (!firebaseView) {
@@ -41,6 +44,7 @@ angular.module('atlasDemo').provider('screenshotScene', [function () {
     function commitScreenshot (screenshot) {
         exportable.base64 = screenshot;
         firebaseView.commit('screenshot');
+        mainApp.emit('screenshotScene.commited');
     }
 
     function saveScreenshot (size) {

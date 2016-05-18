@@ -221,8 +221,6 @@ var FirebaseView = (function () {
             if (!val) {
                 //user did not existed and need to be created
                 var user = {};
-                user.bookmarks = {};
-                user.bookmarks[uuid] = true;
                 user.tmp_token = sessionStorage.getItem('firebase.token') || null;
                 var newToken = generateToken();
                 sessionStorage.setItem('firebase.token', newToken);
@@ -649,22 +647,34 @@ var FirebaseView = (function () {
     singleton.saveBookmark = function () {
         var bookmarkUuid = generateUUID();
 
-        //copy the current view in a new
-        singleton.ref.once('value', function (snapshot) {
-            var bookmarkRef = new Firebase("https://atlas-viewer.firebaseio.com/views/"+bookmarkUuid);
-            var view = snapshot.val();
-            view.locked = true;
-            view.authors = null;
-            bookmarkRef.set(snapshot.val());
+        function copyCurrentView() {
+            //copy the current view in a new
+            singleton.ref.once('value', function (snapshot) {
+                var bookmarkRef = new Firebase("https://atlas-viewer.firebaseio.com/views/"+bookmarkUuid);
+                var view = snapshot.val();
+                view.locked = true;
+                view.authors = null;
+                bookmarkRef.set(snapshot.val());
 
-            //will prevent anyone from having the rights to change the view and thus making it immutable
-            var authorsRef = new Firebase("https://atlas-viewer.firebaseio.com/authors/"+bookmarkUuid);
-            authorsRef.set({nobody : true});
-        });
+                //will prevent anyone from having the rights to change the view and thus making it immutable
+                var authorsRef = new Firebase("https://atlas-viewer.firebaseio.com/authors/"+bookmarkUuid);
+                authorsRef.set({nobody : true});
+            });
+        }
+
+        //wait for the screenshot to be updated to copy the current view (should be short)
+        mainApp.on('screenshot.commited', copyCurrentView);
+
+
+        //register the bookmark in the user profile
         var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks");
         var obj = {};
         obj[bookmarkUuid] = true;
         ref.update(obj);
+
+        //require screenshot
+        mainApp.emit('firebaseView.requireScreenshot');
+
     };
 
     singleton.deleteBookmark = function (viewId) {

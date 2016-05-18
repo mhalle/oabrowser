@@ -86,9 +86,15 @@
 </button>
 
 <!-- LOGOUT -->
-<button ng-if="firebaseView.auth && firebaseView.auth.provider !== 'anonymous'" type="button" class="btn btn-default btn-sm" aria-label="Login" ng-click="firebaseView.unauth()">
+<button ng-if="firebaseView.auth && firebaseView.auth.provider !== 'anonymous'" type="button" class="btn btn-default btn-sm" aria-label="Logout" ng-click="firebaseView.unauth()">
     <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
     <span>Logout</span>
+</button>
+
+<!-- ADD BOOKMARK -->
+<button ng-if="firebaseView.auth && firebaseView.auth.provider !== 'anonymous'" type="button" class="btn btn-default btn-sm" aria-label="AddBookmark" ng-click="firebaseView.saveBookmark()">
+    <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+    <span>Save bookmark</span>
 </button>
 
 <!-- bookmarks -->

@@ -194,3 +194,7 @@ canvas {
 .breadcrumb.alert-warning a:hover, .breadcrumbs.alert-warning a:focus {
     color : #730E0E;
 }
+
+.modal .bookmark-button {
+    font-size: 2em;
+}

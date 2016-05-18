@@ -12,14 +12,16 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Your Bookmarks</h4>
             </div>
-            <div class="modal-body container">
+            <div class="modal-body">
+                <div ng-if="noBookmark">You do not have any bookmark yet.</div>
                 <div class="row" ng-repeat="(key,value) in bookmarks" style="margin-bottom:10px;">
-                    <div class="col-xs-1">
-                        <a href="#">
+                    <div class="col-xs-2">
+                        <a href="">
                             <img class="img-responsive" ng-src="{{value && value.thumbnail || imgPlaceholder}}" alt="thumbnail" style="width:64px;height:64px;">
                         </a>
                     </div>
-                    <div class="col-xs-11">
+                    <div class="col-xs-10">
+                        <i class="fa fa-trash-o pull-right bookmark-button" aria-hidden="true" ng-click="firebaseView.deleteBookmark(key)"></i>
                         <h4 class="media-heading">{{key}}</h4>
                         Description
                     </div>
