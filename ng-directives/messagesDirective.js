@@ -100,6 +100,10 @@ angular.module('atlasDemo').directive( 'messages', function () {
                 return s.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(regexp, (m, p1, p2) =>'<a href="'+p2+'">'+p1+'</a>');
             }
 
+            $scope.isMessageEnabled = function () {
+                return firebaseView.auth && firebaseView.auth.provider !== 'anonymous';
+            };
+
         }]
     };
 });
