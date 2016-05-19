@@ -43,6 +43,10 @@ angular.module('atlasDemo').directive( 'messages', function () {
             function initMessages (messages) {
                 $scope.messages = messages.val();
                 $scope.noMessage = Object.keys(messages).length === 0;
+                var messageId;
+                for (messageId in $scope.messages) {
+                        $scope.messages[messageId].text = parseTextMessage($scope.messages[messageId].text);
+                }
                 $scope.safeApply();
             }
 
@@ -82,11 +86,17 @@ angular.module('atlasDemo').directive( 'messages', function () {
                 $scope.newMessage.recipient = undefined;
                 delete $scope.newMessage.recipient;
                 $scope.newMessage.subject = "Check out this view";
-                $scope.newMessage.text = 'Click <a href="#/view/'+key+'"> here </a> to load the bookmark.';
+                $scope.newMessage.text = 'Click [here]("#/view/'+key+'") to load the bookmark.';
                 $scope.safeApply();
                 $scope.openNewMessageForm();
             }
             mainApp.on('bookmarks.shareBookmark', createBookmarkMessage);
+
+
+            function parseTextMessage (s) {
+                var regexp = /\[(.*?)\]\("(.*?)"\)/g;
+                return s.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(regexp, (m, p1, p2) =>'<a href="'+p2+'">'+p1+'</a>');
+            }
 
         }]
     };

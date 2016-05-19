@@ -98,6 +98,7 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
                 mainApp.emit('bookmarks.shareBookmark', key);
             };
 
+
         }]
     };
 });
