@@ -203,3 +203,12 @@ canvas {
     font-size: 2em;
     cursor: pointer;
 }
+
+.modal .message-button {
+    font-size: 2em;
+}
+
+.modal .message-button:hover {
+    font-size: 2em;
+    cursor: pointer;
+}

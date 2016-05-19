@@ -11,6 +11,7 @@ var FirebaseView = (function () {
         mainApp,
         $body,
         unbindFunctions = [],
+        userRelatedUnbindFunctions = [],
         bindObjects = [],
         loadingNewView = true,
         loadingManager,
@@ -180,6 +181,7 @@ var FirebaseView = (function () {
     }
 
     function authAnonymously (ref) {
+        unbindAllUserRelatedCallbacks();
         if (!singleton.auth) {
             ref.authAnonymously(function(error, authData) {
                 if (error) {
@@ -189,12 +191,16 @@ var FirebaseView = (function () {
                     singleton.auth = authData;
                     loadViewerConnection();
                     loadUserConnection();
+                    loadMessagesConnection();
+                    loadUserNamesConnection();
                 }
             });
         }
         else {
             loadViewerConnection();
             loadUserConnection();
+            loadMessagesConnection();
+            loadUserNamesConnection();
         }
     }
 
@@ -271,11 +277,16 @@ var FirebaseView = (function () {
             }
         });
 
+        var done = false;
         function unbind () {
-            viewerRef.remove();
-            amOnline.off();
+            if (!done) {
+                viewerRef.remove();
+                amOnline.off();
+                done = true;
+            }
         }
         unbindFunctions.push(unbind);
+        userRelatedUnbindFunctions.push(unbind);
     }
 
     function loadAuthorConnection () {
@@ -299,6 +310,63 @@ var FirebaseView = (function () {
             }
         }
         unbindFunctions.push(unbind);
+    }
+
+    function loadMessagesConnection () {
+        var messagesRef = new Firebase("https://atlas-viewer.firebaseio.com/messages/"+singleton.auth.uid);
+
+        messagesRef.on('value', function(snapshot) {
+            if (snapshot.val()) {
+                mainApp.emit('firebaseView.messages', snapshot);
+            }
+        });
+
+        messagesRef.on('child_added', function(snapshot) {
+            if (snapshot.val()) {
+                mainApp.emit('firebaseView.newMessage', snapshot);
+            }
+        });
+
+
+        function unbind () {
+            messagesRef.off();
+        }
+        userRelatedUnbindFunctions.push(unbind);
+    }
+
+    function loadUserNamesConnection () {
+        var userNamesRef = new Firebase("https://atlas-viewer.firebaseio.com/userNames/");
+
+        userNamesRef.on('value', function(snapshot) {
+            if (snapshot.val()) {
+                mainApp.emit('firebaseView.userNames', snapshot);
+            }
+        });
+
+        userNamesRef.on('child_added', function(snapshot) {
+            mainApp.emit('firebaseView.newUserName', snapshot);
+        });
+
+        userNamesRef.on('child_removed', function(snapshot) {
+            mainApp.emit('firebaseView.userNameDeleted', snapshot);
+        });
+
+        userNamesRef.on('child_changed', function(snapshot) {
+            mainApp.emit('firebaseView.userNameChanged', snapshot);
+        });
+
+        if (singleton.auth && singleton.auth.uid && singleton.auth.provider !== 'anonymous') {
+            var userNameRef = new Firebase("https://atlas-viewer.firebaseio.com/userNames/"+singleton.auth.uid);
+            userNameRef.set({
+                name : singleton.auth[singleton.auth.provider].displayName || null,
+                profileImageURL : singleton.auth[singleton.auth.provider].profileImageURL || null
+            });
+        }
+
+        function unbind () {
+            userNamesRef.off();
+        }
+        userRelatedUnbindFunctions.push(unbind);
     }
 
     function loadDatabaseConnection () {
@@ -496,6 +564,11 @@ var FirebaseView = (function () {
         unbindFunctions = [];
     }
 
+    function unbindAllUserRelatedCallbacks () {
+        userRelatedUnbindFunctions.map(unbind => unbind ());
+        userRelatedUnbindFunctions = [];
+    }
+
     function createBinding (obj, key, pathArray) {
         if (typeof key === 'string') {
             key = [key];
@@ -608,6 +681,9 @@ var FirebaseView = (function () {
             console.log("Logged in as:", authData.uid);
             singleton.auth = authData;
             loadUserConnection();
+            loadViewerConnection();
+            loadMessagesConnection();
+            loadUserNamesConnection();
         }).catch(function(error) {
             console.error("Authentication failed:", error);
         });
@@ -686,6 +762,31 @@ var FirebaseView = (function () {
     singleton.deleteBookmark = function (viewId) {
         if (viewId && typeof viewId === 'string' && viewId.length >0) {
             var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks/"+viewId);
+            ref.remove();
+        }
+    };
+
+    singleton.loadBookmark = function (viewId) {
+        uuid = viewId;
+        loadDatabaseConnection();
+    };
+
+    singleton.sendMessage = function (recipient, subject, text) {
+        var messageId = generateUUID();
+        var messageRef = new Firebase("https://atlas-viewer.firebaseio.com/messages/"+recipient+"/"+messageId);
+        var messageObject = {
+            author : singleton.auth.uid,
+            text : text,
+            subject : subject,
+            date : Firebase.ServerValue.TIMESTAMP
+        };
+        messageRef.set(messageObject);
+
+    };
+
+    singleton.deleteMessage = function (messageId) {
+        if (messageId && typeof messageId === 'string' && messageId.length >0) {
+            var ref = new Firebase("https://atlas-viewer.firebaseio.com/messages/"+singleton.auth.uid+"/"+messageId);
             ref.remove();
         }
     };

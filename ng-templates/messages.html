@@ -1,0 +1,87 @@
+<!-- Open the new message modal -->
+<button type="button" class="btn btn-default btn-sm" aria-label="newMessage" ng-click="openNewMessageForm()">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+    <span>New Message</span>
+</button>
+
+<!-- Open the messages list modal -->
+<button type="button" class="btn btn-default btn-sm" aria-label="messagesList" ng-click="openMessagesList()">
+    <i class="fa fa-envelope" aria-hidden="true"></i>
+    <span>Inbox</span>
+</button>
+
+<!-- New message modal --->
+<div class="modal fade" id="newMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">New Message</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipientInput">Recipient</label>
+                        <input id="recipientInput" type="text" ng-model="newMessage.recipient" uib-typeahead="name for name in userNamesList | filter:$viewValue | limitTo:8" class="form-control" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="subjectInput">Subject</label>
+                        <input id="subjectInput" type="text" ng-model="newMessage.subject" class="form-control" placeholder="Subject">
+                    </div>
+                    <div class="form-group">
+                        <label for="contentInput">Content</label>
+                        <textarea id="contentInput" class="form-control" rows="3" ng-model="newMessage.text" ></textarea>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="emptyForm()">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="send()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Messages List modal --->
+<div class="modal fade" id="messagesListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Your Messages</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default" ng-repeat="(key, message) in messages">
+                        <div class="panel-heading" role="tab" ng-attr-id="heading{{key}}" data-toggle="collapse" ng-attr-data-target="#collapse{{key}}" aria-expanded="false" ng-attr-aria-controls="collapse{{key}}">
+                            <h4 class="panel-title">
+                                {{message.subject}}
+
+                                <i class="fa fa-trash-o pull-right message-button" aria-hidden="true" ng-click="deleteMessage(key)"></i>
+                            </h4>
+                            <h6>
+                                {{message.authorName}}
+                                <small class="pull-right">{{message.date | date:'medium'}}</small>
+                            </h6>
+                        </div>
+                        <div ng-attr-id="collapse{{key}}" class="panel-collapse collapse in" role="tabpanel" ng-attr-aria-labelledby="heading{{key}}">
+                            <div class="panel-body">
+                                {{message.text}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

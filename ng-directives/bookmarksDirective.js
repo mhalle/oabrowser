@@ -93,6 +93,10 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
                 $('#bookmarksModal').modal('show');
             };
 
+            $scope.shareBookmark = function (key) {
+                mainApp.emit('bookmarks.shareBookmark', key);
+            };
+
         }]
     };
 });
