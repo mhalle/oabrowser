@@ -67,7 +67,7 @@
                                 <i class="fa fa-trash-o pull-right message-button" aria-hidden="true" ng-click="deleteMessage(key)"></i>
                             </h4>
                             <h6>
-                                {{message.authorName}}
+                                {{userNames[message.author].name}}
                                 <small class="pull-right">{{message.date | date:'medium'}}</small>
                             </h6>
                         </div>
