@@ -94,6 +94,7 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
             };
 
             $scope.shareBookmark = function (key) {
+                $('#bookmarksModal').modal('hide');
                 mainApp.emit('bookmarks.shareBookmark', key);
             };
 
