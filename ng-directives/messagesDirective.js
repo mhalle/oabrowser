@@ -56,6 +56,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
 
                 $scope.messages[key] = undefined;
                 delete $scope.messages[key];
+                $scope.noMessage = Object.keys($scope.messages).length === 0;
                 $scope.safeApply();
 
                 firebaseView.deleteMessage(key);
@@ -83,6 +84,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
             };
 
             function createBookmarkMessage (key) {
+                $scope.newMessage = $scope.newMessage || {};
                 $scope.newMessage.recipient = undefined;
                 delete $scope.newMessage.recipient;
                 $scope.newMessage.subject = "Check out this view";
