@@ -56,7 +56,9 @@
             </div>
             <div class="modal-body">
 
-                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div ng-if="noMessage">You do not have any message.</div>
+
+                <div ng-if="!noMessage" class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default" ng-repeat="(key, message) in messages">
                         <div class="panel-heading" role="tab" ng-attr-id="heading{{key}}" data-toggle="collapse" ng-attr-data-target="#collapse{{key}}" aria-expanded="false" ng-attr-aria-controls="collapse{{key}}">
                             <h4 class="panel-title">

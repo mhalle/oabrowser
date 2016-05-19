@@ -6,6 +6,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
         controller: ['$scope', '$element', 'mainApp', 'firebaseView', function ( $scope, $element, mainApp, firebaseView ) {
 
             $scope.messages = {};
+            $scope.noMessage = true;
 
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null
@@ -41,6 +42,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
 
             function initMessages (messages) {
                 $scope.messages = messages.val();
+                $scope.noMessage = Object.keys(messages).length === 0;
                 $scope.safeApply();
             }
 
