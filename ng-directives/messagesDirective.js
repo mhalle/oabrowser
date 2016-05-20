@@ -7,6 +7,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
 
             $scope.messages = {};
             $scope.noMessage = true;
+            $scope.firebaseView = firebaseView;
 
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null
@@ -88,7 +89,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
                 $scope.newMessage.recipient = undefined;
                 delete $scope.newMessage.recipient;
                 $scope.newMessage.subject = "Check out this view";
-                $scope.newMessage.text = 'Click [here]("#/view/'+key+'") to load the bookmark.';
+                $scope.newMessage.text = 'Click [here]("bookmark://'+key+'") to load the bookmark.';
                 $scope.safeApply();
                 $scope.openNewMessageForm();
             }
@@ -96,8 +97,13 @@ angular.module('atlasDemo').directive( 'messages', function () {
 
 
             function parseTextMessage (s) {
-                var regexp = /\[(.*?)\]\("(.*?)"\)/g;
-                return s.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(regexp, (m, p1, p2) =>'<a href="'+p2+'">'+p1+'</a>');
+                //a link to a bookmark has a structure inspired from markdown : [text of the link]("bookmark://bookmarkuid")
+                var regexp = /\[(.*?)\]\("bookmark:\/\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"\)/g;
+                //escape the html chars
+                s = s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                //replace the link pattern with a javascript link to load the bookmark
+                s = s.replace(regexp, (m, p1, p2) =>'<a ng-click="firebaseView.loadBookmark(\''+p2+'\')">'+p1+'</a>');
+                return s;
             }
 
             $scope.isMessageEnabled = function () {

@@ -730,15 +730,10 @@ var FirebaseView = (function () {
         function copyCurrentView() {
             //copy the current view in a new
             singleton.ref.once('value', function (snapshot) {
-                var bookmarkRef = new Firebase("https://atlas-viewer.firebaseio.com/views/"+bookmarkUuid);
+                var bookmarkRef = new Firebase("https://atlas-viewer.firebaseio.com/bookmarks/"+bookmarkUuid);
                 var view = snapshot.val();
-                view.locked = true;
-                view.authors = null;
+                view.bookmarkedBy = singleton.auth && singleton.auth.uid;
                 bookmarkRef.set(view);
-
-                //will prevent anyone from having the rights to change the view and thus making it immutable
-                var authorsRef = new Firebase("https://atlas-viewer.firebaseio.com/authors/"+bookmarkUuid);
-                authorsRef.set({nobody : true});
             });
         }
 
@@ -766,9 +761,11 @@ var FirebaseView = (function () {
         }
     };
 
-    singleton.loadBookmark = function (viewId) {
-        uuid = viewId;
-        loadDatabaseConnection();
+    singleton.loadBookmark = function (bookmarkUuid) {
+        var bookmarkRef = new Firebase("https://atlas-viewer.firebaseio.com/bookmarks/"+bookmarkUuid);
+        bookmarkRef.once('value', function (snapshot) {
+            singleton.loadState(snapshot, 'root');
+        });
     };
 
     singleton.sendMessage = function (recipient, subject, text) {
