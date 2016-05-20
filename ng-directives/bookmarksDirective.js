@@ -42,14 +42,14 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
                     return callback;
                 }
                 if (specificId && $scope.bookmarksObject[specificId] && !alreadyFetched[specificId] ) {
-                    firebaseView.getViewThumbnail(specificId, createCallback(specificId));
+                    firebaseView.getViewThumbnail(specificId, createCallback(specificId), true);
                     alreadyFetched[specificId] = true;
                     $scope.noBookmark = false;
                 }
                 else {
                     for (uid in $scope.bookmarksObject) {
                         if ($scope.bookmarksObject[uid] && !alreadyFetched[uid]) {
-                            firebaseView.getViewThumbnail(uid, createCallback(uid));
+                            firebaseView.getViewThumbnail(uid, createCallback(uid), true);
                             alreadyFetched[uid] = true;
                         }
                         $scope.noBookmark = false;
