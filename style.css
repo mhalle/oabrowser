@@ -1,5 +1,5 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
+    display: none !important;
 }
 
 #rendererFrame {
@@ -107,7 +107,7 @@ div#stats {
 .glyphicon-chevron-right,
 .glyphicon-chevron-up,
 .glyphicon-chevron-down{
-  color: #aaa;
+    color: #aaa;
 }
 #rendererFrame canvas {
     background: linear-gradient(#657FB5, #D3E2FF);
@@ -158,35 +158,35 @@ div#stats {
 }
 
 /*
-    prevent an element from being selected on drag or on click
-    will be added to body on mouse down on canvas and removed on mouse up
+prevent an element from being selected on drag or on click
+will be added to body on mouse down on canvas and removed on mouse up
 */
 .unselectable {
-   -moz-user-select: none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
 
-   /*
-     Introduced in IE 10.
-     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
-   */
-   -ms-user-select: none;
-   user-select: none;
+    /*
+    Introduced in IE 10.
+    See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+    */
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /*
-    canvas are always unselectable
+canvas are always unselectable
 */
 canvas {
     -moz-user-select: none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
-   -ms-user-select: none;
-   user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /*
-    links inside the distant breadcrumbs
+links inside the distant breadcrumbs
 */
 .breadcrumb.alert-warning a, .breadcrumbs.alert-warning a:visited {
     color : #730E0E;
@@ -213,6 +213,11 @@ canvas {
     cursor: pointer;
 }
 
-.modal .panel-collapse a:hover {
+.modal [ng-click]:hover {
     cursor: pointer;
+}
+
+.modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
 }
