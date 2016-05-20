@@ -84,6 +84,10 @@ angular.module('atlasDemo').directive( 'messages', function () {
                 $('#messagesListModal').modal('show');
             };
 
+            $scope.closeMessagesList = function () {
+                $('#messagesListModal').modal('hide');
+            };
+
             function createBookmarkMessage (key) {
                 $scope.newMessage = $scope.newMessage || {};
                 $scope.newMessage.recipient = undefined;
@@ -102,12 +106,17 @@ angular.module('atlasDemo').directive( 'messages', function () {
                 //escape the html chars
                 s = s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 //replace the link pattern with a javascript link to load the bookmark
-                s = s.replace(regexp, (m, p1, p2) =>'<a ng-click="firebaseView.loadBookmark(\''+p2+'\')">'+p1+'</a>');
+                s = s.replace(regexp, (m, p1, p2) =>'<a ng-click="loadBookmark(\''+p2+'\')">'+p1+'</a>');
                 return s;
             }
 
             $scope.isMessageEnabled = function () {
                 return firebaseView.auth && firebaseView.auth.provider !== 'anonymous';
+            };
+
+            $scope.loadBookmark = function (bookmarkId) {
+                $scope.closeMessagesList();
+                firebaseView.loadBookmark(bookmarkId);
             };
 
         }]
