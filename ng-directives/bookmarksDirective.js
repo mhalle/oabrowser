@@ -98,6 +98,15 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
                 mainApp.emit('bookmarks.shareBookmark', key);
             };
 
+            $scope.closeBookmarks = function () {
+                $('#bookmarksModal').modal('hide');
+            };
+
+            $scope.loadBookmark = function (bookmarkId) {
+                $scope.closeBookmarks();
+                firebaseView.loadBookmark(bookmarkId);
+            };
+
 
         }]
     };
