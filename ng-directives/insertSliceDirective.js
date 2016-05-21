@@ -176,7 +176,7 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
             $scope.repaint = function () {
 
-                if ($scope.canvas) {
+                if ($scope.canvas && sliceContainer.is('visible')) {
                     var canvas = $scope.canvas;
                     canvas.width = sliceContainer.width();
                     canvas.height = sliceContainer.parent().height()-35;
