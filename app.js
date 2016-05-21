@@ -523,7 +523,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             mesh,
             bb;
 
-        for (i = 0; i <= meshesAndSlicesList.length; i++) {
+        for (i = 0; i < meshesAndSlicesList.length; i++) {
             mesh = meshesAndSlicesList[i];
             mesh.geometry.computeBoundingBox();
             bb = mesh.geometry.boundingBox.clone();
