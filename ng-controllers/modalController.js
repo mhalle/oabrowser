@@ -72,7 +72,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModa
         $scope.safeApply();
     });
 
-    mainApp.on('loadingManager.volumeEnd', function (datasource) {
+    mainApp.on('loadingManager.volumeLoaded', function (datasource) {
         var backgroundObject = $scope.backgroundFiles.find(o => o.filename === datasource.source);
         backgroundObject.progress = 100;
         var everyBackgroundLoadingFinished = $scope.backgroundFiles.every(o => o.progress === 100);
