@@ -83,7 +83,7 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModa
     });
 
     mainApp.on('loadingManager.volumeProgress', function (event) {
-        var backgroundObject = $scope.backgroundFiles.find(o => o.filename === event.datasource.source);
+        var backgroundObject = $scope.backgroundFiles.find(o => o.datasource === event.datasource);
         if (!backgroundObject) {
             backgroundObject = {
                 datasource : event.datasource
