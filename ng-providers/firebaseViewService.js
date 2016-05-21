@@ -703,6 +703,15 @@ var FirebaseView = (function () {
         });
     };
 
+    singleton.getBookmarkAnnotation = function (viewId, callback) {
+        var ref = new Firebase("https://atlas-viewer.firebaseio.com/bookmarks/"+viewId+"/annotation");
+
+        ref.on('value', function (snapshot) {
+            var val = snapshot.val();
+            callback(val);
+        });
+    };
+
     singleton.getUserBookmarks = function (valueCallback, childCallback) {
         if (singleton.auth) {
             var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks");
@@ -734,8 +743,10 @@ var FirebaseView = (function () {
                 var bookmarkRef = new Firebase("https://atlas-viewer.firebaseio.com/bookmarks/"+bookmarkUuid);
                 var view = snapshot.val();
                 view.bookmarkedBy = singleton.auth && singleton.auth.uid;
-                view.title = title;
-                view.description = description;
+                view.annotation = {
+                    title : title,
+                    description : description
+                };
                 bookmarkRef.set(view);
             });
         }
