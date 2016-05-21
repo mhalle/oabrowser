@@ -725,7 +725,7 @@ var FirebaseView = (function () {
         }
     };
 
-    singleton.saveBookmark = function () {
+    singleton.saveBookmark = function (title, description) {
         var bookmarkUuid = generateUUID();
 
         function copyCurrentView() {
@@ -734,6 +734,8 @@ var FirebaseView = (function () {
                 var bookmarkRef = new Firebase("https://atlas-viewer.firebaseio.com/bookmarks/"+bookmarkUuid);
                 var view = snapshot.val();
                 view.bookmarkedBy = singleton.auth && singleton.auth.uid;
+                view.title = title;
+                view.description = description;
                 bookmarkRef.set(view);
             });
         }

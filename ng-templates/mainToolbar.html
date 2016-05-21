@@ -82,11 +82,6 @@
     <span>Logout</span>
 </button>
 
-<!-- ADD BOOKMARK -->
-<button ng-if="firebaseView.auth && firebaseView.auth.provider !== 'anonymous'" type="button" class="btn btn-default btn-sm" aria-label="AddBookmark" ng-click="firebaseView.saveBookmark()" uib-tooltip="Save the current view as a bookmark in your profile, you will be able to load this state later or share it with someone" tooltip-placement="bottom" tooltip-append-to-body="true">
-    <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-    <span>Save bookmark</span>
-</button>
 
 <!-- bookmarks -->
 <bookmarks></bookmarks>

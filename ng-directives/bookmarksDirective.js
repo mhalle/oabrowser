@@ -15,6 +15,8 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
 
             $scope.firebaseView = firebaseView;
 
+            $scope.newBookmark = {};
+
 
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null
@@ -93,6 +95,10 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
                 $('#bookmarksModal').modal('show');
             };
 
+            $scope.openNewBookmark = function () {
+                $('#newBookmarkModal').modal('show');
+            };
+
             $scope.shareBookmark = function (key) {
                 $('#bookmarksModal').modal('hide');
                 mainApp.emit('bookmarks.shareBookmark', key);
@@ -102,9 +108,27 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
                 $('#bookmarksModal').modal('hide');
             };
 
+            $scope.closeNewBookmark = function () {
+                $('#newBookmarkModal').modal('hide');
+            };
+
             $scope.loadBookmark = function (bookmarkId) {
                 $scope.closeBookmarks();
                 firebaseView.loadBookmark(bookmarkId);
+            };
+
+            $scope.emptyForm = function () {
+                $scope.newBookmark.title = undefined;
+                $scope.newBookmark.description = undefined;
+                delete $scope.newBookmark.title;
+                delete $scope.newBookmark.description;
+                $scope.safeApply();
+            };
+
+            $scope.createBookmark = function () {
+                firebaseView.saveBookmark($scope.newBookmark.title, $scope.newBookmark.description);
+                $scope.emptyForm();
+                $scope.closeNewBookmark();
             };
 
 
