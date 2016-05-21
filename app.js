@@ -536,7 +536,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
     function autocenterCamera () {
         var bb = getSceneBoundingBox(),
-            center = (new THREE.Vector3()).lerp(bb.min, bb.max, 0.5),
+            center = (new THREE.Vector3()).lerpVectors(bb.min, bb.max, 0.5),
             cameraPosition = center.clone().setZ(1.1*bb.max.z-0.1*center.z),
             up = new THREE.Vector3(0,1,0);
 
