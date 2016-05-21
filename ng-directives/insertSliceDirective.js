@@ -176,7 +176,8 @@ angular.module('atlasDemo').directive( 'insertSlice', function () {
 
             $scope.repaint = function () {
 
-                if ($scope.canvas && sliceContainer.is('visible')) {
+                //do not repaint if left panel is hidden
+                if ($scope.canvas && sliceContainer.width()>0) {
                     var canvas = $scope.canvas;
                     canvas.width = sliceContainer.width();
                     canvas.height = sliceContainer.parent().height()-35;
