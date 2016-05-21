@@ -97,7 +97,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
                         visible = slice.getVisibility(datasource.volume);
                         opacity = slice.getOpacity(datasource.volume);
                         object = {
-                            name : match[1],
+                            name : datasource.displayName || match[1],
                             visible : visible,
                             volume : volumes[i],
                             opacity : opacity

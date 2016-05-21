@@ -64,16 +64,16 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModa
         $scope.safeApply();
     });
 
-    mainApp.on('loadingManager.volumeStart', function (filename) {
+    mainApp.on('loadingManager.volumeStart', function (datasource) {
         $scope.backgroundFiles.push({
-            filename : filename,
+            datasource : datasource,
             progress : 0
         });
         $scope.safeApply();
     });
 
-    mainApp.on('loadingManager.volumeEnd', function (filename) {
-        var backgroundObject = $scope.backgroundFiles.find(o => o.filename === filename);
+    mainApp.on('loadingManager.volumeEnd', function (datasource) {
+        var backgroundObject = $scope.backgroundFiles.find(o => o.filename === datasource.source);
         backgroundObject.progress = 100;
         var everyBackgroundLoadingFinished = $scope.backgroundFiles.every(o => o.progress === 100);
         if (everyBackgroundLoadingFinished) {
@@ -83,10 +83,10 @@ angular.module('atlasDemo').controller('ModalInstanceCtrl', ['$scope', '$uibModa
     });
 
     mainApp.on('loadingManager.volumeProgress', function (event) {
-        var backgroundObject = $scope.backgroundFiles.find(o => o.filename === event.filename);
+        var backgroundObject = $scope.backgroundFiles.find(o => o.filename === event.datasource.source);
         if (!backgroundObject) {
             backgroundObject = {
-                filename : event.filename
+                datasource : event.datasource
             };
             $scope.backgroundFiles.push(backgroundObject);
         }

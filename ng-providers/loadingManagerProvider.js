@@ -21,7 +21,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             if ( xhr.lengthComputable ) {
                 var percentComplete = Math.round(xhr.loaded / xhr.total * 100);
                 volumesProgress[nrrdFileLocation] = percentComplete;
-                mainApp.emit('loadingManager.volumeProgress', {filename : nrrdFileLocation, progress : percentComplete});
+                mainApp.emit('loadingManager.volumeProgress', {datasource : datasource, progress : percentComplete});
             }
         };
 
@@ -31,14 +31,14 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
             volumesManager.addVolume(volume, datasource, treatAsBackground);
 
-            mainApp.emit('loadingManager.volumeLoaded', nrrdFileLocation);
+            mainApp.emit('loadingManager.volumeLoaded', datasource);
             if (singleton.totalNumberOfVolumes === singleton.numberOfVolumesLoaded) {
                 mainApp.emit('loadingManager.everyVolumeLoaded');
                 testIfLoadingIsFinished();
             }
         };
 
-        mainApp.emit('loadingManager.volumeStart', nrrdFileLocation);
+        mainApp.emit('loadingManager.volumeStart', datasource);
 
         nrrdLoader.load( nrrdFileLocation, onSuccess, onProgress );
 
