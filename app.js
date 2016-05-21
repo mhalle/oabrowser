@@ -537,7 +537,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
     function autocenterCamera () {
         var bb = getSceneBoundingBox(),
             center = (new THREE.Vector3()).lerpVectors(bb.min, bb.max, 0.5),
-            cameraPosition = center.clone().setZ(1.1*bb.max.z-0.1*center.z),
+            cameraPosition = center.clone().setZ(2.8*bb.max.z-1.8*center.z),
             up = new THREE.Vector3(0,1,0);
 
         //create a fake state to use firebase callback
