@@ -1,14 +1,14 @@
 <!-- Open the new message modal -->
-<button ng-if="isMessageEnabled()" type="button" class="btn btn-default btn-sm" aria-label="newMessage" ng-click="openNewMessageForm()">
+<button ng-if="isMessageEnabled()" type="button" class="btn btn-default btn-sm" aria-label="newMessage" ng-click="openNewMessageForm()" uib-tooltip="Write a new message to another user" tooltip-placement="bottom">
     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
     <span>New Message</span>
 </button>
 
 <!-- Open the messages list modal -->
-<button ng-if="isMessageEnabled()" type="button" class="btn btn-default btn-sm" aria-label="messagesList" ng-click="openMessagesList()">
+<button ng-if="isMessageEnabled()" type="button" class="btn btn-default btn-sm" aria-label="messagesList" ng-click="openMessagesList()" uib-tooltip="Display your messages" tooltip-placement="bottom">
     <i class="fa fa-envelope" aria-hidden="true"></i>
     <span>Inbox</span>
-    <span ng-if="unreadMessages > 0" class="badge">{{unreadMessages}}</span>
+    <span ng-if="unreadMessages > 0" class="badge unread-messages">{{unreadMessages}}</span>
 </button>
 
 <!-- New message modal --->

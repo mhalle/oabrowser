@@ -1,7 +1,7 @@
 <div class="slice-container">
 </div>
 <span class="slice-controls">
-    <button type="button" class="btn btn-default btn-sm" aria-label="Visibility" ng-click="toggleMeshVisibility($event)">
+    <button type="button" class="btn btn-default btn-sm" aria-label="Visibility" ng-click="toggleMeshVisibility($event)" uib-tooltip="Toggle the visibility of this slice in the scene" tooltip-placement="bottom">
         <span class="glyphicon glyphicon-eye-open slice-controls-true" aria-hidden="true" ng-if="slice.mesh.visible"></span>
         <span class="glyphicon glyphicon-eye-close slice-controls-false" aria-hidden="true" ng-if="!slice.mesh.visible"></span>
     </button>
