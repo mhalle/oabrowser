@@ -52,7 +52,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
 
                     $scope.messages[messageId].text = parseTextMessage($scope.messages[messageId].text);
 
-                    if ($scope[messageId].unread) {
+                    if ($scope.messages[messageId].unread) {
                         $scope.unreadMessages++;
                     }
 
