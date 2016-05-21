@@ -10,6 +10,20 @@ angular.module('atlasDemo').controller('LayoutController', ['$scope', '$timeout'
         leftSide: false
     };
 
+    $scope.safeApply = function(fn) {
+        //if scope has been destroyed, ie if modal has been dismissed, $root is null
+        if (this.$root) {
+            var phase = this.$root.$$phase;
+            if(phase === '$apply' || phase === '$digest') {
+                if(fn && (typeof(fn) === 'function')) {
+                    fn();
+                }
+            } else {
+                this.$apply(fn);
+            }
+        }
+    };
+
 
     $scope.toggle = function (which) {
         $scope.layout[which] = !$scope.layout[which];
@@ -32,6 +46,15 @@ angular.module('atlasDemo').controller('LayoutController', ['$scope', '$timeout'
     });
 
     mainApp.on('ui.layout.forcedUpdate', function () {
+        $timeout(function () {
+            $scope.updateDisplay();
+            mainApp.emit('ui.layout.resize');
+        },10);
+    });
+
+    mainApp.on('ui.layout.forcedToggle', function (which) {
+        $scope.toggle(which);
+        $scope.safeApply();
         $timeout(function () {
             $scope.updateDisplay();
             mainApp.emit('ui.layout.resize');

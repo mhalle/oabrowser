@@ -252,6 +252,11 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
             //signal that the loading has ended
             mainApp.emit('loadingManager.loadingEnd');
+
+            //if no volume loaded, hide the left panel
+            if (singleton.totalNumberOfVolumes === 0) {
+                mainApp.emit('ui.layout.forcedToggle', 'leftSide');
+            }
         }
     }
 
