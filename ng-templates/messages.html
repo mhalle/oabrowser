@@ -8,6 +8,7 @@
 <button ng-if="isMessageEnabled()" type="button" class="btn btn-default btn-sm" aria-label="messagesList" ng-click="openMessagesList()">
     <i class="fa fa-envelope" aria-hidden="true"></i>
     <span>Inbox</span>
+    <span ng-if="unreadMessages > 0" class="badge">{{unreadMessages}}</span>
 </button>
 
 <!-- New message modal --->

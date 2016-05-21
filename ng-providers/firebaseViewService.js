@@ -776,7 +776,8 @@ var FirebaseView = (function () {
             author : singleton.auth.uid,
             text : text,
             subject : subject,
-            date : Firebase.ServerValue.TIMESTAMP
+            date : Firebase.ServerValue.TIMESTAMP,
+            unread : true
         };
         messageRef.set(messageObject);
 
@@ -787,6 +788,19 @@ var FirebaseView = (function () {
             var ref = new Firebase("https://atlas-viewer.firebaseio.com/messages/"+singleton.auth.uid+"/"+messageId);
             ref.remove();
         }
+    };
+
+    singleton.markAllMessagesAsRead = function () {
+        var ref = new Firebase("https://atlas-viewer.firebaseio.com/messages/"+singleton.auth.uid);
+        ref.once('value', function (snapshot) {
+            var val = snapshot.val();
+            if (val) {
+                for (var messageId in val) {
+                    val[messageId].unread = false;
+                }
+                ref.set(val);
+            }
+        });
     };
 
     return function () {return singleton;};

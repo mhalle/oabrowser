@@ -8,6 +8,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
             $scope.messages = {};
             $scope.noMessage = true;
             $scope.firebaseView = firebaseView;
+            $scope.unreadMessages = 0;
 
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null
@@ -44,9 +45,17 @@ angular.module('atlasDemo').directive( 'messages', function () {
             function initMessages (messages) {
                 $scope.messages = messages.val();
                 $scope.noMessage = Object.keys(messages).length === 0;
+                $scope.unreadMessages = 0;
                 var messageId;
+
                 for (messageId in $scope.messages) {
-                        $scope.messages[messageId].text = parseTextMessage($scope.messages[messageId].text);
+
+                    $scope.messages[messageId].text = parseTextMessage($scope.messages[messageId].text);
+
+                    if ($scope[messageId].unread) {
+                        $scope.unreadMessages++;
+                    }
+
                 }
                 $scope.safeApply();
             }
@@ -81,7 +90,9 @@ angular.module('atlasDemo').directive( 'messages', function () {
             };
 
             $scope.openMessagesList = function () {
+                $scope.unreadMessages = 0;
                 $('#messagesListModal').modal('show');
+                firebaseView.markAllMessagesAsRead();
             };
 
             $scope.closeMessagesList = function () {
