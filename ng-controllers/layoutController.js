@@ -52,12 +52,13 @@ angular.module('atlasDemo').controller('LayoutController', ['$scope', '$timeout'
         },10);
     });
 
-    mainApp.on('ui.layout.forcedToggle', function (which) {
-        $scope.toggle(which);
-        $scope.safeApply();
+    mainApp.on('ui.layout.hideLeftSide', function () {
+        var element = angular.element('body > div.stretch.ui-layout-row > div:nth-child(3) > div > div:nth-child(2) > a:nth-child(1) > span');
+        element.mousedown();
+        element.mouseup();
+        element.click();
         $timeout(function () {
-            $scope.updateDisplay();
-            mainApp.emit('ui.layout.resize');
+            mainApp.emit('ui.layout.forcedUpdate');
         },10);
     });
 

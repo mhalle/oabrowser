@@ -144,7 +144,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         window.addEventListener( 'resize', setResizeTimeout);
         mainApp.on('ui.layout.resize', setResizeTimeout);
-        mainApp.on('ui.layout.resize', setResizeTimeout);
+        mainApp.on('ui.layout.toggle', setResizeTimeout);
 
 
         //register events for the pickup and selection
