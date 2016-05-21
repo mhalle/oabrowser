@@ -221,3 +221,9 @@ links inside the distant breadcrumbs
     max-height: calc(100vh - 200px);
     overflow-y: auto;
 }
+
+.badge.unread-messages {
+    font-size: 9px;
+    padding: 2px 7px;
+    background-color: #337ab7;
+}
