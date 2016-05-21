@@ -10,6 +10,11 @@
     <span class="glyphicon glyphicon-screenshot slice-controls-false" aria-hidden="true" ng-if="!crosshair.visible"></span>
 </button>
 
+<!-- RECENTER CAMERA -->
+<button type="button" class="btn btn-default btn-sm" aria-label="CenterCamera" ng-click="autocenterCamera($event)" uib-tooltip="Resize the view to fit the whole scene" tooltip-placement="bottom-left" tooltip-append-to-body="true">
+    <span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span>
+</button>
+
 <!-- LAYERS SELECTION -->
 <div class="btn-group btn-sm" uib-dropdown dropdown-append-to-body="true">
     <button id="single-button" type="button" class="btn btn-default btn-sm" uib-dropdown-toggle uib-tooltip="Choose which volumes you want to display" tooltip-placement="bottom-left" tooltip-append-to-body="true">

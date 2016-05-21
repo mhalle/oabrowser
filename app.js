@@ -516,6 +516,43 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         firebaseView.customBind(watchCallback, dbChangeCallback, ['camera']);
     }
 
+    function getSceneBoundingBox () {
+        var min = new THREE.Vector3(Infinity, Infinity, Infinity),
+            max = new THREE.Vector3(-Infinity, -Infinity, -Infinity),
+            i,
+            mesh,
+            bb;
+
+        for (i = 0; i <= meshesAndSlicesList.length; i++) {
+            mesh = meshesAndSlicesList[i];
+            mesh.geometry.computeBoundingBox();
+            bb = mesh.geometry.boundingBox.clone();
+            min.min(bb.min);
+            max.max(bb.max);
+        }
+
+        return {min : min, max : max};
+    }
+
+    function autocenterCamera () {
+        var bb = getSceneBoundingBox(),
+            center = (new THREE.Vector3()).lerp(bb.min, bb.max),
+            cameraPosition = center.clone().setZ(1.1*bb.max.z-0.1*center.z),
+            up = new THREE.Vector3(0,1,0);
+
+        //create a fake state to use firebase callback
+        function val () {
+            return {target : center, position : cameraPosition, up : up};
+        }
+
+        var state = {
+            val : val
+        };
+
+        firebaseView.loadState(state, 'camera', Date.now());
+    }
+
+    mainApp.on('mainToolbar.autocenterCamera', autocenterCamera);
 
     init();
 

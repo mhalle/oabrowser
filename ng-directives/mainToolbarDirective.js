@@ -131,6 +131,10 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
                 });
             };
 
+            $scope.autocenterCamera = function () {
+                mainApp.on('mainToolbar.autocenterCamera');
+            };
+
             firebaseView.bind(crosshair, 'visible', 'crosshair');
 
 
