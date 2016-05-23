@@ -239,3 +239,8 @@ links inside the distant breadcrumbs
 .input-error-message {
     color:  #843534;
 }
+
+.tooltip {
+    /*else tooltip appear under the modal */
+    z-index: 1100;
+}
