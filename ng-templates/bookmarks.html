@@ -54,7 +54,7 @@
             <div class="modal-body">
                 <form name="newBookmarkForm">
                     <div class="form-group">
-                        <label for="titleInput">Title <span class="input-error-message">*</span></label>
+                        <label for="titleInput"  uib-tooltip="Title is required, keep it short but meaningful" tooltip-placement="top">Title <span class="input-error-message">*</span></label>
                         <input id="titleInput" name="title" type="text" ng-model="newBookmark.title" class="form-control" required placeholder="Title" ng-class="{'input-error' : newBookmarkForm.title.$dirty && !newBookmarkForm.title.$valid, 'input-valid' : newBookmarkForm.title.$dirty && newBookmarkForm.title.$valid}">
                         <span ng-if="newBookmarkForm.title.$dirty && !newBookmarkForm.title.$valid" class="input-error-message" >Required</span>
                     </div>
@@ -67,7 +67,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="emptyForm()">Cancel</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createBookmark()" ng-disabled="angular.isString(newBookmark.title) && newBookmark.title.length()>0">Save</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createBookmark()" ng-disabled="(newBookmark.title || '') .length === 0" uib-tooltip="Title is required" tooltip-placement="top">Save</button>
             </div>
         </div>
     </div>
