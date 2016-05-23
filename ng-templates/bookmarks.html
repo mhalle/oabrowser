@@ -52,10 +52,11 @@
                 <h4 class="modal-title" id="myModalLabel">New Bookmark</h4>
             </div>
             <div class="modal-body">
-                <form>
+                <form name="newBookmarkForm">
                     <div class="form-group">
-                        <label for="subjectInput">Title</label>
-                        <input id="subjectInput" type="text" ng-model="newBookmark.title" class="form-control" placeholder="Title">
+                        <label for="titleInput">Title <span class="input-error-message">*</span></label>
+                        <input id="titleInput" name="title" type="text" ng-model="newBookmark.title" class="form-control" required placeholder="Title" ng-class="{'input-error' : newBookmarkForm.title.$dirty && !newBookmarkForm.title.$valid, 'input-valid' : newBookmarkForm.title.$dirty && newBookmarkForm.title.$valid}">
+                        <span ng-if="newBookmarkForm.title.$dirty && !newBookmarkForm.title.$valid" class="input-error-message" >Required</span>
                     </div>
                     <div class="form-group">
                         <label for="contentInput">Description</label>
@@ -66,7 +67,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="emptyForm()">Cancel</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createBookmark()">Save</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createBookmark()" ng-disabled="angular.isString(newBookmark.title) && newBookmark.title.length()>0">Save</button>
             </div>
         </div>
     </div>

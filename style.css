@@ -227,3 +227,15 @@ links inside the distant breadcrumbs
     padding: 2px 7px;
     background-color: #337ab7;
 }
+
+.input-valid {
+    border-color: #3c763d;
+}
+
+.input-error {
+    border-color: #843534;
+}
+
+.input-error-message {
+    color:  #843534;
+}

@@ -159,9 +159,11 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
             };
 
             $scope.createBookmark = function () {
-                firebaseView.saveBookmark($scope.newBookmark.title, $scope.newBookmark.description);
-                $scope.emptyForm();
-                $scope.closeNewBookmark();
+                if ($scope.newBookmark.title) {
+                    firebaseView.saveBookmark($scope.newBookmark.title, $scope.newBookmark.description || '');
+                    $scope.emptyForm();
+                    $scope.closeNewBookmark();
+                }
             };
 
 
