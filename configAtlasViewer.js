@@ -4,5 +4,6 @@
 window.globalViewerParameters = {
     atlasStructurePath : "",
     timeoutDelayPickup : 25,
-    cubeHelper : true
+    cubeHelper : true,
+    logarithmicDepthBuffer : false //true will set the renderer to use logarithmic depth buffer (lower the performance but enhance the render in case you see models flickering)
 };
