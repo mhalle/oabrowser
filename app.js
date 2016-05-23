@@ -483,42 +483,84 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
     }
 
+    function tweenCamera (position, target, up) {
+        var cameraStart = camera.position.clone().sub(controls.target),
+            cameraStartLength = cameraStart.length(),
+            cameraEnd = new THREE.Vector3().add(position).sub(target),
+            cameraEndLength = cameraEnd.length(),
+            tweenDuration = window.globalViewerParameters.cameraTweenDuration || 1000,
+            upTweenFinished = false,
+            targetTweenFinished = false,
+            resolvePromise;
+
+
+        new TWEEN.Tween(controls.target)
+            .to(target, tweenDuration)
+            .onUpdate(function (timestamp) {
+            var l = (1-timestamp)*cameraStartLength+timestamp*cameraEndLength;
+            var t = cameraStart.clone().lerp(cameraEnd, timestamp).setLength(l);
+            camera.position.copy(t.add(controls.target));
+        }).onComplete(function () {
+            controls.target.copy(target);
+            camera.position.copy(position);
+            targetTweenFinished = true;
+            if (upTweenFinished) {
+                resolvePromise();
+            }
+
+        }).start();
+
+        new TWEEN.Tween(camera.up)
+            .to(up, tweenDuration)
+            .onUpdate(function () {
+            camera.up.normalize();
+        }).onComplete(function () {
+            camera.up.copy(up);
+            upTweenFinished = true;
+            if (targetTweenFinished) {
+                resolvePromise();
+            }
+        }).start();
+
+        var promise = new Promise(function (resolve) {
+            resolvePromise = resolve;
+        });
+
+        return promise;
+    }
+
     function initFirebase () {
 
-        function watchCallback (obj) {
+        //init camera binding
+        function cameraWatchCallback (obj) {
             obj.position = camera.position;
             obj.target = controls.target;
             obj.up = camera.up;
         }
-        function dbChangeCallback (val) {
+        function cameraDbChangeCallback (val) {
             if (val && val.position) {
-                var cameraStart = camera.position.clone().sub(controls.target),
-                    cameraStartLength = cameraStart.length(),
-                    cameraEnd = new THREE.Vector3().add(val.position).sub(val.target),
-                    cameraEndLength = cameraEnd.length();
-
-
-                new TWEEN.Tween(controls.target)
-                    .to(val.target, 1000)
-                    .onUpdate(function (timestamp) {
-                    var l = (1-timestamp)*cameraStartLength+timestamp*cameraEndLength;
-                    var t = cameraStart.clone().lerp(cameraEnd, timestamp).setLength(l);
-                    camera.position.copy(t.add(controls.target));
-                }).onComplete(function () {
-                    controls.target.copy(val.target);
-                    camera.position.copy(val.position);
-                }).start();
-
-                new TWEEN.Tween(camera.up)
-                    .to(val.up, 1000)
-                    .onUpdate(function () {
-                    camera.up.normalize();
-                }).onComplete(function () {
-                    camera.up.copy(val.up);
-                }).start();
+                tweenCamera(val.position, val.target, val.up);
             }
         }
-        firebaseView.customBind(watchCallback, dbChangeCallback, ['camera']);
+        //using custom bind because of the tween, we don't want the camera position to be changed immediatly
+        firebaseView.customBind(cameraWatchCallback, cameraDbChangeCallback, ['camera']);
+
+
+        //init camera near and far binding
+        function cameraPlanesWatchCallback (obj) {
+            obj.near = camera.near;
+            obj.far = camera.far;
+        }
+        function cameraPlaneDbChangeCallback (val) {
+            if (val && val.far) {
+                setCameraPlanes(val.near, val.far);
+            }
+        }
+        //using custom bind because of the tween, we don't want the camera position to be changed immediatly
+        firebaseView.customBind(cameraPlanesWatchCallback, cameraPlaneDbChangeCallback, ['cameraPlanes']);
+
+
+
     }
 
     function getSceneBoundingBox () {
@@ -539,26 +581,33 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         return {min : min, max : max};
     }
 
-    function autocenterCamera () {
+    function autocenterCamera (commitAfter) {
+        commitAfter = commitAfter || true;
         var bb = getSceneBoundingBox(),
             center = (new THREE.Vector3()).lerpVectors(bb.min, bb.max, 0.5),
             height = 1.2*(Math.max(bb.max.y-center.y, bb.max.x - center.x)) / (Math.tan(camera.fov * Math.PI / 360))+center.z,
             cameraPosition = center.clone().setZ(height),
             up = new THREE.Vector3(0,1,0);
 
-        //create a fake state to use firebase callback
-        function val () {
-            return {target : center, position : cameraPosition, up : up};
-        }
+        setCameraPlanes(camera.near, 15*height);
+        tweenCamera(cameraPosition, center, up).then(function () {
+            if (commitAfter) {
+                firebaseView.commit('camera');
+                firebaseView.commit('cameraPlanes');
+            }
+        });
+    }
 
-        var state = {
-            val : val
-        };
-
-        firebaseView.loadState(state, 'camera', Date.now());
+    function setCameraPlanes (near, far) {
+        camera.near = near;
+        camera.far = far;
+        camera.updateProjectionMatrix();
     }
 
     mainApp.on('mainToolbar.autocenterCamera', autocenterCamera);
+    mainApp.on('loadingManager.loadingEnd', function () {
+        autocenterCamera(false);
+    });
 
     init();
 

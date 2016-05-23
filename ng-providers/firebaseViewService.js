@@ -439,7 +439,7 @@ var FirebaseView = (function () {
     }
 
     function commit (namespace) {
-        if (!dbRootObj.locked) {
+        if (dbRootObj && !dbRootObj.locked) {
             if (!loadingManager.isLoading() || createdView){
                 //if there is a namespace, commit only the namespace
                 if (namespace && namespaces[namespace] && namespaces[namespace].commiters) {
