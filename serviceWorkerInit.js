@@ -1,12 +1,12 @@
 if(navigator.serviceWorker) {
 	navigator
 		.serviceWorker
-		.register('libs/sw.js')
+		.register('sw.js')
 		.then(function(r) {
-			console.log('Cats are now available offline');
+			console.log('Models are now available offline');
 		})
 		.catch(function(e) {
-			console.log('Cats are NOT available offline');
+			console.log('Models are NOT available offline');
 			console.log(e);
 		});
 } else {
