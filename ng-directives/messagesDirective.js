@@ -39,7 +39,9 @@ angular.module('atlasDemo').directive( 'messages', function () {
                         break;
                     }
                 }
+
                 firebaseView.sendMessage(recipientUid, $scope.newMessage.subject, $scope.newMessage.text);
+                $scope.emptyForm();
             };
 
             function initMessages (messages) {
