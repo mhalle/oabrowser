@@ -1,7 +1,6 @@
 self.CACHE_NAME =  'atlas-viewer';
-console.log('start');
 
-console.log('Started', self);
+console.log('Service started');
 self.addEventListener('install', function(event) {
     //self.skipWaiting();
     console.log('Installed', event);
@@ -101,11 +100,7 @@ if(typeof self.CACHE_NAME !== 'string') {
     throw new Error('Cache Name cannot be empty');
 }
 
-console.log('register fetch');
-
 self.addEventListener('fetch', function(event) {
-
-    console.log('fetch', event);
     // Clone the request for fetch and cache
     // A request is a stream and can be consumed only once.
     var fetchRequest = event.request.clone(),
