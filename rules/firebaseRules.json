@@ -13,7 +13,7 @@
         "authors" : {
             "$viewId" : {
                 ".read" : false,
-                ".write" : "auth != null && (!data.exists() ||  data.child(root.child('users/'+auth.uid+'/token').val()).val() === true ||  data.child(root.child('users/'+auth.uid+'/tmp_token').val()).val() === true || ( root.child('views/'+$viewId+'/restricted').val() !== true && root.child('views/'+$viewId+'/locked').val() !== true) )",
+                ".write" : "auth != null && (!data.exists() ||  data.child(root.child('users/'+auth.uid+'/token').val()).val() === true ||  (root.child('users/'+auth.uid+'/tmp_token').exists() && data.child(root.child('users/'+auth.uid+'/tmp_token').val()).val() === true) || ( root.child('views/'+$viewId+'/restricted').val() != true && root.child('views/'+$viewId+'/locked').val() != true) )",
                 "$token" : {
                     ".validate" : "newData.isBoolean()"
                 }
