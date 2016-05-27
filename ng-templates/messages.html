@@ -69,7 +69,7 @@
                             </h4>
                             <h6>
                                 {{userNames[message.author].name}}
-                                <small class="pull-right">{{message.date | date:'medium'}}</small>
+                                <small class="pull-right">{{formatDate(message.date)}}</small>
                             </h6>
                         </div>
                         <div ng-attr-id="collapse{{key}}" class="panel-collapse collapse in" role="tabpanel" ng-attr-aria-labelledby="heading{{key}}">

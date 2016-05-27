@@ -21,6 +21,7 @@ const filesList = [
         "libs/rzslicer.js",
         "libs/firebase.js",
         "libs/angularfire.min.js",
+        "libs/moment-with-locales.min.js",
         "babel/angularInit.js",
         "tmp/templates.js",
         "babel/mainAppProvider.js",

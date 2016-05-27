@@ -10,6 +10,8 @@ angular.module('atlasDemo').directive( 'messages', function () {
             $scope.firebaseView = firebaseView;
             $scope.unreadMessages = 0;
 
+            moment.local(navigator.language);
+
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null
                 if (this.$root) {
@@ -130,6 +132,13 @@ angular.module('atlasDemo').directive( 'messages', function () {
             $scope.loadBookmark = function (bookmarkId) {
                 $scope.closeMessagesList();
                 firebaseView.loadBookmark(bookmarkId);
+            };
+
+            $scope.formatDate = function (timestamp) {
+                if (Date.now()-timestamp < 24*60*60*1000) {
+                    return moment(timestamp).fromNow();
+                }
+                return moment(timestamp).calendar();
             };
 
         }]
