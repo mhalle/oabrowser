@@ -606,7 +606,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
     mainApp.on('mainToolbar.autocenterCamera', autocenterCamera);
     mainApp.on('loadingManager.loadingEnd', function () {
-        autocenterCamera(false);
+        setTimeout(function () {
+            autocenterCamera(false);
+        }, 100);
     });
 
     init();
