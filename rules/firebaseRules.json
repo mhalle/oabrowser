@@ -1,0 +1,252 @@
+{
+    "rules": {
+        "atlas" : {
+            ".read" : true,
+            "$nodeId" : {
+                ".read" : true,
+                ".write" : "!data.exists() && newData.hasChildren(['@id', '@type'])",
+                "@id" : {
+                    ".validate" : "newData.val() === $nodeId"
+                }
+            }
+        },
+        "authors" : {
+            "$viewId" : {
+                ".read" : false,
+                ".write" : "auth != null && (!data.exists() ||  data.child(root.child('users/'+auth.uid+'/token').val()).val() === true ||  data.child(root.child('users/'+auth.uid+'/tmp_token').val()).val() === true || ( root.child('views/'+$viewId+'/restricted').val() !== true && root.child('views/'+$viewId+'/locked').val() !== true) )",
+                "$token" : {
+                    ".validate" : "newData.isBoolean()"
+                }
+            }
+        },
+        "bookmarks" : {
+            "$bookmarkId" : {
+                ".read" : true,
+                ".write" : "!data.exists() && auth != null && auth.provider !== 'anonymous'",
+                ".validate" : "newData.hasChildren(['annotation', 'bookmarkedBy'])",
+                "annotation" : {
+                    ".validate" : "newData.hasChild('title')",
+                    "title" : {
+                        ".validate" : "newData.isString() && newData.val().length > 0"
+                    }
+                },
+                "bookmarkedBy" : {
+                    ".validate" : "newData.val() === auth.uid"
+                }
+
+            }
+        },
+        "messages" : {
+            "$userId" : {
+                ".write" : "$userId === auth.uid",
+                ".read" : "$userId === auth.uid",
+                "$messageId" : {
+                    ".read" : "$userId === auth.uid",
+                    ".write" : "$userId === auth.uid || (!data.exists() && auth !== null && auth.provider !== 'anonymous' && newData.hasChildren(['author', 'date', 'subject', 'text', 'unread']))",
+                    "author" : {
+                        ".validate" : "$userId === auth.uid || (!data.exists() && newData.val() === auth.uid)"
+                    },
+                    "date" : {
+                        ".validate" : "$userId === auth.uid || (!data.exists() && newData.val() === now)"
+                    },
+                    "subject" : {
+                        ".validate" : "$userId === auth.uid || (!data.exists() && newData.isString() && newData.val().length > 0)"
+                    },
+                    "text" : {
+                        ".validate" : "$userId === auth.uid || (!data.exists() && newData.isString())"
+                    },
+                    "unread" : {
+                        ".validate" : "$userId === auth.uid || (!data.exists() && newData.val() === true)"
+                    }
+                }
+            }
+        },
+        "userNames" : {
+            ".read" : true,
+            "$userId" : {
+                ".read" : true,
+                ".write" : "$userId === auth.uid",
+                "name" : {
+                    ".validate" : "newData.isString()"
+                },
+                "profileImageURL" : {
+                    ".validate" : "newData.isString()"
+                }
+            }
+        },
+        "users" : {
+            "$userId" : {
+                ".read" : "$userId === auth.uid",
+                ".write" : "$userId === auth.uid",
+                "modified" : {
+                    ".validate" : "newData.val() === now && (!data.exists() || newData.val() > 10000+data.val())"
+                },
+                "token" : {
+                    ".validate" : "!data.exists()"
+                }
+            }
+        },
+        "views" : {
+            "$viewId" : {
+                ".read" : true,
+                ".write" : "!data.exists() || (data.child('locked').val() === true && newData.child('locked').val() === false && ( root.child('authors/'+$viewId+'/'+root.child('users/'+auth.uid+'/token').val()).val() === true || root.child('authors/'+$viewId+'/'+root.child('users/'+auth.uid+'/tmp_token').val()).val() === true)) || (data.child('locked').val() !== true && data.child('restricted').val() === true && ( root.child('authors/'+$viewId+'/'+root.child('users/'+auth.uid+'/token').val()).val() === true || root.child('authors/'+$viewId+'/'+root.child('users/'+auth.uid+'/tmp_token').val()).val() === true)) || (data.child('locked').val() !== true && data.child('restricted').val() !== true )",
+                "axial" : {
+                    "globalOffset" : {
+                        "$offset" : {
+                            ".validate" : "newData.isNumber()"
+                        }
+                    },
+                    "globalZoom" : {
+                        ".validate" : "newData.isNumber()"
+                    },
+                    "mesh" : {
+                        "visible" : {
+                            ".validate" : "newData.isBoolean()"
+                        }
+                    },
+                    "slice" : {
+                        "index" : {
+                            ".validate" : "newData.isNumber()"
+                        },
+                        "opacities" : {
+                            "$index" : {
+                                ".validate" : "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1"
+                            }
+                        },
+                        "visibilities" : {
+                            "$index" : {
+                                ".validate" : "newData.isBoolean()"
+                            }
+                        }
+                    }
+                },
+                "camera" : {
+                    "$property" : {
+                        "x" : {
+                            ".validate" : "newData.isNumber()"
+                        },
+                        "y" : {
+                            ".validate" : "newData.isNumber()"
+                        },
+                        "z" : {
+                            ".validate" : "newData.isNumber()"
+                        },
+                    }
+                },
+                "cameraPlanes" : {
+                    "$planes" : {
+                        ".validate" : "newData.isNumber()"
+                    }
+                },
+                "coronal" : {
+                    "globalOffset" : {
+                        "$offset" : {
+                            ".validate" : "newData.isNumber()"
+                        }
+                    },
+                    "globalZoom" : {
+                        ".validate" : "newData.isNumber()"
+                    },
+                    "mesh" : {
+                        "visible" : {
+                            ".validate" : "newData.isBoolean()"
+                        }
+                    },
+                    "slice" : {
+                        "index" : {
+                            ".validate" : "newData.isNumber()"
+                        },
+                        "opacities" : {
+                            "$index" : {
+                                ".validate" : "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1"
+                            }
+                        },
+                        "visibilities" : {
+                            "$index" : {
+                                ".validate" : "newData.isBoolean()"
+                            }
+                        }
+                    }
+                },
+                "crosshair" : {
+                    "visible" : {
+                        ".validate" : "newData.isBoolean()"
+                    }
+                },
+                "lastModifiedAt" : {
+                    ".validate" : "newData.isNumber()"
+                },
+                "lastModifiedBy" : {
+                    ".validate" : "newData.isString()"
+                },
+                "models" : {
+                    "$modelId" : {
+                        "mesh" : {
+                            "visible" : {
+                                ".validate" : "newData.isBoolean()"
+                            }
+                        },
+                        "visibleInTree" : {
+                            ".validate" : "newData.isBoolean()"
+                        }
+                    }
+                },
+                "sagittal" : {
+                    "globalOffset" : {
+                        "$offset" : {
+                            ".validate" : "newData.isNumber()"
+                        }
+                    },
+                    "globalZoom" : {
+                        ".validate" : "newData.isNumber()"
+                    },
+                    "mesh" : {
+                        "visible" : {
+                            ".validate" : "newData.isBoolean()"
+                        }
+                    },
+                    "slice" : {
+                        "index" : {
+                            ".validate" : "newData.isNumber()"
+                        },
+                        "opacities" : {
+                            "$index" : {
+                                ".validate" : "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1"
+                            }
+                        },
+                        "visibilities" : {
+                            "$index" : {
+                                ".validate" : "newData.isBoolean()"
+                            }
+                        }
+                    }
+                },
+                "sceneCrosshair" : {
+                    ".read" : true,
+                    ".write" : "root.child('views/'+$viewId+'/lastModifiedBy').val() === auth.uid"
+                },
+                "screenshot" : {
+                    "base64" : {
+                        ".validate" : "newData.isString()"
+                    }
+                },
+                "viewers" : {
+                    ".read" : true,
+                    "$viewerId" : {
+                        ".write" : "auth.uid === $viewerId",
+                        "name" : {
+                            ".validate" : "newData.isString()"
+                        }
+                    }
+                },
+                "volumes" : {
+                    "$volumeId" : {
+                        "$parameter" : {
+                            ".validate" : "newData.isNumber()"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
