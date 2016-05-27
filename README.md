@@ -10,7 +10,7 @@ If you are using any of these repositories :
 * [spl-abdominal-atlas](https://github.com/stity/spl-abdominal-atlas)
 You need to run the mrmlToJson module first.
 
-To use the viewer :
+###To use the viewer :
 * go in atlas repository
 * add this repository as submodule with `git submodule add https://github.com/stity/threejs-atlas-viewer <path-to-submodule-directory>`
 * run `bower install` in the new directory
@@ -19,7 +19,14 @@ To use the viewer :
 * run a server at the root of your initial repository (you can do this with `npm install -g http-server` followed with `http-server`)
 * now you can open your browser and enjoy the viewer (if you used `http-server` command, the URL will be http://localhost:8080/path-to-submodule)
 
-To build the release files (dist directory) :
+###To build the release files (dist directory) :
 * run `npm install -g gulp-cli` to install gulp
 * run `npm install --dev` to install the dev dependencies
 * run `gulp` or `npm build`
+
+###Working with service workers :
+A Service Worker is registred to enhance user experience by providing offline support but as it uses cache for everything, you will need to follow these steps (with Google Chrome) in case you change your local files.
+* open developer tools
+* check that the checkbox "disable cache" in the network panel is checked
+* long push on the refresh button
+* "Empty Cache and Hard Reload"
