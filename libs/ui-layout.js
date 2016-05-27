@@ -227,7 +227,7 @@ angular.module('ui.layout', [])
             opts.maxSizes[i] = child.attr('max-size') || opts.maxSizes[i] || null;
             opts.minSizes[i] = child.attr('min-size') || opts.minSizes[i] || null;
             opts.sizes[i] = child.attr('size') || opts.sizes[i] || 'auto';
-            //opts.collapsed[i] = child.attr('collapsed') || opts.collapsed[i] || false;
+            opts.collapsed[i] = child.attr('collapsed') || opts.collapsed[i] || false;
 
             // verify size is properly set to pixels or percent
             var sizePattern = /\d+\s*(px|%)\s*$/i;
