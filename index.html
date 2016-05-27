@@ -121,7 +121,7 @@
             </div>
             <div ui-layout-container>
                 <div ui-layout="config" >
-                    <div id="leftSideContainer" ui-layout-container ng-attr-collapsed="layout.leftSide" size="20%">
+                    <div id="leftSideContainer" ui-layout-container ng-attr-collapsed="{{layout.leftSide}}" size="20%">
                         <div ui-layout="{flow: 'row'}">
                             <div ui-layout-container><div insert-slice sliceid="axial"></div></div>
                             <div ui-layout-container="center"><div insert-slice sliceid="coronal"></div></div>
@@ -133,7 +133,7 @@
                         <div id="inset"></div>
                         <div id="gui-container"></div>
                     </div>
-                    <div id="rightSideContainer" ui-layout-container collapsed="layout.rightSide" size="20%">
+                    <div id="rightSideContainer" ui-layout-container ng-attr-collapsed="{{layout.rightSide}}" size="20%">
                         <!--- LOGO BOX ---->
                         <div id="logoBox" ng-controller="HeaderCtrl">
                             <img src="logo_spl.gif" width="60px" height="48px"><br>
@@ -150,7 +150,7 @@
                 </div>
             </div>
 
-            <div id="bottomContainer" ui-layout-container collapsed="layout.bottom" size="50px">
+            <div id="bottomContainer" ui-layout-container ng-attr-collapsed="{{layout.bottom}}" size="50px">
                 <div insert-breadcrumbs id="breadcrumbsList"></div>
             </div>
         </div>

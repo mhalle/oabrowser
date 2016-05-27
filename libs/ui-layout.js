@@ -227,7 +227,7 @@ angular.module('ui.layout', [])
             opts.maxSizes[i] = child.attr('max-size') || opts.maxSizes[i] || null;
             opts.minSizes[i] = child.attr('min-size') || opts.minSizes[i] || null;
             opts.sizes[i] = child.attr('size') || opts.sizes[i] || 'auto';
-            opts.collapsed[i] = child.attr('collapsed') || opts.collapsed[i] || false;
+            opts.collapsed[i] = child.attr('collapsed') === 'true' || opts.collapsed[i] || false;
 
             // verify size is properly set to pixels or percent
             var sizePattern = /\d+\s*(px|%)\s*$/i;
@@ -267,7 +267,7 @@ angular.module('ui.layout', [])
 
             if(opts.sizes[i] === 'auto') {
               numOfAutoContainers++;
-            } else {
+            } else if (ctrl.containers[i].collapsed !== true) {
               availableSize -= opts.sizes[i];
             }
           }
@@ -288,7 +288,13 @@ angular.module('ui.layout', [])
           if(!LayoutContainer.isSplitbar(c)) {
             var newSize = (opts.sizes[i] === 'auto') ? autoSize : opts.sizes[i];
 
-            c.size = (newSize !== null) ? newSize : autoSize;
+              var size = (newSize !== null) ? newSize : autoSize;
+              if (c.collapsed) {
+                  c.size = 0;
+              }
+              else {
+                  c.size = size;
+              }
           } else {
             c.size = dividerSize;
           }

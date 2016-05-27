@@ -24,21 +24,38 @@ angular.module('atlasDemo').controller('LayoutController', ['$scope', '$timeout'
         }
     };
 
+    $scope.forceUpdate = function () {
+        $timeout(function () {
+            $scope.updateDisplay();
+            mainApp.emit('ui.layout.resize');
+        },10);
+    };
+
 
     $scope.toggle = function (which) {
         $scope.layout[which] = !$scope.layout[which];
+        $scope.forceUpdate();
     };
 
     $scope.close = function (which) {
         $scope.layout[which] = true;
+        $scope.forceUpdate();
     };
 
     $scope.open = function (which) {
         $scope.layout[which] = false;
+        $scope.forceUpdate();
     };
 
-    $scope.$on('ui.layout.toggle', function () {
+    $scope.$on('ui.layout.toggle', function (e, c) {
+        //refresh scope value (binding is not done by the library)
+        var id = (c.element.attr('id') || '').split('');
+        if (id.length > 0) {
+            id.splice(-9);
+            $scope.layout[id.join('')] = c.collapsed;
+        }
         mainApp.emit('ui.layout.toggle', $scope);
+        $scope.forceUpdate();
     });
 
     $scope.$on('ui.layout.resize', function () {
@@ -46,20 +63,11 @@ angular.module('atlasDemo').controller('LayoutController', ['$scope', '$timeout'
     });
 
     mainApp.on('ui.layout.forcedUpdate', function () {
-        $timeout(function () {
-            $scope.updateDisplay();
-            mainApp.emit('ui.layout.resize');
-        },10);
+        $scope.forceUpdate();
     });
 
     mainApp.on('ui.layout.hideLeftSide', function () {
-        var element = angular.element('body > div.stretch.ui-layout-row > div:nth-child(3) > div > div:nth-child(2) > a:nth-child(1) > span');
-        element.mousedown();
-        element.mouseup();
-        element.click();
-        $timeout(function () {
-            mainApp.emit('ui.layout.forcedUpdate');
-        },10);
+        $scope.close('leftSide');
     });
 
 }]);
