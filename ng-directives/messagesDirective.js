@@ -10,7 +10,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
             $scope.firebaseView = firebaseView;
             $scope.unreadMessages = 0;
 
-            moment.local(navigator.language);
+            moment.locale(navigator.language || 'en');
 
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null
