@@ -27,23 +27,29 @@ angular.module('atlasDemo').controller('LayoutController', ['$scope', '$timeout'
     $scope.forceUpdate = function () {
         $timeout(function () {
             $scope.updateDisplay();
-            mainApp.emit('ui.layout.resize');
         },10);
+        $timeout(function () {
+            $scope.updateDisplay();
+            mainApp.emit('ui.layout.resize');
+        },20);
     };
 
 
     $scope.toggle = function (which) {
         $scope.layout[which] = !$scope.layout[which];
+        $scope.safeApply();
         $scope.forceUpdate();
     };
 
     $scope.close = function (which) {
         $scope.layout[which] = true;
+        $scope.safeApply();
         $scope.forceUpdate();
     };
 
     $scope.open = function (which) {
         $scope.layout[which] = false;
+        $scope.safeApply();
         $scope.forceUpdate();
     };
 
@@ -68,6 +74,9 @@ angular.module('atlasDemo').controller('LayoutController', ['$scope', '$timeout'
 
     mainApp.on('ui.layout.hideLeftSide', function () {
         $scope.close('leftSide');
+        $timeout(function () {
+            $(window).resize();
+        },100);
     });
 
 }]);
