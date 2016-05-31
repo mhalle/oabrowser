@@ -8,7 +8,7 @@
         <script>
             //Force HTTPS when using github
             if (window.location.host.substr(-10) == '.github.io' && window.location.protocol != 'https:') {
-                window.location.protocol = 'https:';
+                window.location = window.location.href.replace('http','https');
             }
         </script>
 
