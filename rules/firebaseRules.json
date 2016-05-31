@@ -82,7 +82,7 @@
                     ".validate" : "newData.val() === now && (!data.exists() || newData.val() > 10000+data.val())"
                 },
                 "token" : {
-                    ".validate" : "!data.exists()"
+                    ".validate" : "!data.exists() || data.val() == newData.val()"
                 }
             }
         },
