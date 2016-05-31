@@ -174,10 +174,12 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         container = document.getElementById('rendererFrame');
 
-        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.05, 1e8 );
 
         //set position according to global parameters
         var distanceToOrigin = window.globalViewerParameters.cameraInitialDistanceToOrigin || 300;
+
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.05, distanceToOrigin*15 );
+
         var initialPosition = window.globalViewerParameters.cameraInitialPositionVector || [0,0,1];
         camera.position.x = distanceToOrigin * initialPosition[0];
         camera.position.y = distanceToOrigin * initialPosition[1];
