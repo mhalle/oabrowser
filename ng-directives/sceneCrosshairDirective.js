@@ -49,6 +49,9 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                 if (!camera) {
                     return {x:0,y:0};
                 }
+                if (canvas.length === 0) {
+                    canvas  = $('#rendererFrame canvas');
+                }
                 var pos = position.clone();
                 var projScreenMat = new THREE.Matrix4();
                 projScreenMat.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
