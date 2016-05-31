@@ -27,6 +27,25 @@ angular.module('atlasDemo').provider("mainApp", function () {
 
     };
 
+    singleton.once = function (eventName, callback, context) {
+
+        if (!listeners[eventName]) {
+            singleton.createEvent(eventName);
+        }
+
+        function wraper (evt) {
+            callback.call(this || null, evt);
+            singleton.off(eventName, wraper);
+        }
+
+        var listener = {
+            callback : wraper,
+            context : context
+        };
+
+        listeners[eventName].push(listener);
+    };
+
     singleton.off = function (eventName, callback) {
 
         if (listeners[eventName]) {
