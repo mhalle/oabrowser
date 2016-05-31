@@ -175,7 +175,20 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         container = document.getElementById('rendererFrame');
 
         camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.05, 1e8 );
-        camera.position.z = 300;
+
+        //set position according to global parameters
+        var distanceToOrigin = window.globalViewerParameters.cameraInitialDistanceToOrigin || 300;
+        var initialPosition = window.globalViewerParameters.cameraInitialPositionVector || [0,0,1];
+        camera.position.x = distanceToOrigin * initialPosition[0];
+        camera.position.y = distanceToOrigin * initialPosition[1];
+        camera.position.z = distanceToOrigin * initialPosition[2];
+
+        //set up vector according to global parameters
+        var initialUp = window.globalViewerParameters.cameraInitialUpVector || [0,1,0];
+        camera.up.x = initialUp[0];
+        camera.up.y = initialUp[1];
+        camera.up.z = initialUp[2];
+
         mainApp.camera = camera;
 
         controls = new THREE.TrackballControls( camera, container );
@@ -585,9 +598,13 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         commitAfter = commitAfter || true;
         var bb = getSceneBoundingBox(),
             center = (new THREE.Vector3()).lerpVectors(bb.min, bb.max, 0.5),
-            height = 1.2*(Math.max(bb.max.y-center.y, bb.max.x - center.x)) / (Math.tan(camera.fov * Math.PI / 360))+center.z,
-            cameraPosition = center.clone().setZ(height),
-            up = new THREE.Vector3(0,1,0);
+            height = 1.2*(Math.max(bb.max.y-center.y, bb.max.x - center.x)) / (Math.tan(camera.fov * Math.PI / 360)),
+            initialPosition = window.globalViewerParameters.cameraInitialPositionVector || [0,0,1],
+            cameraPosition = new THREE.Vector3(center.x + height*initialPosition[0], center.y + height*initialPosition[1], center.z + height*initialPosition[2]),
+            initialUp = window.globalViewerParameters.camcameraInitialUpVector || [0,1,0],
+            up = new THREE.Vector3(initialUp[0], initialUp[1], initialUp[2]);
+
+        up.normalize();
 
         setCameraPlanes(camera.near, 15*height);
         tweenCamera(cameraPosition, center, up).then(function () {
