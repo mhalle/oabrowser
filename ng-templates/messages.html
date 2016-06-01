@@ -33,7 +33,7 @@
 
                 <!-- list of message -->
                 <div ng-if="!noMessage" class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                    <div class="panel panel-default" ng-repeat="(key, message) in messages">
+                    <div class="panel panel-default" ng-repeat="(key, message) in messages | orderBy:'-date'">
                         <div class="panel-heading collapsed" role="tab" ng-attr-id="heading{{key}}" data-toggle="collapse" ng-attr-data-target="#collapse{{key}}" aria-expanded="false" ng-attr-aria-controls="collapse{{key}}" style="min-height:80px">
 
                             <!-- profile picture -->
