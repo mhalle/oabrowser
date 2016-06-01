@@ -603,7 +603,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             height = 1.2*(Math.max(bb.max.y-center.y, bb.max.x - center.x)) / (Math.tan(camera.fov * Math.PI / 360)),
             initialPosition = window.globalViewerParameters.cameraInitialPositionVector || [0,0,1],
             cameraPosition = new THREE.Vector3(center.x + height*initialPosition[0], center.y + height*initialPosition[1], center.z + height*initialPosition[2]),
-            initialUp = window.globalViewerParameters.camcameraInitialUpVector || [0,1,0],
+            initialUp = window.globalViewerParameters.cameraInitialUpVector || [0,1,0],
             up = new THREE.Vector3(initialUp[0], initialUp[1], initialUp[2]);
 
         up.normalize();
