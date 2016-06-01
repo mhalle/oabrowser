@@ -112,7 +112,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         camera.updateProjectionMatrix();
 
         renderer = new THREE.WebGLRenderer({
-            antialias: false,
+            antialias : window.globalViewerParameters.antialias || false,
             alpha : true,
             preserveDrawingBuffer : true,
             logarithmicDepthBuffer : window.globalViewerParameters.logarithmicDepthBuffer || false
