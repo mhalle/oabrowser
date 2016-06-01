@@ -6,7 +6,7 @@
  * @author Valentin Demeusy / https://github.com/stity
  * @param   {THREE.Camera} camera The camera to which lightkit will be bound
  */
-function LightKit ( camera, controls ) {
+function LightKit ( camera, controls, scene ) {
 
     this.camera = camera;
     this.controls = controls;
@@ -58,8 +58,7 @@ function LightKit ( camera, controls ) {
     this.update();
 
     for (var id in this.lights) {
-        camera.add(this.lights[id]);
-        camera.add(this.lights[id].target);
+        scene.add(this.lights[id]);
     }
 
 }
@@ -192,7 +191,7 @@ LightKit.prototype = {
             z = this.camera.up.clone().normalize(),
             x = position.clone().sub(origin).normalize(),
             y = z.clone().cross(x),
-            r = position.clone().sub(origin).length,
+            r = position.clone().sub(origin).length(),
             id,
             pi = Math.PI,
             pos,
@@ -203,12 +202,11 @@ LightKit.prototype = {
             pos = origin.clone();
             lat = pi*this.latitude[id]/180;
             long = pi*this.longitude[id]/180;
-            pos.add(x.clone().multiplyScalar(Math.cos(lat)*Math.cos(long)));
-            pos.add(y.clone().multiplyScalar(Math.cos(lat)*Math.sin(long)));
-            pos.add(z.clone().multiplyScalar(Math.sin(lat)));
-            pos.normalize();
-            console.log(pos);
+            pos.add(x.clone().multiplyScalar(r*Math.cos(lat)*Math.cos(long)));
+            pos.add(y.clone().multiplyScalar(r*Math.cos(lat)*Math.sin(long)));
+            pos.add(z.clone().multiplyScalar(r*Math.sin(lat)));
             this.lights[id].position.copy(pos);
+            this.lights[id].target.position.copy(this.controls.target);
         }
 
 

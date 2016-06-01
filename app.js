@@ -224,7 +224,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         camera.add( dirLight.target );
         */
 
-        lightKit = new LightKit(camera, controls);
+        lightKit = new LightKit(camera, controls, scene);
 
 
         //fetch atlas structure
@@ -267,11 +267,11 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         }
         menu = lightKitGui.addFolder('Longitude');
         for (id in lightKit.lights) {
-            menu.add(lightKit.longitude, id, -180,180).name(id+' longitude').onChange(function(){lightKit.updatePosition();});
+            menu.add(lightKit.longitude, id, -180, 180).name(id+' longitude').onChange(function(){lightKit.updatePosition();});
         }
         menu = lightKitGui.addFolder('Latitude');
         for (id in lightKit.lights) {
-            menu.add(lightKit.longitude, id, -90,90).name(id+' latitude').onChange(function(){lightKit.updatePosition();});
+            menu.add(lightKit.latitude, id, -90,90).name(id+' latitude').onChange(function(){lightKit.updatePosition();});
         }
 
         var materialController = new THREE.MeshPhongMaterial({});
@@ -306,6 +306,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         requestAnimationFrame( animate );
 
         controls.update();
+        lightKit.updatePosition();
 
         //copy position of the camera into inset
         camera2.position.copy( camera.position );
