@@ -7,7 +7,7 @@
 
 
 <!-- Open the modal -->
-<button type="button" class="btn btn-default btn-sm" aria-label="Bookmarks" ng-click="openBookmarks()" uib-tooltip="Display your bookmarks" tooltip-placement="bottom" tooltip-append-to-body="true">
+<button ng-if="firebaseView.auth && firebaseView.auth.provider !== 'anonymous'" type="button" class="btn btn-default btn-sm" aria-label="Bookmarks" ng-click="openBookmarks()" uib-tooltip="Display your bookmarks" tooltip-placement="bottom" tooltip-append-to-body="true">
     <i class="fa fa-bookmark" aria-hidden="true"></i>
     <span>Bookmarks</span>
 </button>

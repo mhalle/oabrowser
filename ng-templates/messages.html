@@ -7,11 +7,11 @@
 <!-- Open the messages list modal -->
 <button ng-if="isMessageEnabled()" type="button" class="btn btn-default btn-sm" aria-label="messagesList" ng-click="openMessagesList()" uib-tooltip="Display your messages" tooltip-placement="bottom" tooltip-append-to-body="true">
     <i class="fa fa-envelope" aria-hidden="true"></i>
-    <span>Inbox</span>
+    <span>Messages</span>
     <span ng-if="unreadMessages > 0" class="badge unread-messages">{{unreadMessages}}</span>
 </button>
 
-<!-- New message modal --->
+<!-- New message modal -->
 <div class="modal fade" id="newMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -47,7 +47,7 @@
 
 
 
-<!-- Messages List modal --->
+<!-- Messages List modal -->
 <div class="modal fade" id="messagesListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -57,11 +57,27 @@
             </div>
             <div class="modal-body">
 
+                <!-- send a new message -->
+                <button ng-if="isMessageEnabled()" type="button" class="btn btn-default btn-sm" aria-label="newMessage" ng-click="openNewMessageForm()" uib-tooltip="Write a new message to another user" tooltip-placement="bottom" tooltip-append-to-body="true">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <span>New Message</span>
+                </button>
+
+                <!-- placeholder id no message -->
                 <div ng-if="noMessage">You do not have any message.</div>
 
+                <!-- list of message -->
                 <div ng-if="!noMessage" class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default" ng-repeat="(key, message) in messages">
-                        <div class="panel-heading" role="tab" ng-attr-id="heading{{key}}" data-toggle="collapse" ng-attr-data-target="#collapse{{key}}" aria-expanded="false" ng-attr-aria-controls="collapse{{key}}">
+                        <div class="panel-heading collapsed" role="tab" ng-attr-id="heading{{key}}" data-toggle="collapse" ng-attr-data-target="#collapse{{key}}" aria-expanded="false" ng-attr-aria-controls="collapse{{key}}" style="min-height:80px">
+
+                            <!-- profile picture -->
+                            <img ng-if="userNames[message.author].profileImageURL" ng-src="userNames[message.author].profileImageURL" height="64px" width="64px" class="message-profile-picture"/>
+
+                            <!-- First letter of name if no profile picture -->
+                            <span ng-if="!userNames[message.author].profileImageURL" class="message-profile-picture-placeholder">{{userNames[message.author].name.substr(0,1).toUpperCase()}}</span>
+
+
                             <h4 class="panel-title">
                                 {{message.subject}}
 
@@ -72,7 +88,7 @@
                                 <small class="pull-right">{{formatDate(message.date)}}</small>
                             </h6>
                         </div>
-                        <div ng-attr-id="collapse{{key}}" class="panel-collapse collapse in" role="tabpanel" ng-attr-aria-labelledby="heading{{key}}">
+                        <div ng-attr-id="collapse{{key}}" class="panel-collapse collapse" role="tabpanel" ng-attr-aria-labelledby="heading{{key}}">
                             <div class="panel-body" compile="message.text">
                             </div>
                         </div>

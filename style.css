@@ -244,3 +244,17 @@ links inside the distant breadcrumbs
     /*else tooltip appear under the modal */
     z-index: 1100;
 }
+
+.message-profile-picture {
+    margin-right: 10px;
+    float: left;
+}
+
+.message-profile-picture-placeholder {
+    height: 64px;
+    width: 64px;
+    float: left;
+    margin-right: 10px;
+    font-size: 50px;
+    text-align: center;
+}
