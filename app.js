@@ -609,6 +609,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         up.normalize();
 
+        lightKit.distanceToTarget = height*15; // simulate infinity
+
         setCameraPlanes(camera.near, 15*height);
         tweenCamera(cameraPosition, center, up).then(function () {
             if (commitAfter) {

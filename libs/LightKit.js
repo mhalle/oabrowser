@@ -31,6 +31,8 @@ function LightKit ( camera, controls, scene ) {
 
     this.intensity = 0.004;
 
+    this.distanceToTarget = 1000;
+
     this.ratio = {
         key : 1,
         back1 : 3.5,
@@ -188,10 +190,11 @@ LightKit.prototype = {
     updatePosition : function () {
         var origin = this.controls.target,
             position = this.camera.position,
+            //create the spherical system (x,y,z)
             z = this.camera.up.clone().normalize(),
             x = position.clone().sub(origin).normalize(),
             y = z.clone().cross(x),
-            r = position.clone().sub(origin).length(),
+            r = this.distanceToTarget,
             id,
             pi = Math.PI,
             pos,
@@ -200,11 +203,17 @@ LightKit.prototype = {
 
         for (id in this.lights) {
             pos = origin.clone();
+
+            //convert degree to radian
             lat = pi*this.latitude[id]/180;
             long = pi*this.longitude[id]/180;
+
+            // compute position in spherical coordinates
             pos.add(x.clone().multiplyScalar(r*Math.cos(lat)*Math.cos(long)));
             pos.add(y.clone().multiplyScalar(r*Math.cos(lat)*Math.sin(long)));
             pos.add(z.clone().multiplyScalar(r*Math.sin(lat)));
+
+            //update position and target
             this.lights[id].position.copy(pos);
             this.lights[id].target.position.copy(this.controls.target);
         }
