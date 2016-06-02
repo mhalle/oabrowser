@@ -74,7 +74,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
                 $scope.noSentMessage = Object.keys(messages).length === 0;
                 var messageId;
 
-                for (messageId in $scope.messages) {
+                for (messageId in $scope.sentMessages) {
 
                     $scope.sentMessages[messageId].text = parseTextMessage($scope.sentMessages[messageId].text);
 
