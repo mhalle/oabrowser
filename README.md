@@ -10,14 +10,22 @@ If you are using any of these repositories :
 * [spl-abdominal-atlas](https://github.com/stity/spl-abdominal-atlas)
 You need to run the mrmlToJson module first.
 
-###To use the viewer :
+###Demos
+####Lastest
+[https://stity.github.io/spl-brain-atlas/utils/three](https://stity.github.io/spl-brain-atlas/utils/three)
+####Stable
+[https://stity.github.io/atlas-releases/](https://stity.github.io/atlas-releases)
+
+###To install the viewer locally :
 * go in atlas repository
 * add this repository as submodule with `git submodule add https://github.com/stity/threejs-atlas-viewer <path-to-submodule-directory>`
 * run `bower install` in the new directory
 * copy `configAtlasViewer.js` in the parent directory of the submodule (it allows git to commit the changes you make to this config file)
-* fill `configAtlasViewer.js`with your own parameters
-* run a server at the root of your initial repository (you can do this with `npm install -g http-server` followed with `http-server`)
-* now you can open your browser and enjoy the viewer (if you used `http-server` command, the URL will be http://localhost:8080/path-to-submodule)
+* fill `configAtlasViewer.js` with your own parameters
+* run a server at the root of your initial repository.If can use http-server NPM package :
+    * `npm install -g http-server` 
+    * `http-server`
+* now you can open your browser and enjoy the viewer (if you used `http-server` command, the URL will be [http://localhost:8080/path-to-submodule](http://localhost:8080/path-to-submodule))
 
 ###To build the release files (dist directory) :
 * run `npm install -g gulp-cli` to install gulp
