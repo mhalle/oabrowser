@@ -81,7 +81,7 @@
 
                                     <!-- message header -->
                                     <h4 class="panel-title">
-                                        <span ng-repeat="recipient in message.recipient">{{recipient}}<span ng-if="!$last">;</span></span>
+                                        <span ng-repeat="recipient in message.recipients">{{recipient}}<span ng-if="!$last">;</span></span>
 
                                         <i class="fa fa-trash-o pull-right message-button" aria-hidden="true" ng-click="deleteMessage(message.$key, 'sent')"></i>
                                     </h4>
