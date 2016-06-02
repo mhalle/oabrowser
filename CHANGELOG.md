@@ -1,4 +1,4 @@
-#[0.2.0](https://github.com/stity/threejs-atlas-viewer/commits/0.2.0) Jun. 2, 2016
+#[0.2.0](https://github.com/stity/threejs-atlas-viewer/commits/0.2.0) Jun 2, 2016
 
 * Firebase 
     * realtime sharing view
@@ -18,6 +18,6 @@
 
 
 
-#[0.1](https://github.com/stity/threejs-atlas-viewer/commits/0.1) Apr. 9, 2016
+#[0.1](https://github.com/stity/threejs-atlas-viewer/commits/0.1) Apr 9, 2016
 
 First Version
