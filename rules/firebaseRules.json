@@ -61,6 +61,25 @@
                 }
             }
         },
+        "sent-messages" : {
+            "$userId" : {
+                ".write" : "$userId === auth.uid",
+                ".read" : "$userId === auth.uid",
+                "$messageId" : {
+                    ".read" : "$userId === auth.uid",
+                    ".write" : "$userId === auth.uid",
+                    "date" : {
+                        ".validate" : "!newData.exists() || (!data.exists() && newData.val() === now)"
+                    },
+                    "subject" : {
+                        ".validate" : "!newData.exists() || (!data.exists() && newData.isString() && newData.val().length > 0)"
+                    },
+                    "text" : {
+                        ".validate" : "!newData.exists() || (!data.exists() && newData.isString())"
+                    }
+                }
+            }
+        },
         "userNames" : {
             ".read" : true,
             "$userId" : {

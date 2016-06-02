@@ -42,6 +42,7 @@ angular.module('atlasDemo').directive( 'messages', function () {
                 for (i = 0; i < $scope.newMessage.recipient.length; i++) {
                     firebaseView.sendMessage($scope.newMessage.recipient[i].uid, $scope.newMessage.subject, $scope.newMessage.text);
                 }
+                firebaseView.registerSentMessage($scope.newMessage.recipient, $scope.newMessage.subject, $scope.newMessage.text);
                 $scope.emptyForm();
             };
 

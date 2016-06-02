@@ -796,6 +796,21 @@ var FirebaseView = (function () {
 
     };
 
+    singleton.registerSentMessage = function (recipients, subject, text) {
+        if (!singleton.auth || singleton.auth.provider === 'anonymous') {
+            return;
+        }
+        var messageId = generateUUID();
+        var messageRef = new Firebase("https://atlas-viewer.firebaseio.com/sent-messages/"+singleton.auth.uid+"/"+messageId);
+        var messageObject = {
+            recipients : recipients.map(r => r.name),
+            text : text,
+            subject : subject,
+            date : Firebase.ServerValue.TIMESTAMP
+        };
+        messageRef.set(messageObject);
+    };
+
     singleton.deleteMessage = function (messageId) {
         if (messageId && typeof messageId === 'string' && messageId.length >0) {
             var ref = new Firebase("https://atlas-viewer.firebaseio.com/messages/"+singleton.auth.uid+"/"+messageId);
