@@ -1,3 +1,7 @@
+#Master
+
+*New atlas format
+
 #[0.2.0](https://github.com/stity/threejs-atlas-viewer/commits/0.2.0) Jun 2, 2016
 
 * Firebase 
