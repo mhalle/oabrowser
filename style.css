@@ -286,7 +286,7 @@ links inside the distant breadcrumbs
   top:5px;
 }
 
-#messageListModal .tab-content {
+#messagesListModal .tab-content {
     padding: 5px;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
