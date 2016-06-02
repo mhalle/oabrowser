@@ -82,7 +82,14 @@
                 <form>
                     <div class="form-group">
                         <label for="recipientInput">Recipient</label>
-                        <input id="recipientInput" type="text" ng-model="newMessage.recipient" uib-typeahead="name for name in userNamesList | filter:$viewValue | limitTo:8" class="form-control" placeholder="Name">
+                        <tags-input id="recipientInput" ng-model="newMessage.recipient" display-property="name" placeholder="Add a recipient" replace-spaces-with-dashes="false">
+                            <auto-complete source="getMatchingUserNames($query)"
+                                           min-length="0"
+                                           load-on-focus="true"
+                                           load-on-empty="true"
+                                           max-results-to-show="8"
+                                           template="ng-templates/usersAutocomplete.html"></auto-complete>
+                        </tags-input>
                     </div>
                     <div class="form-group">
                         <label for="subjectInput">Subject</label>

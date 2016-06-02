@@ -31,18 +31,17 @@ angular.module('atlasDemo').directive( 'messages', function () {
             };
 
             $scope.send = function () {
-                //retrieve user uid from name
-                var uid,
-                    recipientUid;
+                var i;
 
-                for (uid in $scope.userNames) {
-                    if ($scope.userNames[uid].name === $scope.newMessage.recipient) {
-                        recipientUid = uid;
-                        break;
-                    }
+                // only send if there is at least one recipient
+                if (!$scope.newMessage.recipient || $scope.newMessage.recipient.length === 0) {
+                    return;
                 }
 
-                firebaseView.sendMessage(recipientUid, $scope.newMessage.subject, $scope.newMessage.text);
+
+                for (i = 0; i < $scope.newMessage.recipient.length; i++) {
+                    firebaseView.sendMessage($scope.newMessage.recipient[i].uid, $scope.newMessage.subject, $scope.newMessage.text);
+                }
                 $scope.emptyForm();
             };
 
@@ -82,7 +81,8 @@ angular.module('atlasDemo').directive( 'messages', function () {
                 var uid;
                 for (uid in $scope.userNames) {
                     if ($scope.userNames[uid].name && $scope.userNames[uid].name.length > 0) {
-                        $scope.userNamesList.push($scope.userNames[uid].name);
+                        $scope.userNames[uid].uid = uid;
+                        $scope.userNamesList.push($scope.userNames[uid]);
                     }
                 }
                 $scope.safeApply();
@@ -139,6 +139,10 @@ angular.module('atlasDemo').directive( 'messages', function () {
                     return moment(timestamp).fromNow();
                 }
                 return moment(timestamp).calendar();
+            };
+
+            $scope.getMatchingUserNames = function ($query) {
+                return $scope.userNamesList.filter(o => o.name.toLowerCase().indexOf($query.toLowerCase()) !== -1).sort((a,b) => a.name > b.name);
             };
 
         }]

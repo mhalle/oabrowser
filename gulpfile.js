@@ -19,6 +19,7 @@ const filesList = [
         "bower_components/adapt-strap/dist/adapt-strap.tpl.min.js",
         "libs/ui-layout.js",
         "libs/rzslicer.js",
+        "libs/ng-tags/ng-tags-input.min.js",
         "libs/firebase.js",
         "libs/angularfire.min.js",
         "libs/moment-with-locales.min.js",
