@@ -28,38 +28,80 @@
                     <span>New Message</span>
                 </button>
 
-                <!-- placeholder id no message -->
-                <div ng-if="noMessage">You do not have any message.</div>
+                <!-- tabs -->
+                <uib-tabset active="activeTab">
+                    <uib-tab index="0" heading="Received">
 
-                <!-- list of message -->
-                <div ng-if="!noMessage" class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                    <div class="panel panel-default" ng-repeat="message in messages | toArray | orderBy:'-date'">
-                        <div class="panel-heading collapsed" role="tab" ng-attr-id="heading{{message.$key}}" data-toggle="collapse" ng-attr-data-target="#collapse{{message.$key}}" aria-expanded="false" ng-attr-aria-controls="collapse{{message.$key}}" style="min-height:80px">
+                        <!-- placeholder if no message -->
+                        <div ng-if="noMessage">You do not have any message.</div>
 
-                            <!-- profile picture -->
-                            <img ng-if="userNames[message.author].profileImageURL" ng-src="{{userNames[message.author].profileImageURL}}" height="64px" width="64px" class="message-profile-picture"/>
+                        <!-- list of received message -->
+                        <div ng-if="!noMessage" class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="panel panel-default" ng-repeat="message in messages | toArray | orderBy:'-date'">
+                                <div class="panel-heading collapsed" role="tab" ng-attr-id="heading{{message.$key}}" data-toggle="collapse" ng-attr-data-target="#collapse{{message.$key}}" aria-expanded="false" ng-attr-aria-controls="collapse{{message.$key}}" style="min-height:80px">
 
-                            <!-- First letter of name if no profile picture -->
-                            <span ng-if="!userNames[message.author].profileImageURL" class="message-profile-picture-placeholder">{{userNames[message.author].name.substr(0,1).toUpperCase()}}</span>
+                                    <!-- profile picture -->
+                                    <img ng-if="userNames[message.author].profileImageURL" ng-src="{{userNames[message.author].profileImageURL}}" height="64px" width="64px" class="message-profile-picture"/>
+
+                                    <!-- First letter of name if no profile picture -->
+                                    <span ng-if="!userNames[message.author].profileImageURL" class="message-profile-picture-placeholder">{{userNames[message.author].name.substr(0,1).toUpperCase()}}</span>
 
 
-                            <h4 class="panel-title">
-                                {{userNames[message.author].name}}
+                                    <!-- message header -->
+                                    <h4 class="panel-title">
+                                        {{userNames[message.author].name}}
 
-                                <i class="fa fa-trash-o pull-right message-button" aria-hidden="true" ng-click="deleteMessage(message.$key)"></i>
-                            </h4>
-                            <h6>
-                                {{message.subject}}
-                                <small class="pull-right">{{formatDate(message.date)}}</small>
-                            </h6>
-                        </div>
-                        <div ng-attr-id="collapse{{message.$key}}" class="panel-collapse collapse" role="tabpanel" ng-attr-aria-labelledby="heading{{message.$key}}">
-                            <div class="panel-body" compile="message.text">
+                                        <i class="fa fa-trash-o pull-right message-button" aria-hidden="true" ng-click="deleteMessage(message.$key, 'received')"></i>
+                                    </h4>
+                                    <h6>
+                                        {{message.subject}}
+                                        <small class="pull-right">{{formatDate(message.date)}}</small>
+                                    </h6>
+                                </div>
+
+                                <!-- message content -->
+                                <div ng-attr-id="collapse{{message.$key}}" class="panel-collapse collapse" role="tabpanel" ng-attr-aria-labelledby="heading{{message.$key}}">
+                                    <div class="panel-body" compile="message.text">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </uib-tab>
 
-                </div>
+
+                    <uib-tab index="1" heading="Sent">
+                        <!-- placeholder if no message -->
+                        <div ng-if="noSentMessage">You do not have any sent message.</div>
+
+                        <!-- list of received message -->
+                        <div ng-if="!noSentMessage" class="panel-group" id="accordionSent" role="tablist" aria-multiselectable="true">
+                            <div class="panel panel-default" ng-repeat="message in sentMessages | toArray | orderBy:'-date'">
+                                <div class="panel-heading collapsed" role="tab" ng-attr-id="headingSent{{message.$key}}" data-toggle="collapse" ng-attr-data-target="#collapseSent{{message.$key}}" aria-expanded="false" ng-attr-aria-controls="collapseSent{{message.$key}}" style="min-height:80px">
+
+
+                                    <!-- message header -->
+                                    <h4 class="panel-title">
+                                        <span ng-repeat="recipient in message.recipient">{{recipient}}<span ng-if="!$last">;</span></span>
+
+                                        <i class="fa fa-trash-o pull-right message-button" aria-hidden="true" ng-click="deleteMessage(message.$key, 'sent')"></i>
+                                    </h4>
+                                    <h6>
+                                        {{message.subject}}
+                                        <small class="pull-right">{{formatDate(message.date)}}</small>
+                                    </h6>
+                                </div>
+
+                                <!-- message content -->
+                                <div ng-attr-id="collapseSent{{message.$key}}" class="panel-collapse collapse" role="tabpanel" ng-attr-aria-labelledby="headingSent{{message.$key}}">
+                                    <div class="panel-body" compile="message.text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </uib-tab>
+                </uib-tabset>
+
+
 
             </div>
             <div class="modal-footer">

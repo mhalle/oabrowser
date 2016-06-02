@@ -327,9 +327,24 @@ var FirebaseView = (function () {
             }
         });
 
+        var sentMessagesRef = new Firebase("https://atlas-viewer.firebaseio.com/sent-messages/"+singleton.auth.uid);
+
+        sentMessagesRef.on('value', function(snapshot) {
+            if (snapshot.val()) {
+                mainApp.emit('firebaseView.sentMessages', snapshot);
+            }
+        });
+
+        sentMessagesRef.on('child_added', function(snapshot) {
+            if (snapshot.val()) {
+                mainApp.emit('firebaseView.newSentMessage', snapshot);
+            }
+        });
+
 
         function unbind () {
             messagesRef.off();
+            sentMessagesRef.off();
         }
         userRelatedUnbindFunctions.push(unbind);
     }
@@ -811,9 +826,10 @@ var FirebaseView = (function () {
         messageRef.set(messageObject);
     };
 
-    singleton.deleteMessage = function (messageId) {
+    singleton.deleteMessage = function (messageId, type) {
         if (messageId && typeof messageId === 'string' && messageId.length >0) {
-            var ref = new Firebase("https://atlas-viewer.firebaseio.com/messages/"+singleton.auth.uid+"/"+messageId);
+            var messageType = type === 'sent' ? 'sent-messages' : 'messages';
+            var ref = new Firebase("https://atlas-viewer.firebaseio.com/"+messageType+"/"+singleton.auth.uid+"/"+messageId);
             ref.remove();
         }
     };

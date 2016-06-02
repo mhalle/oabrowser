@@ -9,6 +9,9 @@ angular.module('atlasDemo').directive( 'messages', function () {
             $scope.noMessage = true;
             $scope.firebaseView = firebaseView;
             $scope.unreadMessages = 0;
+            $scope.activeTab = 0;
+            $scope.sentMessages = {};
+            $scope.noSentMessage = true;
 
             moment.locale(navigator.language || 'en');
 
@@ -66,14 +69,37 @@ angular.module('atlasDemo').directive( 'messages', function () {
 
             mainApp.on('firebaseView.messages', initMessages);
 
-            $scope.deleteMessage = function (key) {
+            function initSentMessages (messages) {
+                $scope.sentMessages = messages.val();
+                $scope.noSentMessage = Object.keys(messages).length === 0;
+                var messageId;
 
-                $scope.messages[key] = undefined;
-                delete $scope.messages[key];
-                $scope.noMessage = Object.keys($scope.messages).length === 0;
+                for (messageId in $scope.messages) {
+
+                    $scope.sentMessages[messageId].text = parseTextMessage($scope.sentMessages[messageId].text);
+
+                }
+                $scope.safeApply();
+            }
+
+            mainApp.on('firebaseView.sentMessages', initSentMessages);
+
+            $scope.deleteMessage = function (key, type) {
+
+                if (type === 'sent') {
+                    $scope.sentMessages[key] = undefined;
+                    delete $scope.sentMessages[key];
+                    $scope.noSentMessage = Object.keys($scope.sentMessages).length === 0;
+                }
+                else {
+                    $scope.messages[key] = undefined;
+                    delete $scope.messages[key];
+                    $scope.noMessage = Object.keys($scope.messages).length === 0;
+                }
+
                 $scope.safeApply();
 
-                firebaseView.deleteMessage(key);
+                firebaseView.deleteMessage(key, type);
             };
 
             function initUserNames (userNames) {
