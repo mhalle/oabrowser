@@ -44,12 +44,12 @@
 
 
                             <h4 class="panel-title">
-                                {{message.subject}}
+                                {{userNames[message.author].name}}
 
                                 <i class="fa fa-trash-o pull-right message-button" aria-hidden="true" ng-click="deleteMessage(message.$key)"></i>
                             </h4>
                             <h6>
-                                {{userNames[message.author].name}}
+                                {{message.subject}}
                                 <small class="pull-right">{{formatDate(message.date)}}</small>
                             </h6>
                         </div>
