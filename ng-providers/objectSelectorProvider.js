@@ -9,7 +9,7 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
     function _select (object) {
 
         var mesh = object.mesh;
-        if (object['@type'] === 'structure') {
+        if (object['@type'] === 'Structure') {
 
             if (!mesh.originalColor) {
                 mesh.originalColor = mesh.material.color.getHex();
@@ -17,12 +17,12 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
             mesh.material.color.setHex(highlightMeshColor);
 
         }
-        else if (object['@type'] === 'group') {
+        else if (object['@type'] === 'Group') {
 
-            for (var i = 0; i < object.members.length; i++) {
+            for (var i = 0; i < object.member.length; i++) {
 
-                removeFromSelection(object.members[i]);
-                _select(object.members[i]);
+                removeFromSelection(object.member[i]);
+                _select(object.member[i]);
 
             }
 
@@ -38,16 +38,16 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
 
     function _unselect (object) {
 
-        if (object['@type'] === 'structure') {
+        if (object['@type'] === 'Structure') {
 
             object.mesh.material.color.setHex(object.mesh.originalColor);
 
         }
-        else if (object['@type'] === 'group') {
+        else if (object['@type'] === 'Group') {
 
-            for (var i = 0; i < object.members.length; i++) {
+            for (var i = 0; i < object.member.length; i++) {
 
-                _unselect(object.members[i]);
+                _unselect(object.member[i]);
 
             }
 
@@ -111,7 +111,7 @@ angular.module('atlasDemo').provider('objectSelector', ['mainAppProvider', funct
             return selectedObjects;
         },
         set : function (value) {
-            if (value['@type'] === 'structure' || value['@type'] === 'group') {
+            if (value['@type'] === 'structure' || value['@type'] === 'Group') {
                 select(value);
             }
             else if (value instanceof Array) {

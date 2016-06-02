@@ -67,12 +67,12 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
     function loadVTKModel(structure) {
         var file;
         if (Array.isArray(structure.sourceSelector)) {
-            var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('geometrySelector'));
+            var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
             if (geometrySelector) {
                 file = geometrySelector.dataSource.source;
             }
             else {
-                throw 'In case of multiple selectors, VTK selector should have an array as @type which includes "geometrySelector"';
+                throw 'In case of multiple selectors, VTK selector should have an array as @type which includes "GeometrySelector"';
             }
         }
         else {
@@ -89,10 +89,10 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
                 wireframe : false,
                 morphTargets : false,
                 side : THREE.DoubleSide,
-                color : item.renderOptions.color >> 8 //get rid of alpha
+                color : item.renderOption.color >> 8 //get rid of alpha
             });
 
-            material.opacity = (item.renderOptions.color & 0xff)/255;
+            material.opacity = (item.renderOption.color & 0xff)/255;
             material.visible = true;
 
 
@@ -116,12 +116,12 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             mtlLoader = new THREE.MTLLoader();
 
         if (Array.isArray(structure.sourceSelector)) {
-            var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('geometrySelector'));
+            var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
             if (geometrySelector) {
                 objFile = geometrySelector.dataSource.source;
             }
             else {
-                throw 'In case of multiple selectors, VTK selector should have an array as @type which includes "geometrySelector"';
+                throw 'In case of multiple selectors, VTK selector should have an array as @type which includes "GeometrySelector"';
             }
         }
         else {
@@ -134,7 +134,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
 
         //split the path into a directory and a filename to be able to load dependant file in the same directory (textures)
-        mtlFile = structure.renderOptions.material.source;
+        mtlFile = structure.renderOption.material.source;
         mtlDirectory = mtlFile.split('/');
         mtlFile = mtlDirectory.pop();
         mtlDirectory = mtlDirectory.join('/')+'/';
@@ -177,14 +177,14 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
         mainApp.atlasStructure = atlasStructure;
 
-        var header = atlasStructure.header;
+        var header = atlasStructure.Header;
         if (header) {
             mainApp.emit('headerData',header);
         }
 
         //load the models (only VTK and OBJ are supported for now)
 
-        var vtkStructures = atlasStructure.structure.filter(item => {
+        var vtkStructures = atlasStructure.Structure.filter(item => {
             if (Array.isArray(item.sourceSelector)) {
                 return item.sourceSelector.some(selector => /\.vtk$/.test(selector.dataSource.source));
             }
@@ -193,7 +193,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             }
         });
 
-        var objStructures = atlasStructure.structure.filter(item => {
+        var objStructures = atlasStructure.Structure.filter(item => {
             if (Array.isArray(item.sourceSelector)) {
                 return item.sourceSelector.some(selector => /\.obj$/.test(selector.dataSource.source));
             }

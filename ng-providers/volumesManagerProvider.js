@@ -57,7 +57,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         var colorTable = new Int32Array(Math.pow(2,8*volume.data.BYTES_PER_ELEMENT)),
             structure,
             selector,
-            structures = mainApp.atlasStructure.structure,
+            structures = mainApp.atlasStructure.Structure,
             length = structures.length,
             i,
             reverseMapping = {};
@@ -66,7 +66,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             structure = structures[i];
             selector = findSelector(structure);
             if (selector) {
-                colorTable[selector.dataKey] = structure.renderOptions.color;
+                colorTable[selector.dataKey] = structure.renderOption.color;
                 reverseMapping[selector.dataKey] = structure;
             }
         }
@@ -171,7 +171,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
     }
 
     function isBackground (datasource) {
-        var backgroundImages = mainApp.atlasStructure.header.backgroundImages;
+        var backgroundImages = mainApp.atlasStructure.Header.backgroundImage;
         return backgroundImages === datasource || backgroundImages.includes(datasource);
     }
 

@@ -12,11 +12,11 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
         resolveQueue = [];
         resolvedList = [];
         objectsByType = {
-            header : null,
-            structure : [],
-            group : [],
-            datasource : [],
-            selector : []
+            Header : null,
+            Structure : [],
+            Group : [],
+            DataSource : [],
+            Selector : []
         };
     }
 
@@ -84,11 +84,11 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
     }
 
     function parseColors (structures) {
-        var renderOptions;
+        var renderOption;
         for (var i = 0; i < structures.length; i++) {
-            renderOptions = structures[i].renderOptions;
-            if (renderOptions.color) {
-                renderOptions.color = colorToHex(renderOptions.color, renderOptions.opacity);
+            renderOption = structures[i].renderOption;
+            if (renderOption.color) {
+                renderOption.color = colorToHex(renderOption.color, renderOption.opacity);
             }
         }
     }
@@ -149,11 +149,11 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
             }
         }
         else if (typeof type === 'string') {
-            if (type === 'header') {
-                if (objectsByType.header) {
+            if (type === 'Header') {
+                if (objectsByType.Header) {
                     throw 'Error : There can only be one header';
                 }
-                objectsByType.header = object;
+                objectsByType.Header = object;
             }
             else {
                 (objectsByType[type] ||(objectsByType[type] = [])).push(object);
@@ -172,7 +172,7 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
         while ((objectToParse = resolveQueue.pop()) && objectToParse) {
             resolveReferences(objectToParse);
         }
-        parseColors(objectsByType.structure);
+        parseColors(objectsByType.Structure);
         cleanObjects();
         objectsByType.all = atlasObject;
         return objectsByType;

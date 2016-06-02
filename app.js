@@ -43,7 +43,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
     });
 
     mainApp.on('loadingManager.atlasStructureLoaded', function (atlasStructure) {
-        header = atlasStructure.header;
+        header = atlasStructure.Header;
     });
 
     function bindHierarchyItemWithFirebase (item) {
@@ -62,15 +62,15 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         firebaseView.bind(item, ['selected', 'visibleInTree'],'models.'+item['@id']);
 
         //do not bind 'visible' property with group because they will fetch their property from their child
-        if (item['@type'] !== 'group') {
+        if (item['@type'] !== 'Group') {
             firebaseView.bind(item.mesh, ['visible'],'models.'+item['@id']+'.mesh');
         }
     }
 
     function getMesh(item) {
 
-        if (item['@type']==='group') {
-            var childrenMeshes = item.members.map(getMesh);
+        if (item['@type']==='Group') {
+            var childrenMeshes = item.member.map(getMesh);
             //HierarchyGroup is used instead of THREE.Group because THREE.Group does not allow children to have multiple parents
             item.mesh = new HierarchyGroup();
             item.mesh.atlasStructure = item;
@@ -90,7 +90,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
     }
 
     function createHierarchy() {
-        var rootGroups = header.roots;
+        var rootGroups = header.root;
         rootGroups.map(getMesh);
 
         mainApp.emit('insertTree',rootGroups);
