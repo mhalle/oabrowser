@@ -216,7 +216,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
         //load labelmap and background
 
-        var nrrdDatasource = atlasStructure.datasource.filter(datasource => /\.nrrd$/.test(datasource.source));
+        var nrrdDatasource = atlasStructure.DataSource.filter(datasource => /\.nrrd$/.test(datasource.source));
         singleton.totalNumberOfVolumes = nrrdDatasource.length;
 
         for (i = 0; i < nrrdDatasource.length; i++) {
