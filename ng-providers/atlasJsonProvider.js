@@ -1,14 +1,12 @@
 angular.module('atlasDemo').provider('atlasJson', [function () {
 
     var ids,
-        uuidRegExp,
         resolveQueue,
         resolvedList,
         objectsByType;
 
     function initVariables () {
         ids = {};
-        uuidRegExp = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
         resolveQueue = [];
         resolvedList = [];
         objectsByType = {
@@ -103,16 +101,18 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
             for (key in object) {
                 value = object[key];
                 if (key[0] !== '@') {
-                    if (Array.isArray(value) && typeof value[0] === 'string' && value[0].match(uuidRegExp)) {
+                    if (Array.isArray(value)) {
                         for (var i = 0; i < value.length; i++) {
-                            retrieved = ids[value[i]];
-                            value[i] = retrieved;
-                            if (!retrieved._resolved) {
-                                resolveQueue.push(retrieved);
+                            if (typeof value[i] === 'string' && ids[value[i]]) {
+                                retrieved = ids[value[i]];
+                                value[i] = retrieved;
+                                if (!retrieved._resolved) {
+                                    resolveQueue.push(retrieved);
+                                }
                             }
                         }
                     }
-                    else if (typeof value === 'string' && value.match(uuidRegExp)) {
+                    else if (typeof value === 'string' && ids[value]) {
                         retrieved = ids[value];
                         object[key] = retrieved;
                         if (!retrieved._resolved) {
