@@ -110,6 +110,11 @@ angular.module('atlasDemo').provider('atlasJson', [function () {
                                     resolveQueue.push(retrieved);
                                 }
                             }
+                            else if (typeof value[i] === 'object') {
+                                if (!value[i]._resolved) {
+                                    resolveQueue.push(value[i]);
+                                }
+                            }
                         }
                     }
                     else if (typeof value === 'string' && ids[value]) {
