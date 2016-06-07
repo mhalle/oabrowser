@@ -15,7 +15,13 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
     function loadVolume(datasource, treatAsBackground) {
 
-        var nrrdFileLocation = datasource.source;
+        var nrrdFileLocation;
+        if (datasource.baseURL) {
+            nrrdFileLocation = datasource.baseURL.url + datasource.source;
+        }
+        else {
+            nrrdFileLocation = datasource.source;
+        }
 
         var onProgress = function ( xhr ) {
             if ( xhr.lengthComputable ) {
@@ -70,6 +76,11 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
             if (geometrySelector) {
                 file = geometrySelector.dataSource.source;
+
+                //prepend base url if it exists
+                if (geometrySelector.dataSource.baseURL) {
+                    file = geometrySelector.dataSource.baseURL.url + file;
+                }
             }
             else {
                 throw 'In case of multiple selectors, VTK selector should have an array as @type which includes "GeometrySelector"';
@@ -77,6 +88,11 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         }
         else {
             file = structure.sourceSelector.dataSource.source;
+
+            //prepend base url if it exists
+            if (structure.sourceSelector.dataSource.baseURL) {
+                file = structure.sourceSelector.dataSource.baseURL.url + file;
+            }
         }
 
         vtkLoader.load(file, function (geometry) {
@@ -119,13 +135,23 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
             if (geometrySelector) {
                 objFile = geometrySelector.dataSource.source;
+
+                //prepend base url if it exists
+                if ( geometrySelector.dataSource.baseURL) {
+                    objFile =  geometrySelector.dataSource.baseURL.url + objFile;
+                }
             }
             else {
                 throw 'In case of multiple selectors, VTK selector should have an array as @type which includes "GeometrySelector"';
             }
         }
         else {
+
             objFile = structure.sourceSelector.dataSource.source;
+            //prepend base url if it exists
+            if ( structure.sourceSelector.dataSource.baseURL) {
+                objFile =  structure.sourceSelector.dataSource.baseURL.url + objFile;
+            }
         }
         //split the path into a directory and a filename to be able to load dependant file in the same directory (textures)
         objDirectory = objFile.split('/');
@@ -135,6 +161,10 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
         //split the path into a directory and a filename to be able to load dependant file in the same directory (textures)
         mtlFile = structure.renderOption.material.source;
+        //prepend base url if it exists
+        if ( structure.renderOption.material.source.baseURL) {
+            mtlFile =  structure.renderOption.material.source.baseURL.url + mtlFile;
+        }
         mtlDirectory = mtlFile.split('/');
         mtlFile = mtlDirectory.pop();
         mtlDirectory = mtlDirectory.join('/')+'/';
