@@ -445,6 +445,10 @@ var FirebaseView = (function () {
             ref.offAuth(authHandler);
             $body.off('mouseup', onMouseUp);
             $body.off('mousewheel', onMouseWheel);
+            var otherViewers = singleton.getOtherViewersId();
+            if (otherViewers.length === 0) {
+                ref.remove();
+            }
         }
 
         unbindFunctions.push(unbind);
