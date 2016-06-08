@@ -851,6 +851,11 @@ var FirebaseView = (function () {
         });
     };
 
+    //
+    $(window).on('beforeunload', function() {
+        unbindAll();
+    });
+
     return function () {return singleton;};
 
 })();
