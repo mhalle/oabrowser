@@ -363,6 +363,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
             needPickupUpdate = true;
         }
+        else {
+            needPickupUpdate = false;
+        }
 
 
     }
