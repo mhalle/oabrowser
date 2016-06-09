@@ -473,7 +473,10 @@ var FirebaseView = (function () {
                         }
                     }
                     dbRootObj.$save();
+
+                    //since user has created the view he does not have to load the initial view
                     createdView = false;
+                    loadingNewView = false;
                 }
             }
         }
