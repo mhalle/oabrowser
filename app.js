@@ -375,6 +375,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         mousedownPosition.x = ( (event.clientX-containerOffset.left) / container.clientWidth ) * 2 - 1;
         mousedownPosition.y = - ( (event.clientY-containerOffset.top) / container.clientHeight ) * 2 + 1;
         mousedownDate = Date.now();
+        needPickupUpdate = false;
 
     }
 
