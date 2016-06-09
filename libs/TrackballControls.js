@@ -416,8 +416,6 @@ THREE.TrackballControls = function ( object, domElement ) {
 		document.addEventListener( 'mousemove', mousemove, false );
 		document.addEventListener( 'mouseup', mouseup, false );
 
-        $(document.body).addClass('unselectable');
-
 		_this.dispatchEvent( startEvent );
 
 	}
@@ -451,7 +449,6 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		document.removeEventListener( 'mousemove', mousemove );
 		document.removeEventListener( 'mouseup', mouseup );
-        $(document.body).removeClass('unselectable');
 		_this.dispatchEvent( endEvent );
 
 	}
