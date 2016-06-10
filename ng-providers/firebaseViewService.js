@@ -248,7 +248,15 @@ var FirebaseView = (function () {
             var val = snapshot.val();
             if (!val) {
                 //user did not existed and need to be created
-                ref.set(singleton.auth);
+                var user = {};
+
+                if (!singleton.auth.isAnonymous) {
+                    user.name = singleton.auth[singleton.auth.provider].displayName || null;
+                    user.profileImageURL = singleton.auth[singleton.auth.provider].profileImageURL || null;
+                    user.email = singleton.auth[singleton.auth.provider].email || null;
+                }
+                user.modified = firebase.database.ServerValue.TIMESTAMP;
+                ref.set(user);
             }
         });
 
@@ -419,8 +427,8 @@ var FirebaseView = (function () {
             },100);
         });
 
-        singleton.auth = ref.getAuth();
-        authAnonymously(ref);
+        singleton.auth = firebase.auth().currentUser;
+        authAnonymously();
 
 
         loadAuthorConnection();
