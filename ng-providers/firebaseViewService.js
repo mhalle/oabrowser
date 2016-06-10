@@ -299,7 +299,7 @@ var FirebaseView = (function () {
     }
 
     function loadAuthorConnection () {
-        var ref = new rootRef.child("authors/"+uuid);
+        var ref = rootRef.child("authors/"+uuid);
 
         function commit () {
             //add himself to the list of authors

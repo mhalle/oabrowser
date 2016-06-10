@@ -15,6 +15,15 @@
 
     self.addEventListener('fetch', function(event) {
 
+        //ignore POST request
+        if (event.request.method === 'POST') {
+            return fetch(event.request).then(function(response) {
+                return response;
+            }).catch(function(error) {
+                throw error;
+            });
+        }
+
         // Clone the request for fetch and cache
         // A request is a stream and can be consumed only once.
         var fetchRequest = event.request.clone(),
