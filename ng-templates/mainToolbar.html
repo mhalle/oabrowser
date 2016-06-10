@@ -71,13 +71,13 @@
 </button>
 
 <!-- LOGIN -->
-<button ng-if="!firebaseView.auth || firebaseView.auth.provider === 'anonymous'" type="button" class="btn btn-default btn-sm" aria-label="Login" ng-click="openLoginModal()" uib-tooltip="Log yourself in to access the bookmark and message features" tooltip-placement="bottom" tooltip-append-to-body="true">
+<button ng-if="!firebaseView.auth || firebaseView.auth.isAnonymous" type="button" class="btn btn-default btn-sm" aria-label="Login" ng-click="openLoginModal()" uib-tooltip="Log yourself in to access the bookmark and message features" tooltip-placement="bottom" tooltip-append-to-body="true">
     <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
     <span>Login</span>
 </button>
 
 <!-- LOGOUT -->
-<button ng-if="firebaseView.auth && firebaseView.auth.provider !== 'anonymous'" type="button" class="btn btn-default btn-sm" aria-label="Logout" ng-click="firebaseView.unauth()">
+<button ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default btn-sm" aria-label="Logout" ng-click="firebaseView.unauth()">
     <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
     <span>Logout</span>
 </button>

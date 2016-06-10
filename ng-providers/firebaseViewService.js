@@ -703,7 +703,7 @@ var FirebaseView = (function () {
     };
 
     singleton.authWithProvider = function (provider) {
-        singleton.auth.linkWithPopup(providers[provider]).then(function(user) {
+        singleton.auth.signInWithPopup(providers[provider]).then(function(user) {
             console.log("Logged in as:", user.uid);
             singleton.auth = user;
             loadUserConnection();
