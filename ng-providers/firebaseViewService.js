@@ -42,6 +42,12 @@ var FirebaseView = (function () {
         facebook : new firebase.auth.FacebookAuthProvider()
     };
 
+    providers.google.addScope('https://www.googleapis.com/auth/userinfo.email');
+    providers.google.addScope('https://www.googleapis.com/auth/userinfo.profile');
+    providers.github.addScope('user:email');
+    providers.facebook.addScope('public_profile');
+    providers.facebook.addScope('email');
+
     firebase.auth().onAuthStateChanged(authHandler);
 
     singleton.setRootScope = function (root) {
@@ -250,10 +256,10 @@ var FirebaseView = (function () {
                 //user did not existed and need to be created
                 var user = {};
 
-                if (!singleton.auth.isAnonymous) {
-                    user.name = singleton.auth[singleton.auth.provider].displayName || null;
-                    user.profileImageURL = singleton.auth[singleton.auth.provider].profileImageURL || null;
-                    user.email = singleton.auth[singleton.auth.provider].email || null;
+                if (!singleton.auth.isAnonymous && singleton.auth.providerData[0]) {
+                    user.name = singleton.auth.providerData[0].displayName || null;
+                    user.photoURL = singleton.auth.providerData[0].photoURL || null;
+                    user.email = singleton.auth.providerData[0].email || null;
                 }
                 user.modified = firebase.database.ServerValue.TIMESTAMP;
                 ref.set(user);
@@ -378,7 +384,7 @@ var FirebaseView = (function () {
             mainApp.emit('firebaseView.userNameChanged', snapshot);
         });
 
-        if (singleton.auth && singleton.auth.uid && singleton.auth.provider !== 'anonymous') {
+        if (singleton.auth && singleton.auth.uid && !singleton.auth.isAnonymous) {
             var userNameRef = rootRef.child("userNames/"+singleton.auth.uid);
             userNameRef.set({
                 name : singleton.auth.displayName || null,
@@ -823,7 +829,7 @@ var FirebaseView = (function () {
     };
 
     singleton.registerSentMessage = function (recipients, subject, text) {
-        if (!singleton.auth || singleton.auth.provider === 'anonymous') {
+        if (!singleton.auth || singleton.auth.isAnonymous) {
             return;
         }
         var messageId = generateUUID();
