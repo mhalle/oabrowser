@@ -309,9 +309,11 @@ var FirebaseView = (function () {
 
         function commit () {
             //add himself to the list of authors
-            var obj = {};
-            obj[singleton.auth.uid] = true;
-            ref.update(obj);
+            if (singleton.auth) {
+                var obj = {};
+                obj[singleton.auth.uid] = true;
+                ref.update(obj);
+            }
         }
         createNamespace('authors');
         namespaces.authors.commiters.push(commit);
@@ -709,7 +711,7 @@ var FirebaseView = (function () {
     };
 
     singleton.authWithProvider = function (provider) {
-        singleton.auth.signInWithPopup(providers[provider]).then(function(user) {
+        firebase.auth.signInWithPopup(providers[provider]).then(function(user) {
             console.log("Logged in as:", user.uid);
             singleton.auth = user;
             loadUserConnection();
