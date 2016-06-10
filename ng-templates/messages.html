@@ -41,10 +41,10 @@
                                 <div class="panel-heading collapsed" role="tab" ng-attr-id="heading{{message.$key}}" data-toggle="collapse" ng-attr-data-target="#collapse{{message.$key}}" aria-expanded="false" ng-attr-aria-controls="collapse{{message.$key}}" style="min-height:80px">
 
                                     <!-- profile picture -->
-                                    <img ng-if="userNames[message.author].profileImageURL" ng-src="{{userNames[message.author].profileImageURL}}" height="64px" width="64px" class="message-profile-picture"/>
+                                    <img ng-if="userNames[message.author].photoURL" ng-src="{{userNames[message.author].photoURL}}" height="64px" width="64px" class="message-profile-picture"/>
 
                                     <!-- First letter of name if no profile picture -->
-                                    <span ng-if="!userNames[message.author].profileImageURL" class="message-profile-picture-placeholder">{{userNames[message.author].name.substr(0,1).toUpperCase()}}</span>
+                                    <span ng-if="!userNames[message.author].photoURL" class="message-profile-picture-placeholder">{{userNames[message.author].name.substr(0,1).toUpperCase()}}</span>
 
 
                                     <!-- message header -->

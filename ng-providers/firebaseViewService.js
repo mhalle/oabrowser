@@ -18,7 +18,31 @@ var FirebaseView = (function () {
         initiated = false,
         createdView = false,
         namespaces = {},
-        undoRedoManager;
+        undoRedoManager,
+        config = {
+            apiKey: "AIzaSyD3pMiEmPlkA1SZfYywK_JxtT6ruzyfk3k",
+            authDomain: "atlas-viewer.firebaseapp.com",
+            databaseURL: "https://atlas-viewer.firebaseio.com",
+            storageBucket: "firebase-atlas-viewer.appspot.com",
+        },
+        rootRef,
+        auth,
+        providers;
+
+
+    //initializeApp (SDK v3)
+    firebase.initializeApp(config);
+    rootRef = firebase.database().ref();
+    auth = firebase.auth();
+
+    providers = {
+        twitter : new firebase.auth.TwitterAuthProvider(),
+        google : new firebase.auth.GoogleAuthProvider(),
+        github : new firebase.auth.GithubAuthProvider(),
+        facebook : new firebase.auth.FacebookAuthProvider()
+    };
+
+    firebase.auth().onAuthStateChanged(authHandler);
 
     singleton.setRootScope = function (root) {
         if (!$root) {
@@ -180,20 +204,19 @@ var FirebaseView = (function () {
         initRootListenersAndCommiters.done = true;
     }
 
-    function authAnonymously (ref) {
+    function authAnonymously () {
         unbindAllUserRelatedCallbacks();
         if (!singleton.auth) {
-            ref.authAnonymously(function(error, authData) {
-                if (error) {
-                    console.log("Authentication Failed!", error);
-                } else {
-                    console.log("Authenticated successfully with payload:", authData);
-                    singleton.auth = authData;
-                    loadViewerConnection();
-                    loadUserConnection();
-                    loadMessagesConnection();
-                    loadUserNamesConnection();
-                }
+
+            firebase.auth().signInAnonymously().then(function (user) {
+                console.log("Authenticated successfully :", user);
+                singleton.auth = user;
+                loadViewerConnection();
+                loadUserConnection();
+                loadMessagesConnection();
+                loadUserNamesConnection();
+            }).catch(function(error) {
+                console.log("Authentication Failed!", error);
             });
         }
         else {
@@ -204,14 +227,14 @@ var FirebaseView = (function () {
         }
     }
 
-    function authHandler (authData) {
-        if (authData) {
-            singleton.auth = authData;
+    function authHandler (user) {
+        if (user) {
+            singleton.auth = user;
         }
         else {
             //get to this part when user log out
             singleton.auth = null;
-            authAnonymously(singleton.ref);
+            authAnonymously();
         }
     }
 
@@ -219,52 +242,30 @@ var FirebaseView = (function () {
         if (!singleton.auth || !singleton.auth.uid) {
             return ;
         }
-        var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid);
+        var ref = rootRef.child("users/"+singleton.auth.uid);
 
         ref.once('value', function(snapshot) {
-            //reload the connection if one of the author give him the edition rights
             var val = snapshot.val();
             if (!val) {
                 //user did not existed and need to be created
-                var user = {};
-                user.tmp_token = sessionStorage.getItem('firebase.token') || null;
-                var newToken = generateToken();
-                sessionStorage.setItem('firebase.token', newToken);
-                user.token = newToken;
-                if (singleton.auth.provider && singleton.auth.provider !== 'anonymous') {
-                    user.name = singleton.auth[singleton.auth.provider].displayName || null;
-                    user.profileImageURL = singleton.auth[singleton.auth.provider].profileImageURL || null;
-                    user.email = singleton.auth[singleton.auth.provider].email || null;
-                }
-                user.modified = Firebase.ServerValue.TIMESTAMP;
-                ref.set(user);
-            }
-            else {
-                var currentToken = sessionStorage.getItem('firebase.token') || null;
-                if (currentToken !== val.token) {
-                    val.tmp_token = currentToken;
-                    sessionStorage.setItem('firebase.token', val.token);
-                    val.modified = Firebase.ServerValue.TIMESTAMP;
-                    ref.set(val);
-                }
+                ref.set(singleton.auth);
             }
         });
 
     }
 
     function loadViewerConnection () {
-        var viewerRef = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid+"/viewers/"+singleton.auth.uid);
+        var viewerRef = rootRef.child("views/"+uuid+"/viewers/"+singleton.auth.uid);
 
         //simple boolean to know if user is online
-        var amOnline = new Firebase('https://atlas-viewer.firebaseio.com/.info/connected');
+        var amOnline = rootRef.child('.info/connected');
 
         amOnline.on('value', function(snapshot) {
             if (snapshot.val()) {
                 viewerRef.onDisconnect().remove();
                 viewerRef.set({
-                    lastUpdate : Firebase.ServerValue.TIMESTAMP,
-                    token : sessionStorage.getItem('firebase.token'), //useful to pass the author right
-                    name : singleton.auth && singleton.auth.provider !== 'anonymous' && singleton.auth[singleton.auth.provider].displayName || null
+                    lastUpdate : firebase.database.ServerValue.TIMESTAMP,
+                    name : singleton.auth && singleton.auth.displayName || null
                 });
             }
         });
@@ -290,13 +291,12 @@ var FirebaseView = (function () {
     }
 
     function loadAuthorConnection () {
-        var ref = new Firebase("https://atlas-viewer.firebaseio.com/authors/"+uuid);
+        var ref = new rootRef.child("authors/"+uuid);
 
         function commit () {
             //add himself to the list of authors
-            var token = sessionStorage.getItem('firebase.token');
             var obj = {};
-            obj[token] = true;
+            obj[singleton.auth.uid] = true;
             ref.update(obj);
         }
         createNamespace('authors');
@@ -313,7 +313,7 @@ var FirebaseView = (function () {
     }
 
     function loadMessagesConnection () {
-        var messagesRef = new Firebase("https://atlas-viewer.firebaseio.com/messages/"+singleton.auth.uid);
+        var messagesRef = rootRef.child("messages/"+singleton.auth.uid);
 
         messagesRef.on('value', function(snapshot) {
             if (snapshot.val()) {
@@ -327,7 +327,7 @@ var FirebaseView = (function () {
             }
         });
 
-        var sentMessagesRef = new Firebase("https://atlas-viewer.firebaseio.com/sent-messages/"+singleton.auth.uid);
+        var sentMessagesRef = rootRef.child("sent-messages/"+singleton.auth.uid);
 
         sentMessagesRef.on('value', function(snapshot) {
             if (snapshot.val()) {
@@ -350,7 +350,7 @@ var FirebaseView = (function () {
     }
 
     function loadUserNamesConnection () {
-        var userNamesRef = new Firebase("https://atlas-viewer.firebaseio.com/userNames/");
+        var userNamesRef = rootRef.child("userNames");
 
         userNamesRef.on('value', function(snapshot) {
             if (snapshot.val()) {
@@ -371,10 +371,10 @@ var FirebaseView = (function () {
         });
 
         if (singleton.auth && singleton.auth.uid && singleton.auth.provider !== 'anonymous') {
-            var userNameRef = new Firebase("https://atlas-viewer.firebaseio.com/userNames/"+singleton.auth.uid);
+            var userNameRef = rootRef.child("userNames/"+singleton.auth.uid);
             userNameRef.set({
-                name : singleton.auth[singleton.auth.provider].displayName || null,
-                profileImageURL : singleton.auth[singleton.auth.provider].profileImageURL || null
+                name : singleton.auth.displayName || null,
+                photoURL : singleton.auth.photoURL || null
             });
         }
 
@@ -386,7 +386,7 @@ var FirebaseView = (function () {
 
     function loadDatabaseConnection () {
 
-        var ref = new Firebase("https://atlas-viewer.firebaseio.com/views/"+uuid);
+        var ref = rootRef.child("views/"+uuid);
 
         //if dbRootObj is defined then we are changing view and need to destroy previous references
         if (dbRootObj) {
@@ -415,15 +415,13 @@ var FirebaseView = (function () {
         //wait for the next animation frame to be sure that dbRootObject has the right value
         ref.on('child_changed', function (snapshot) {
             setTimeout(function () {
-                onValue(snapshot, snapshot.key());
+                onValue(snapshot, snapshot.key);
             },100);
         });
 
         singleton.auth = ref.getAuth();
         authAnonymously(ref);
 
-
-        ref.onAuth(authHandler);
 
         loadAuthorConnection();
         //handle event propagation listener and author commiter
@@ -442,7 +440,6 @@ var FirebaseView = (function () {
 
         function unbind () {
             ref.off();
-            ref.offAuth(authHandler);
             $body.off('mouseup', onMouseUp);
             $body.off('mousewheel', onMouseWheel);
             var otherViewers = singleton.getOtherViewersId();
@@ -698,10 +695,9 @@ var FirebaseView = (function () {
     };
 
     singleton.authWithProvider = function (provider) {
-        var authObj = $firebaseAuth(singleton.ref);
-        authObj.$authWithOAuthPopup(provider).then(function(authData) {
-            console.log("Logged in as:", authData.uid);
-            singleton.auth = authData;
+        singleton.auth.linkWithPopup(providers[provider]).then(function(user) {
+            console.log("Logged in as:", user.uid);
+            singleton.auth = user;
             loadUserConnection();
             loadViewerConnection();
             loadMessagesConnection();
@@ -712,12 +708,12 @@ var FirebaseView = (function () {
     };
 
     singleton.unauth = function () {
-        singleton.ref.unauth();
+        firebase.auth().signOut();
     };
 
     singleton.getViewThumbnail = function (viewId, callback, isBookmark) {
         var type = isBookmark ? 'bookmarks/' : 'views/';
-        var ref = new Firebase("https://atlas-viewer.firebaseio.com/"+type+viewId+"/screenshot/base64");
+        var ref = rootRef.child(type+viewId+"/screenshot/base64");
 
         ref.on('value', function (snapshot) {
             var val = snapshot.val();
@@ -726,7 +722,7 @@ var FirebaseView = (function () {
     };
 
     singleton.getBookmarkAnnotation = function (viewId, callback) {
-        var ref = new Firebase("https://atlas-viewer.firebaseio.com/bookmarks/"+viewId+"/annotation");
+        var ref = rootRef.child("bookmarks/"+viewId+"/annotation");
 
         ref.on('value', function (snapshot) {
             var val = snapshot.val();
@@ -736,22 +732,22 @@ var FirebaseView = (function () {
 
     singleton.getUserBookmarks = function (valueCallback, childCallback) {
         if (singleton.auth) {
-            var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks");
+            var ref = rootRef.child("users/"+singleton.auth.uid+"/bookmarks");
             ref.once('value', function (snapshot) {
                 var val = snapshot.val();
                 valueCallback(val);
             });
 
             ref.on('child_changed', function (snapshot) {
-                childCallback(snapshot.val(), snapshot.key());
+                childCallback(snapshot.val(), snapshot.key);
             });
 
             ref.on('child_added', function (snapshot) {
-                childCallback(snapshot.val(), snapshot.key());
+                childCallback(snapshot.val(), snapshot.key);
             });
 
             ref.on('child_removed', function (oldSnapshot) {
-                childCallback(false, oldSnapshot.key());
+                childCallback(false, oldSnapshot.key);
             });
         }
     };
@@ -762,7 +758,7 @@ var FirebaseView = (function () {
         function copyCurrentView() {
             //copy the current view in a new
             singleton.ref.once('value', function (snapshot) {
-                var bookmarkRef = new Firebase("https://atlas-viewer.firebaseio.com/bookmarks/"+bookmarkUuid);
+                var bookmarkRef = rootRef.child("bookmarks/"+bookmarkUuid);
                 var view = snapshot.val();
                 view.bookmarkedBy = singleton.auth && singleton.auth.uid;
                 view.annotation = {
@@ -778,7 +774,7 @@ var FirebaseView = (function () {
 
 
         //register the bookmark in the user profile
-        var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks");
+        var ref = rootRef.child("users/"+singleton.auth.uid+"/bookmarks");
         ref.once('value', function (snapshot) {
             var value = snapshot.val() || {};
             value[bookmarkUuid] = true;
@@ -792,13 +788,13 @@ var FirebaseView = (function () {
 
     singleton.deleteBookmark = function (viewId) {
         if (viewId && typeof viewId === 'string' && viewId.length >0) {
-            var ref = new Firebase("https://atlas-viewer.firebaseio.com/users/"+singleton.auth.uid+"/bookmarks/"+viewId);
+            var ref = rootRef.child("users/"+singleton.auth.uid+"/bookmarks/"+viewId);
             ref.remove();
         }
     };
 
     singleton.loadBookmark = function (bookmarkUuid) {
-        var bookmarkRef = new Firebase("https://atlas-viewer.firebaseio.com/bookmarks/"+bookmarkUuid);
+        var bookmarkRef = rootRef.child("bookmarks/"+bookmarkUuid);
         bookmarkRef.once('value', function (snapshot) {
             singleton.loadState(snapshot, 'root');
         });
@@ -806,12 +802,12 @@ var FirebaseView = (function () {
 
     singleton.sendMessage = function (recipient, subject, text) {
         var messageId = generateUUID();
-        var messageRef = new Firebase("https://atlas-viewer.firebaseio.com/messages/"+recipient+"/"+messageId);
+        var messageRef = rootRef.child("messages/"+recipient+"/"+messageId);
         var messageObject = {
             author : singleton.auth.uid,
             text : text,
             subject : subject,
-            date : Firebase.ServerValue.TIMESTAMP,
+            date : firebase.database.ServerValue.TIMESTAMP,
             unread : true
         };
         messageRef.set(messageObject);
@@ -823,12 +819,12 @@ var FirebaseView = (function () {
             return;
         }
         var messageId = generateUUID();
-        var messageRef = new Firebase("https://atlas-viewer.firebaseio.com/sent-messages/"+singleton.auth.uid+"/"+messageId);
+        var messageRef = rootRef.child("sent-messages/"+singleton.auth.uid+"/"+messageId);
         var messageObject = {
             recipients : recipients.map(r => r.name),
             text : text,
             subject : subject,
-            date : Firebase.ServerValue.TIMESTAMP
+            date : firebase.database.ServerValue.TIMESTAMP
         };
         messageRef.set(messageObject);
     };
@@ -836,13 +832,13 @@ var FirebaseView = (function () {
     singleton.deleteMessage = function (messageId, type) {
         if (messageId && typeof messageId === 'string' && messageId.length >0) {
             var messageType = type === 'sent' ? 'sent-messages' : 'messages';
-            var ref = new Firebase("https://atlas-viewer.firebaseio.com/"+messageType+"/"+singleton.auth.uid+"/"+messageId);
+            var ref = rootRef.child(messageType+"/"+singleton.auth.uid+"/"+messageId);
             ref.remove();
         }
     };
 
     singleton.markAllMessagesAsRead = function () {
-        var ref = new Firebase("https://atlas-viewer.firebaseio.com/messages/"+singleton.auth.uid);
+        var ref = rootRef.child("messages/"+singleton.auth.uid);
         ref.once('value', function (snapshot) {
             var val = snapshot.val();
             if (val) {

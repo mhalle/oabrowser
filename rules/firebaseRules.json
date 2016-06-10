@@ -13,8 +13,8 @@
         "authors" : {
             "$viewId" : {
                 ".read" : false,
-                ".write" : "auth != null && (!data.exists() ||  data.child(root.child('users/'+auth.uid+'/token').val()).val() === true ||  (root.child('users/'+auth.uid+'/tmp_token').exists() && data.child(root.child('users/'+auth.uid+'/tmp_token').val()).val() === true) || ( root.child('views/'+$viewId+'/restricted').val() != true && root.child('views/'+$viewId+'/locked').val() != true) )",
-                "$token" : {
+                ".write" : "auth != null && (!data.exists() ||  data.child(auth.uid).val() === true || ( root.child('views/'+$viewId+'/restricted').val() != true && root.child('views/'+$viewId+'/locked').val() != true) )",
+                "$uid" : {
                     ".validate" : "newData.isBoolean()"
                 }
             }
@@ -88,7 +88,7 @@
                 "name" : {
                     ".validate" : "newData.isString()"
                 },
-                "profileImageURL" : {
+                "photoURL" : {
                     ".validate" : "newData.isString()"
                 }
             }
@@ -96,13 +96,7 @@
         "users" : {
             "$userId" : {
                 ".read" : "$userId === auth.uid",
-                ".write" : "$userId === auth.uid",
-                "modified" : {
-                    ".validate" : "newData.val() === now && (!data.exists() || newData.val() > 10000+data.val())"
-                },
-                "token" : {
-                    ".validate" : "!data.exists() || data.val() == newData.val()"
-                }
+                ".write" : "$userId === auth.uid"
             }
         },
         "views" : {
