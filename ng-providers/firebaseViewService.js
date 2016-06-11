@@ -823,8 +823,8 @@ var FirebaseView = (function () {
         var messageRef = rootRef.child("messages/"+recipient+"/"+messageId);
         var messageObject = {
             author : singleton.auth.uid,
-            text : text,
-            subject : subject,
+            text : text || '',
+            subject : subject || '(no subject)',
             date : firebase.database.ServerValue.TIMESTAMP,
             unread : true
         };
