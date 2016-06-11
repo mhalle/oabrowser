@@ -245,7 +245,7 @@ var FirebaseView = (function () {
     }
 
     function loadUserConnection () {
-        if (!singleton.auth || !singleton.auth.uid) {
+        if (!singleton.auth || !singleton.auth.uid || singleton.auth.isAnonymous) {
             return ;
         }
         var ref = rootRef.child("users/"+singleton.auth.uid);
@@ -712,8 +712,8 @@ var FirebaseView = (function () {
 
     singleton.authWithProvider = function (provider) {
         firebase.auth().signInWithPopup(providers[provider]).then(function(user) {
-            console.log("Logged in as:", user.uid);
-            singleton.auth = user;
+            console.log("Logged in as:", user.user.uid);
+            singleton.auth = user.user;
             loadUserConnection();
             loadViewerConnection();
             loadMessagesConnection();
