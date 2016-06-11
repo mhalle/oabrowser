@@ -236,11 +236,13 @@ var FirebaseView = (function () {
     function authHandler (user) {
         if (user) {
             singleton.auth = user;
+            mainApp.emit('firebaseView.userSignedIn');
         }
         else {
             //get to this part when user log out
             singleton.auth = null;
             authAnonymously();
+            mainApp.emit('firebaseView.userSignedOut');
         }
     }
 
@@ -386,11 +388,11 @@ var FirebaseView = (function () {
             mainApp.emit('firebaseView.userNameChanged', snapshot);
         });
 
-        if (singleton.auth && singleton.auth.uid && !singleton.auth.isAnonymous) {
+        if (singleton.auth && singleton.auth.uid && !singleton.auth.isAnonymous && singleton.auth.providerData[0]) {
             var userNameRef = rootRef.child("userNames/"+singleton.auth.uid);
             userNameRef.set({
-                name : singleton.auth.displayName || null,
-                photoURL : singleton.auth.photoURL || null
+                name : singleton.auth.providerData[0].displayName || null,
+                photoURL : singleton.auth.providerData[0].photoURL || null
             });
         }
 

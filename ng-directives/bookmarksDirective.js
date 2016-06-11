@@ -123,6 +123,7 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
             }
 
             mainApp.on('firebaseView.connectionSetup', fetchBookmarks);
+            mainApp.on('firebaseView.userSignedIn', fetchBookmarks);
 
             $scope.openBookmarks = function () {
                 $('#bookmarksModal').modal('show');
