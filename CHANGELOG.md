@@ -2,7 +2,8 @@
 
 * New atlas format
 * Base URLs
-* Support any string @id
+* Support any string as @id
+* Firebase 3.x.x SDK (instead of 2.x.x)
 
 
 #[0.2.0](https://github.com/stity/threejs-atlas-viewer/commits/0.2.0) Jun 2, 2016
