@@ -840,8 +840,8 @@ var FirebaseView = (function () {
         var messageRef = rootRef.child("sent-messages/"+singleton.auth.uid+"/"+messageId);
         var messageObject = {
             recipients : recipients.map(r => r.name),
-            text : text,
-            subject : subject,
+            text : text || '',
+            subject : subject || '(no subject)',
             date : firebase.database.ServerValue.TIMESTAMP
         };
         messageRef.set(messageObject);
