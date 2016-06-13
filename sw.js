@@ -17,11 +17,7 @@
 
         //ignore POST request
         if (event.request.method === 'POST') {
-            return fetch(event.request).then(function(response) {
-                return response;
-            }).catch(function(error) {
-                throw error;
-            });
+            return;
         }
 
         // Clone the request for fetch and cache
