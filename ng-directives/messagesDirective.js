@@ -141,14 +141,29 @@ angular.module('atlasDemo').directive( 'messages', function () {
             }
             mainApp.on('bookmarks.shareBookmark', createBookmarkMessage);
 
+            function createShareViewMessage () {
+                var uuid = firebaseView.getViewUuid();
+                $scope.newMessage = $scope.newMessage || {};
+                $scope.newMessage.recipient = undefined;
+                delete $scope.newMessage.recipient;
+                $scope.newMessage.subject = "Check out this shared view";
+                $scope.newMessage.text = 'Click [here]("view://'+uuid+'") to load the shared view.';
+                $scope.safeApply();
+                $scope.openNewMessageForm();
+            }
+            mainApp.on('mainToolbar.shareView', createShareViewMessage);
 
             function parseTextMessage (s) {
                 //a link to a bookmark has a structure inspired from markdown : [text of the link]("bookmark://bookmarkuid")
-                var regexp = /\[(.*?)\]\("bookmark:\/\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"\)/g;
+                var bookmarkRegexp = /\[(.*?)\]\("bookmark:\/\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"\)/g;
+                //a link to a shared view has a slightly different structure
+                var sharedViewRegexp = /\[(.*?)\]\("view:\/\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"\)/g;
                 //escape the html chars
                 s = s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 //replace the link pattern with a javascript link to load the bookmark
-                s = s.replace(regexp, (m, p1, p2) =>'<a ng-click="loadBookmark(\''+p2+'\')">'+p1+'</a>');
+                s = s.replace(bookmarkRegexp, (m, p1, p2) =>'<a ng-click="loadBookmark(\''+p2+'\')">'+p1+'</a>');
+                //replace the link pattern with a javascript link to load the shared view
+                s = s.replace(sharedViewRegexp, (m, p1, p2) =>'<a href="#/view/'+p2+'">'+p1+'</a>');
                 return s;
             }
 

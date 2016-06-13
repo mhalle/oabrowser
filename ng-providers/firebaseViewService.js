@@ -870,6 +870,10 @@ var FirebaseView = (function () {
         });
     };
 
+    singleton.getViewUuid = function () {
+        return uuid;
+    };
+
     //
     $(window).on('beforeunload', function() {
         unbindAll();

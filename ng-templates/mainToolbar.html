@@ -70,6 +70,14 @@
     <span>Download screenshot</span>
 </button>
 
+
+<!-- SHARE VIEW -->
+<button ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default btn-sm" aria-label="ShareView" ng-click="shareView()" uib-tooltip="Invite someone to join your dynamic view" tooltip-placement="bottom" tooltip-append-to-body="true">
+    <span class="fa fa-television" aria-hidden="true"></span>
+    <span>Share your view</span>
+</button>
+
+
 <!-- LOGIN -->
 <button ng-if="!firebaseView.auth || firebaseView.auth.isAnonymous" type="button" class="btn btn-default btn-sm" aria-label="Login" ng-click="openLoginModal()" uib-tooltip="Log yourself in to access the bookmark and message features" tooltip-placement="bottom" tooltip-append-to-body="true">
     <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
