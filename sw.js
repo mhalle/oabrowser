@@ -21,7 +21,7 @@
         }
 
         //ignore AJAX requests made by firebase
-        if (event.request.url.match(/(?:googleapis)|(?:firebaseio)/)) {
+        if (event.request.url.match(/(?:googleapis)|(?:firebaseio)|(?:apis\.google)/)) {
             return;
         }
 
