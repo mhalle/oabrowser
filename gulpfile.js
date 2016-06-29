@@ -10,6 +10,7 @@ const filesList = [
         "bower_components/jquery/dist/jquery.js",
         "libs/jquery.mousewheel.js",
         "libs/limit.js",
+        "libs/inobounce.js",
         "bower_components/angular/angular.js",
         "bower_components/angular-sanitize/angular-sanitize.js",
         "bower_components/bootstrap/dist/js/bootstrap.js",

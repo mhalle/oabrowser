@@ -286,3 +286,10 @@ links inside the distant breadcrumbs
     border-right: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
+
+/* allow touch scrolling in bottom and right container */
+#rightSideContainer, #bottomContainer {
+    -webkit-overflow-scrolling: touch;
+}
+
+
