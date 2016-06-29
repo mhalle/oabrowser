@@ -22,6 +22,10 @@
 				break;
 			}
 
+            if (el.nodeName === 'INPUT' && el.hasAttribute('type') && el.getAttribute('type') === 'range') {
+                return;
+            }
+
 			var scrolling = style.getPropertyValue('-webkit-overflow-scrolling');
 			var overflowY = style.getPropertyValue('overflow-y');
 			var height = parseInt(style.getPropertyValue('height'), 10);
