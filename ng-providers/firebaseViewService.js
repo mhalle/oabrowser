@@ -77,6 +77,9 @@ var FirebaseView = (function () {
         if (!mainApp) {
             mainApp = mA;
             mainApp.on('loadingManager.loadingEnd', init);
+            mainApp.on('loadingManager.atlasStructureStart', function (url) {
+                currentAtasStructurePath = url;
+            });
         }
     };
 
@@ -85,9 +88,6 @@ var FirebaseView = (function () {
             loadingManager = lm;
             //init currentAtlasStructurePath in case loading has started before this object is created
             currentAtasStructurePath = loadingManager.atlasStructurePath || null;
-            mainApp.on('loadingManager.atlasStructureStart', function (url) {
-                currentAtasStructurePath = url;
-            });
         }
     };
 
