@@ -84,7 +84,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         if (Array.isArray(structure.sourceSelector)) {
             var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
             if (geometrySelector) {
-                file = getURL(geometrySelector.dataSource.source);
+                file = getUrl(geometrySelector.dataSource.source);
 
                 //prepend base url if it exists
                 if (geometrySelector.dataSource.baseURL) {
