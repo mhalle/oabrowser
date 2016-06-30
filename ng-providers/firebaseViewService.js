@@ -36,11 +36,7 @@ var FirebaseView = (function () {
     rootRef = firebase.database().ref();
     auth = firebase.auth();
 
-    //init currentAtlasStructurePath in case loading has started before this object is created
-    currentAtasStructurePath = loadingManager.atlasStructurePath || null;
-    mainApp.on('loadingManager.atlasStructureStart', function (url) {
-        currentAtasStructurePath = url;
-    });
+
 
     providers = {
         twitter : new firebase.auth.TwitterAuthProvider(),
@@ -87,6 +83,11 @@ var FirebaseView = (function () {
     singleton.setLoadingManager = function (lm) {
         if (!loadingManager) {
             loadingManager = lm;
+            //init currentAtlasStructurePath in case loading has started before this object is created
+            currentAtasStructurePath = loadingManager.atlasStructurePath || null;
+            mainApp.on('loadingManager.atlasStructureStart', function (url) {
+                currentAtasStructurePath = url;
+            });
         }
     };
 
