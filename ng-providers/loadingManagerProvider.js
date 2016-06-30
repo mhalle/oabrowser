@@ -84,11 +84,13 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         if (Array.isArray(structure.sourceSelector)) {
             var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
             if (geometrySelector) {
-                file = getUrl(geometrySelector.dataSource.source);
 
                 //prepend base url if it exists
                 if (geometrySelector.dataSource.baseURL) {
-                    file = getUrl(geometrySelector.dataSource.baseURL.url + file);
+                    file = getUrl(geometrySelector.dataSource.baseURL.url + geometrySelector.dataSource.source);
+                }
+                else {
+                    file = getUrl(geometrySelector.dataSource.source);
                 }
             }
             else {
@@ -96,11 +98,13 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             }
         }
         else {
-            file = getUrl(structure.sourceSelector.dataSource.source);
 
             //prepend base url if it exists
             if (structure.sourceSelector.dataSource.baseURL) {
-                file = getUrl(structure.sourceSelector.dataSource.baseURL.url + file);
+                file = getUrl(structure.sourceSelector.dataSource.baseURL.url + structure.sourceSelector.dataSource.source);
+            }
+            else {
+                file = getUrl(structure.sourceSelector.dataSource.source);
             }
         }
 
@@ -143,11 +147,13 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         if (Array.isArray(structure.sourceSelector)) {
             var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
             if (geometrySelector) {
-                objFile = getUrl(geometrySelector.dataSource.source);
 
                 //prepend base url if it exists
                 if ( geometrySelector.dataSource.baseURL) {
-                    objFile =  getUrl(geometrySelector.dataSource.baseURL.url + objFile);
+                    objFile =  getUrl(geometrySelector.dataSource.baseURL.url + geometrySelector.dataSource.source);
+                }
+                else {
+                    objFile = getUrl(geometrySelector.dataSource.source);
                 }
             }
             else {
@@ -156,10 +162,12 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         }
         else {
 
-            objFile = getUrl(structure.sourceSelector.dataSource.source);
             //prepend base url if it exists
             if ( structure.sourceSelector.dataSource.baseURL) {
-                objFile =  getUrl(structure.sourceSelector.dataSource.baseURL.url + objFile);
+                objFile =  getUrl(structure.sourceSelector.dataSource.baseURL.url + structure.sourceSelector.dataSource.source);
+            }
+            else {
+                objFile = getUrl(structure.sourceSelector.dataSource.source);
             }
         }
         //split the path into a directory and a filename to be able to load dependant file in the same directory (textures)

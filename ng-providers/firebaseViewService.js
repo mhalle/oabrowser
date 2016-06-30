@@ -443,7 +443,7 @@ var FirebaseView = (function () {
         singleton.ref = ref;
 
         if (dbRootObj.atlasStructureURL && dbRootObj.atlasStructureURL !== currentAtlasStructurePath) {
-			window.localStorage.setItem('atlasStructureToLoad', dbRootObj.atlasStructureURL);
+            window.localStorage.setItem('atlasStructureToLoad', dbRootObj.atlasStructureURL);
             window.location.reload(true);
         }
 
@@ -466,14 +466,14 @@ var FirebaseView = (function () {
         //handle event propagation listener and author commiter
         initRootListenersAndCommiters();
 
-		//in case we are reloading the page after a bookmark loading to load the right atlas
-		var bookmarkToLoad = window.localStorage.getItem('bookmarkToLoad');
-		if (bookmarkToLoad) {
-			window.localStorage.removeItem('bookmarkToLoad');
-			setTimeout(function () {
-				singleton.loadBookmark(bookmarkToLoad);
-			},100);
-		}
+        //in case we are reloading the page after a bookmark loading to load the right atlas
+        var bookmarkToLoad = window.localStorage.getItem('bookmarkToLoad');
+        if (bookmarkToLoad) {
+            window.localStorage.removeItem('bookmarkToLoad');
+            setTimeout(function () {
+                singleton.loadBookmark(bookmarkToLoad);
+            },100);
+        }
 
 
         var onMouseUp = (function () {
@@ -849,7 +849,7 @@ var FirebaseView = (function () {
             if (snapshot.val() && snapshot.val().atlasStructureURL !== currentAtlasStructurePath) {
 
                 function success () {
-					window.localStorage.setItem('bookmarkToLoad', bookmarkUuid);
+                    window.localStorage.setItem('bookmarkToLoad', bookmarkUuid);
                     window.location.reload(true);
                 }
                 var confirmationModal = {
