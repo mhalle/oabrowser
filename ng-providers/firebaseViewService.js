@@ -28,7 +28,7 @@ var FirebaseView = (function () {
         rootRef,
         auth,
         providers,
-        currentAtasStructurePath;
+        currentAtlasStructurePath;
 
 
     //initializeApp (SDK v3)
@@ -78,7 +78,7 @@ var FirebaseView = (function () {
             mainApp = mA;
             mainApp.on('loadingManager.loadingEnd', init);
             mainApp.on('loadingManager.atlasStructureStart', function (url) {
-                currentAtasStructurePath = url;
+                currentAtlasStructurePath = url;
             });
         }
     };
@@ -87,7 +87,7 @@ var FirebaseView = (function () {
         if (!loadingManager) {
             loadingManager = lm;
             //init currentAtlasStructurePath in case loading has started before this object is created
-            currentAtasStructurePath = loadingManager.atlasStructurePath || null;
+            currentAtlasStructurePath = loadingManager.atlasStructurePath || null;
         }
     };
 
@@ -203,6 +203,15 @@ var FirebaseView = (function () {
         }
 
         namespaces.root.commiters.push(registerLastModification);
+
+        function registerAtlasPath () {
+            // link the view to a specific atlas
+            if (!dbRootObj.atlasStructureURL) {
+                dbRootObj.atlasStructureURL = currentAtlasStructurePath;
+            }
+        }
+
+        namespaces.root.commiters.push(registerAtlasPath);
 
         //always try to add himself as author
         function addHimselfAsAuthor () {
@@ -432,12 +441,6 @@ var FirebaseView = (function () {
         });
         singleton.obj = dbRootObj;
         singleton.ref = ref;
-
-        // link the view to a specific atlas
-        if (!dbRootObj.atlasStructureURL) {
-            dbRootObj.atlasStructureURL = currentAtasStructurePath;
-        }
-
 
         ref.on('value', function (snapshot) {
             onValue(snapshot, 'root');
