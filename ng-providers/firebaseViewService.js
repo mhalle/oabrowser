@@ -442,6 +442,11 @@ var FirebaseView = (function () {
         singleton.obj = dbRootObj;
         singleton.ref = ref;
 
+        if (dbRootObj.atlasStructureURL && dbRootObj.atlasStructureURL !== currentAtlasStructurePath) {
+			window.localStorage.setItem('atlasStructureToLoad', dbRootObj.atlasStructureURL);
+            window.location.reload(true);
+        }
+
         ref.on('value', function (snapshot) {
             onValue(snapshot, 'root');
         });
@@ -460,6 +465,15 @@ var FirebaseView = (function () {
         loadAuthorConnection();
         //handle event propagation listener and author commiter
         initRootListenersAndCommiters();
+
+		//in case we are reloading the page after a bookmark loading to load the right atlas
+		var bookmarkToLoad = window.localStorage.getItem('bookmarkToLoad');
+		if (bookmarkToLoad) {
+			window.localStorage.removeItem('bookmarkToLoad');
+			setTimeout(function () {
+				singleton.loadBookmark(bookmarkToLoad);
+			},100);
+		}
 
 
         var onMouseUp = (function () {
@@ -832,7 +846,23 @@ var FirebaseView = (function () {
     singleton.loadBookmark = function (bookmarkUuid) {
         var bookmarkRef = rootRef.child("bookmarks/"+bookmarkUuid);
         bookmarkRef.once('value', function (snapshot) {
-            singleton.loadState(snapshot, 'root');
+            if (snapshot.val() && snapshot.val().atlasStructureURL !== currentAtlasStructurePath) {
+
+                function success () {
+					window.localStorage.setItem('bookmarkToLoad', bookmarkUuid);
+                    window.location.reload(true);
+                }
+                var confirmationModal = {
+                    text : 'This bookmark uses a different atlas.\nLoading it will involve reloading the page.\nDo you want to continue ?',
+                    success : success
+                };
+
+                mainApp.emit('firebaseView.askConfirmation', confirmationModal);
+
+            }
+            else {
+                singleton.loadState(snapshot, 'root');
+            }
         });
     };
 

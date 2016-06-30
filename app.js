@@ -228,8 +228,10 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
 
         //fetch atlas structure
-        if (window.globalViewerParameters && window.globalViewerParameters.atlasStructurePath) {
-            loadingManager.loadAtlasStructure(window.globalViewerParameters.atlasStructurePath);
+		var atlasStructurePath = window.localStorage.getItem('atlasStructureToLoad') || window.globalViewerParameters && window.globalViewerParameters.atlasStructurePath;
+		window.localStorage.removeItem('atlasStructureToLoad');
+        if (atlasStructurePath) {
+            loadingManager.loadAtlasStructure(atlasStructurePath);
         }
         else {
             throw 'Atlas structure path is not defined in global parameters';
