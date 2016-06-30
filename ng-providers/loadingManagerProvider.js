@@ -271,7 +271,9 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             async: true,
             success: dealWithAtlasStructure
         });
-        mainApp.emit('loadingManager.atlasStructureStart');
+        var absoluteURL = getAbsoluteURL(location);
+
+        mainApp.emit('loadingManager.atlasStructureStart', absoluteURL);
     }
 
     function testIfLoadingIsFinished () {
@@ -294,6 +296,12 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         return singleton.numberOfModelsLoaded !== singleton.totalNumberOfModels || singleton.totalNumberOfVolumes !== singleton.numberOfVolumesLoaded;
     }
 
+    function getAbsoluteURL (url) {
+        var a = document.createElement('a');
+        a.href = url;
+        return a.href;
+    }
+
     singleton.loadVolume = loadVolume;
     singleton.loadVTKModel = loadVTKModel;
     singleton.loadAtlasStructure = loadAtlasStructure;
@@ -301,6 +309,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
     singleton.volumesProgress = volumesProgress;
     singleton.modelsLoaded = modelsLoaded;
     singleton.isLoading = isLoading;
+    singleton.getAbsoluteURL = getAbsoluteURL;
 
 
     Object.defineProperty(singleton, 'numberOfVolumesLoaded', {

@@ -103,6 +103,9 @@
             "$viewId" : {
                 ".read" : true,
                 ".write" : "!data.exists() || (data.child('locked').val() === true && newData.child('locked').val() === false && ( root.child('authors/'+$viewId+'/'+root.child('users/'+auth.uid+'/token').val()).val() === true || root.child('authors/'+$viewId+'/'+root.child('users/'+auth.uid+'/tmp_token').val()).val() === true)) || (data.child('locked').val() !== true && data.child('restricted').val() === true && ( root.child('authors/'+$viewId+'/'+root.child('users/'+auth.uid+'/token').val()).val() === true || root.child('authors/'+$viewId+'/'+root.child('users/'+auth.uid+'/tmp_token').val()).val() === true)) || (data.child('locked').val() !== true && data.child('restricted').val() !== true )",
+                "atlasStructureURL" : {
+                    ".validate" : "!data.exists() || data.val() === newData.val()"
+                },
                 "axial" : {
                     "globalOffset" : {
                         "$offset" : {

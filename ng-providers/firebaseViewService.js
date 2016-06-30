@@ -27,13 +27,20 @@ var FirebaseView = (function () {
         },
         rootRef,
         auth,
-        providers;
+        providers,
+        currentAtasStructurePath;
 
 
     //initializeApp (SDK v3)
     firebase.initializeApp(config);
     rootRef = firebase.database().ref();
     auth = firebase.auth();
+
+    //init currentAtlasStructurePath in case loading has started before this object is created
+    currentAtasStructurePath = loadingManager.atlasStructurePath || null;
+    mainApp.on('loadingManager.atlasStructureStart', function (url) {
+        currentAtasStructurePath = url;
+    });
 
     providers = {
         twitter : new firebase.auth.TwitterAuthProvider(),
@@ -424,6 +431,11 @@ var FirebaseView = (function () {
         });
         singleton.obj = dbRootObj;
         singleton.ref = ref;
+
+        // link the view to a specific atlas
+        if (!dbRootObj.atlasStructureURL) {
+            dbRootObj.atlasStructureURL = currentAtasStructurePath;
+        }
 
 
         ref.on('value', function (snapshot) {
