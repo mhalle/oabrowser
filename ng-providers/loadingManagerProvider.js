@@ -11,16 +11,25 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         },
         volumesLoaded = {},
         volumesProgress = {},
-        modelsLoaded = {};
+        modelsLoaded = {},
+        atlasStructurePath;
+
+    function getUrl(url) {
+        var theUrl = new URI(url);
+        if (theUrl.is("relative")) {
+            theUrl = theUrl.absoluteTo(atlasStructurePath);
+        }
+        return theUrl.toString();
+    }
 
     function loadVolume(datasource, treatAsBackground) {
 
         var nrrdFileLocation;
         if (datasource.baseURL) {
-            nrrdFileLocation = datasource.baseURL.url + datasource.source;
+            nrrdFileLocation = getUrl(datasource.baseURL.url + datasource.source);
         }
         else {
-            nrrdFileLocation = datasource.source;
+            nrrdFileLocation = getUrl(datasource.source);
         }
 
         var onProgress = function ( xhr ) {
@@ -75,11 +84,11 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         if (Array.isArray(structure.sourceSelector)) {
             var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
             if (geometrySelector) {
-                file = geometrySelector.dataSource.source;
+                file = getURL(geometrySelector.dataSource.source);
 
                 //prepend base url if it exists
                 if (geometrySelector.dataSource.baseURL) {
-                    file = geometrySelector.dataSource.baseURL.url + file;
+                    file = getUrl(geometrySelector.dataSource.baseURL.url + file);
                 }
             }
             else {
@@ -87,11 +96,11 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             }
         }
         else {
-            file = structure.sourceSelector.dataSource.source;
+            file = getUrl(structure.sourceSelector.dataSource.source);
 
             //prepend base url if it exists
             if (structure.sourceSelector.dataSource.baseURL) {
-                file = structure.sourceSelector.dataSource.baseURL.url + file;
+                file = getUrl(structure.sourceSelector.dataSource.baseURL.url + file);
             }
         }
 
@@ -134,11 +143,11 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         if (Array.isArray(structure.sourceSelector)) {
             var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
             if (geometrySelector) {
-                objFile = geometrySelector.dataSource.source;
+                objFile = getUrl(geometrySelector.dataSource.source);
 
                 //prepend base url if it exists
                 if ( geometrySelector.dataSource.baseURL) {
-                    objFile =  geometrySelector.dataSource.baseURL.url + objFile;
+                    objFile =  getUrl(geometrySelector.dataSource.baseURL.url + objFile);
                 }
             }
             else {
@@ -147,10 +156,10 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         }
         else {
 
-            objFile = structure.sourceSelector.dataSource.source;
+            objFile = getUrl(structure.sourceSelector.dataSource.source);
             //prepend base url if it exists
             if ( structure.sourceSelector.dataSource.baseURL) {
-                objFile =  structure.sourceSelector.dataSource.baseURL.url + objFile;
+                objFile =  getUrl(structure.sourceSelector.dataSource.baseURL.url + objFile);
             }
         }
         //split the path into a directory and a filename to be able to load dependant file in the same directory (textures)
@@ -272,6 +281,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             success: dealWithAtlasStructure
         });
         var absoluteURL = getAbsoluteURL(location);
+        atlasStructurePath = absoluteURL;
 
         mainApp.emit('loadingManager.atlasStructureStart', absoluteURL);
     }
