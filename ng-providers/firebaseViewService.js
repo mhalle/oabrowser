@@ -850,6 +850,7 @@ var FirebaseView = (function () {
 
                 function success () {
                     window.localStorage.setItem('bookmarkToLoad', bookmarkUuid);
+                    window.localStorage.setItem('atlasStructureToLoad', snapshot.val().atlasStructureURL);
                     window.location.reload(true);
                 }
                 var confirmationModal = {

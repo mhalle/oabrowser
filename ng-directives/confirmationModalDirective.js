@@ -22,6 +22,7 @@ angular.module('atlasDemo').directive( 'confirmationModal', function () {
                         param.success();
                     }
                 };
+                $scope.openModal();
             }
 
 
