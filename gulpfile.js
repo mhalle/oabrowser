@@ -51,7 +51,7 @@ const filesList = [
         "babel/modalController.js",
         "babel/headerController.js",
         "babel/loginModalController.js",
-        "libs/three.min.js",
+        "bower_components/three.js/build/three.min.js",
         "libs/TrackballControls.js",
         "babel/Volume.js",
         "babel/VolumeSlice.js",
