@@ -13,28 +13,14 @@
         </script>
 
         <!-- service worker -->
-        <script src="serviceWorkerInit.js"></script>
-
-        <!-- dependencies -->
-        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
-        <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css" />
-
-        <!-- adapt-strap -->
-        <link rel="stylesheet" href="bower_components/adapt-strap/dist/adapt-strap.min.css"/>
-
-        <link rel="stylesheet" href="libs/ui-layout.css">
-        <link rel="stylesheet" href="libs/rzslicer.css">
-
-        <!-- ng tags -->
-        <link rel="stylesheet" href="libs/ng-tags/ng-tags-input.min.css">
-        <link rel="stylesheet" href="libs/ng-tags/ng-tags-input.bootstrap.min.css">
-
-        <script src="../configAtlasViewer.js"></script>
-
+        <!-- <script src="serviceWorkerInit.js"></script> -->
 
         <!--- local files -->
-        <link rel="stylesheet" type="text/css" href="style.css" />
+        <link rel="stylesheet" type="text/css" href="dist/allstyles.css" />
 
+        <script src="configAtlasViewer.js"></script>
+
+        <script src="../configAtlasViewer.js"></script>
 
         <!-- icons --->
         <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
@@ -103,11 +89,6 @@
             </div>
         </div>
 
-
-
-
-
-
         <script type="text/ng-template" id="treeListDirective">
             <ad-tree-browser class="ad-border-default"
                              tree-name="treeDemoBordered"
@@ -123,7 +104,17 @@
         <div ng-controller="ModalDemoCtrl"></div>
         <div confirmation-modal></div>
 
+        <script>
+        if (typeof module === 'object') {
+            window.module = module; module = undefined;
+        }
+        </script>
+
         <script src="dist/all.js"></script>
+        <script>if (window.module) {
+            module = window.module;
+        }
+        </script>
 
     </body>
 </html>
