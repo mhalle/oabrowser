@@ -1,0 +1,41 @@
+{
+  "name": "angularfire",
+  "description": "The officially supported AngularJS binding for Firebase",
+  "version": "2.0.2",
+  "authors": [
+    "Firebase (https://firebase.google.com/)"
+  ],
+  "homepage": "https://github.com/firebase/angularfire",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/firebase/angularfire.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "angularjs",
+    "firebase",
+    "realtime"
+  ],
+  "main": "dist/angularfire.js",
+  "ignore": [
+    "**/*",
+    "!dist/*.js",
+    "!README.md",
+    "!LICENSE"
+  ],
+  "dependencies": {
+    "angular": "^1.3.0",
+    "firebase": "3.x.x"
+  },
+  "_release": "2.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.0.2",
+    "commit": "575fc88bd3b5f104e76cadedad1348a4f6ceea07"
+  },
+  "_source": "https://github.com/firebase/angularFire.git",
+  "_target": "~2.0.2",
+  "_originalSource": "angularfire",
+  "_direct": true
+}

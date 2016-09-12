@@ -5,6 +5,7 @@ const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const clean = require('gulp-clean');
 const templateCache = require('gulp-angular-templatecache');
+const concatCss = require('gulp-concat-css');
 
 const filesList = [
         "bower_components/jquery/dist/jquery.js",
@@ -19,11 +20,11 @@ const filesList = [
         "libs/ui-bootstrap-tpls-1.3.1.min.js",
         "bower_components/adapt-strap/dist/adapt-strap.min.js",
         "bower_components/adapt-strap/dist/adapt-strap.tpl.min.js",
+        "bower_components/firebase/firebase.js",
+        "bower_components/angularfire/dist/angularfire.min.js",
         "libs/ui-layout.js",
         "libs/rzslicer.js",
         "libs/ng-tags/ng-tags-input.min.js",
-        "libs/firebase.js",
-        "libs/angularfire.min.js",
         "libs/moment-with-locales.min.js",
         "babel/angularInit.js",
         "tmp/templates.js",
@@ -103,6 +104,18 @@ const babelFiles = [
         "hierarchyGroup.js",
         "app.js"
     ];
+
+const styleList = [
+    "bower_components/bootstrap/dist/css/bootstrap.css",
+    "libs/font-awesome/css/font-awesome.min.css",
+    "bower_components/adapt-strap/dist/adapt-strap.min.css",
+    "libs/ui-layout.css",
+    "libs/rzslicer.css",
+    "libs/ng-tags/ng-tags-input.min.css",
+    "libs/ng-tags/ng-tags-input.bootstrap.min.css",
+    "style.css"
+];
+
 gulp.task('babel', () => {
 	return gulp.src(babelFiles)
 		.pipe(babel({
@@ -120,7 +133,13 @@ gulp.task('templates', function () {
     .pipe(gulp.dest('tmp'));
 });
 
-gulp.task('build', ['babel', 'templates'], () => {
+gulp.task('styles', () => {
+    return gulp.src(styleList)
+        .pipe(concatCss('allstyles.css', {rebaseUrls: false}))
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('build', ['babel', 'templates', 'styles'], () => {
 	return gulp.src(filesList)
 		.pipe(sourcemaps.init())
 		.pipe(concat('all.js'))
@@ -129,11 +148,11 @@ gulp.task('build', ['babel', 'templates'], () => {
 		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('clean', ['babel', 'templates', 'build'], function () {
+gulp.task('clean', ['babel', 'templates', 'styles', 'build'], function () {
 	return gulp.src(['babel','tmp'], {read: false})
 		.pipe(clean());
 });
 
-gulp.task('default', ['babel', 'templates', 'build', 'clean'],function () {
+gulp.task('default', ['babel', 'templates', 'styles', 'build', 'clean'],function () {
 
 });
