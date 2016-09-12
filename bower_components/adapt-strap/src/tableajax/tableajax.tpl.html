@@ -18,7 +18,9 @@
             ng-class="getRowClass(item, $index)"
             ng-include="'tableajax/rowContent.html'"
             ng-click="onRowClick(item, $event)"></tr>
-        <tr ng-if="attrs.rowExpandTemplate && adStrapUtils.itemExistsInList($index, localConfig.expandedItems)" ng-repeat-end>
+        <tr ng-if="attrs.rowExpandTemplate && adStrapUtils.itemExistsInList($index, localConfig.expandedItems)"
+            class="expandable-row-content"
+            ng-repeat-end>
           <td colspan="{{ visibleColumnDefinition.length + 1}}"
               ng-include="attrs.rowExpandTemplate"></td>
         </tr>

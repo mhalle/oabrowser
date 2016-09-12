@@ -30,6 +30,6 @@
     "commit": "a2b0051fb3d5d16f2d1724d0bd2ebd4127a1e189"
   },
   "_source": "https://github.com/firebase/firebase-bower.git",
-  "_target": "3.x.x",
+  "_target": "~3.3.2",
   "_originalSource": "firebase"
 }

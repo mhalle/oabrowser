@@ -51,7 +51,7 @@ angular.module('adaptv.adaptStrap.tableajax', ['adaptv.adaptStrap.utils', 'adapt
         var lastRequestToken,
           watchers = [];
 
-        if ($scope.items.paging.pageSizes.indexOf($scope.items.paging.pageSize) < 0) {
+        if (!$scope.items.paging.pageSize && $scope.items.paging.pageSizes[0]) {
           $scope.items.paging.pageSize = $scope.items.paging.pageSizes[0];
         }
 
@@ -177,6 +177,7 @@ angular.module('adaptv.adaptStrap.tableajax', ['adaptv.adaptStrap.utils', 'adapt
           var rowClass = '';
           rowClass += ($attrs.selectedItems &&
             adStrapUtils.itemExistsInList(item, $scope.selectedItems)) ? 'ad-selected' : '';
+          rowClass += (adStrapUtils.itemExistsInList(index, $scope.localConfig.expandedItems) ? ' row-expanded' : '');
           if ($attrs.rowClassProvider) {
             rowClass += ' ' + $scope.$eval($attrs.rowClassProvider)(item, index);
           }

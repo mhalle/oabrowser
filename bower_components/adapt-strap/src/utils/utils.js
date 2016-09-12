@@ -294,41 +294,45 @@ angular.module('adaptv.adaptStrap.utils', [])
         pagingArray: [],
         token: options.token
       };
-      var start = (options.pageNumber - 1) * options.pageSize,
-        end = start + options.pageSize,
-        i,
-        itemsObject = options.localData,
-        localItems = itemsObject;
 
-      if (options.sortKey && !options.draggable) {
-        localItems = $filter('orderBy')(
-          itemsObject,
-          options.sortKey,
-          options.sortDirection
+      if(angular.isDefined(options.localData)) {
+        var start = (options.pageNumber - 1) * options.pageSize,
+          end = start + options.pageSize,
+          i,
+          itemsObject = options.localData,
+          localItems = itemsObject;
+
+        if (options.sortKey && !options.draggable) {
+          localItems = $filter('orderBy')(
+            itemsObject,
+            options.sortKey,
+            options.sortDirection
+          );
+        }
+
+        response.items = localItems.slice(start, end);
+        response.allItems = itemsObject;
+        response.currentPage = options.pageNumber;
+        response.totalPages = Math.ceil(
+            itemsObject.length /
+            options.pageSize
         );
+        var TOTAL_PAGINATION_ITEMS = 5;
+        var minimumBound = options.pageNumber - Math.floor(TOTAL_PAGINATION_ITEMS / 2);
+        for (i = minimumBound; i <= options.pageNumber; i++) {
+          if (i > 0) {
+            response.pagingArray.push(i);
+          }
+        }
+        while (response.pagingArray.length < TOTAL_PAGINATION_ITEMS) {
+          if (i > response.totalPages) {
+            break;
+          }
+          response.pagingArray.push(i);
+          i++;
+        }
       }
 
-      response.items = localItems.slice(start, end);
-      response.allItems = itemsObject;
-      response.currentPage = options.pageNumber;
-      response.totalPages = Math.ceil(
-          itemsObject.length /
-          options.pageSize
-      );
-      var TOTAL_PAGINATION_ITEMS = 5;
-      var minimumBound = options.pageNumber - Math.floor(TOTAL_PAGINATION_ITEMS / 2);
-      for (i = minimumBound; i <= options.pageNumber; i++) {
-        if (i > 0) {
-          response.pagingArray.push(i);
-        }
-      }
-      while (response.pagingArray.length < TOTAL_PAGINATION_ITEMS) {
-        if (i > response.totalPages) {
-          break;
-        }
-        response.pagingArray.push(i);
-        i++;
-      }
       return response;
     };
   }]);

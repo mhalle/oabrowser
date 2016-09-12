@@ -11,7 +11,9 @@
     ng-class="getRowClass(item, $index)"
     ng-include="'tablelite/rowContent.html'">
 </tr>
-<tr ng-if="attrs.rowExpandTemplate && adStrapUtils.itemExistsInList($index, localConfig.expandedItems)" ng-repeat-end>
+<tr ng-if="attrs.rowExpandTemplate && adStrapUtils.itemExistsInList($index, localConfig.expandedItems)"
+    class="expandable-row-content"
+    ng-repeat-end>
   <td colspan="{{ visibleColumnDefinition.length + !!attrs.draggable + !!attrs.selectedItems + 1}}"
       ng-include="attrs.rowExpandTemplate"></td>
 </tr>

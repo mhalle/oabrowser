@@ -1,6 +1,6 @@
 {
   "name": "adapt-strap",
-  "version": "2.4.13",
+  "version": "2.6.1",
   "description": "",
   "main": "gulpfile.js",
   "scripts": {

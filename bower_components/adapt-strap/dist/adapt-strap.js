@@ -1,6 +1,6 @@
 /**
  * adapt-strap
- * @version v2.4.12 - 2016-03-03
+ * @version v2.6.1 - 2016-08-09
  * @link https://github.com/Adaptv/adapt-strap
  * @author Kashyap Patel (kashyap@adap.tv)
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -67,6 +67,92 @@ angular.module('adaptv.adaptStrap', [
     };
   };
 });
+
+// Source: alerts.js
+angular.module('adaptv.adaptStrap.alerts', []).directive('adAlerts', [function () {
+function controllerFunction($scope, $attrs, $adConfig, adAlerts) {
+      $scope.iconMap = {
+        'info': $adConfig.iconClasses.alertInfoSign,
+        'success': $adConfig.iconClasses.alertSuccessSign,
+        'warning': $adConfig.iconClasses.alertWarningSign,
+        'danger': $adConfig.iconClasses.alertDangerSign
+      };
+      var timeout = $scope.timeout && !Number(timeout).isNAN ? $scope.timeout : 0;
+      var timeoutPromise;
+      $scope.close = function () {
+        adAlerts.clear();
+        if (timeoutPromise) {
+          clearTimeout(timeoutPromise);
+        }
+      };
+      $scope.customClasses = $scope.customClasses || '';
+      $scope.settings = adAlerts.settings;
+      if (timeout !== 0) {
+        $scope.$watch('settings.type', function (type) {
+          if (type !== '') {
+            if (timeoutPromise) {
+              clearTimeout(timeoutPromise);
+            }
+            timeoutPromise = setTimeout($scope.close, timeout);
+          }
+        });
+      }
+    }
+    return {
+      restrict: 'AE',
+      scope: {
+        timeout: '=',
+        customClasses: '@'
+      },
+      templateUrl: 'alerts/alerts.tpl.html',
+      controller: [
+        '$scope',
+        '$attrs',
+        '$adConfig',
+        'adAlerts',
+        controllerFunction
+      ]
+    };
+  }]);
+
+// Source: alerts.svc.js
+angular.module('adaptv.adaptStrap.alerts').factory('adAlerts', [function () {
+    var _settings = {
+        type: '',
+        caption: '',
+        message: ''
+      };
+    function _updateSettings(type, caption, msg) {
+      _settings.type = type;
+      _settings.caption = caption;
+      _settings.message = msg;
+    }
+    function _warning(cap, msg) {
+      _updateSettings('warning', cap, msg);
+    }
+    function _info(cap, msg) {
+      _updateSettings('info', cap, msg);
+    }
+    function _success(cap, msg) {
+      _updateSettings('success', cap, msg);
+    }
+    function _error(cap, msg) {
+      _updateSettings('danger', cap, msg);
+    }
+    function _clearSettings() {
+      _settings.type = '';
+      _settings.caption = '';
+      _settings.message = '';
+    }
+    return {
+      settings: _settings,
+      warning: _warning,
+      info: _info,
+      success: _success,
+      error: _error,
+      clear: _clearSettings
+    };
+  }]);
 
 // Source: draggable.js
 angular.module('adaptv.adaptStrap.draggable', []).directive('adDrag', [
@@ -453,136 +539,6 @@ angular.module('adaptv.adaptStrap.draggable', []).directive('adDrag', [
   }
 ]);
 
-// Source: alerts.js
-angular.module('adaptv.adaptStrap.alerts', []).directive('adAlerts', [function () {
-function controllerFunction($scope, $attrs, $adConfig, adAlerts) {
-      $scope.iconMap = {
-        'info': $adConfig.iconClasses.alertInfoSign,
-        'success': $adConfig.iconClasses.alertSuccessSign,
-        'warning': $adConfig.iconClasses.alertWarningSign,
-        'danger': $adConfig.iconClasses.alertDangerSign
-      };
-      var timeout = $scope.timeout && !Number(timeout).isNAN ? $scope.timeout : 0;
-      var timeoutPromise;
-      $scope.close = function () {
-        adAlerts.clear();
-        if (timeoutPromise) {
-          clearTimeout(timeoutPromise);
-        }
-      };
-      $scope.customClasses = $scope.customClasses || '';
-      $scope.settings = adAlerts.settings;
-      if (timeout !== 0) {
-        $scope.$watch('settings.type', function (type) {
-          if (type !== '') {
-            if (timeoutPromise) {
-              clearTimeout(timeoutPromise);
-            }
-            timeoutPromise = setTimeout($scope.close, timeout);
-          }
-        });
-      }
-    }
-    return {
-      restrict: 'AE',
-      scope: {
-        timeout: '=',
-        customClasses: '@'
-      },
-      templateUrl: 'alerts/alerts.tpl.html',
-      controller: [
-        '$scope',
-        '$attrs',
-        '$adConfig',
-        'adAlerts',
-        controllerFunction
-      ]
-    };
-  }]);
-
-// Source: alerts.svc.js
-angular.module('adaptv.adaptStrap.alerts').factory('adAlerts', [function () {
-    var _settings = {
-        type: '',
-        caption: '',
-        message: ''
-      };
-    function _updateSettings(type, caption, msg) {
-      _settings.type = type;
-      _settings.caption = caption;
-      _settings.message = msg;
-    }
-    function _warning(cap, msg) {
-      _updateSettings('warning', cap, msg);
-    }
-    function _info(cap, msg) {
-      _updateSettings('info', cap, msg);
-    }
-    function _success(cap, msg) {
-      _updateSettings('success', cap, msg);
-    }
-    function _error(cap, msg) {
-      _updateSettings('danger', cap, msg);
-    }
-    function _clearSettings() {
-      _settings.type = '';
-      _settings.caption = '';
-      _settings.message = '';
-    }
-    return {
-      settings: _settings,
-      warning: _warning,
-      info: _info,
-      success: _success,
-      error: _error,
-      clear: _clearSettings
-    };
-  }]);
-
-// Source: loadingindicator.js
-angular.module('adaptv.adaptStrap.loadingindicator', []).directive('adLoadingIcon', [
-  '$adConfig',
-  '$compile',
-  function ($adConfig, $compile) {
-    return {
-      restrict: 'E',
-      compile: function compile() {
-        return {
-          pre: function preLink(scope, element, attrs) {
-            var loadingIconClass = attrs.loadingIconClass || $adConfig.iconClasses.loadingSpinner, ngStyleTemplate = attrs.loadingIconSize ? 'ng-style="{\'font-size\': \'' + attrs.loadingIconSize + '\'}"' : '', template = '<i class="' + loadingIconClass + '" ' + ngStyleTemplate + '></i>';
-            element.empty();
-            element.append($compile(template)(scope));
-          }
-        };
-      }
-    };
-  }
-]).directive('adLoadingOverlay', [
-  '$adConfig',
-  function ($adConfig) {
-    return {
-      restrict: 'E',
-      templateUrl: 'loadingindicator/loadingindicator.tpl.html',
-      scope: {
-        loading: '=',
-        zIndex: '@',
-        position: '@',
-        containerClasses: '@',
-        loadingIconClass: '@',
-        loadingIconSize: '@'
-      },
-      compile: function compile() {
-        return {
-          pre: function preLink(scope) {
-            scope.loadingIconClass = scope.loadingIconClass || $adConfig.iconClasses.loading;
-            scope.loadingIconSize = scope.loadingIconSize || '3em';
-          }
-        };
-      }
-    };
-  }
-]);
-
 // Source: infinitedropdown.js
 angular.module('adaptv.adaptStrap.infinitedropdown', [
   'adaptv.adaptStrap.utils',
@@ -781,6 +737,50 @@ function linkFunction(scope, element, attrs) {
   }
 ]);
 
+// Source: loadingindicator.js
+angular.module('adaptv.adaptStrap.loadingindicator', []).directive('adLoadingIcon', [
+  '$adConfig',
+  '$compile',
+  function ($adConfig, $compile) {
+    return {
+      restrict: 'E',
+      compile: function compile() {
+        return {
+          pre: function preLink(scope, element, attrs) {
+            var loadingIconClass = attrs.loadingIconClass || $adConfig.iconClasses.loadingSpinner, ngStyleTemplate = attrs.loadingIconSize ? 'ng-style="{\'font-size\': \'' + attrs.loadingIconSize + '\'}"' : '', template = '<i class="' + loadingIconClass + '" ' + ngStyleTemplate + '></i>';
+            element.empty();
+            element.append($compile(template)(scope));
+          }
+        };
+      }
+    };
+  }
+]).directive('adLoadingOverlay', [
+  '$adConfig',
+  function ($adConfig) {
+    return {
+      restrict: 'E',
+      templateUrl: 'loadingindicator/loadingindicator.tpl.html',
+      scope: {
+        loading: '=',
+        zIndex: '@',
+        position: '@',
+        containerClasses: '@',
+        loadingIconClass: '@',
+        loadingIconSize: '@'
+      },
+      compile: function compile() {
+        return {
+          pre: function preLink(scope) {
+            scope.loadingIconClass = scope.loadingIconClass || $adConfig.iconClasses.loading;
+            scope.loadingIconSize = scope.loadingIconSize || '3em';
+          }
+        };
+      }
+    };
+  }
+]);
+
 // Source: tableajax.js
 angular.module('adaptv.adaptStrap.tableajax', [
   'adaptv.adaptStrap.utils',
@@ -833,7 +833,7 @@ function controllerFunction($scope, $attrs) {
       $scope.visibleColumnDefinition = $filter('filter')($scope.columnDefinition, $scope.columnVisible);
       // ---------- Local data ---------- //
       var lastRequestToken, watchers = [];
-      if ($scope.items.paging.pageSizes.indexOf($scope.items.paging.pageSize) < 0) {
+      if (!$scope.items.paging.pageSize && $scope.items.paging.pageSizes[0]) {
         $scope.items.paging.pageSize = $scope.items.paging.pageSizes[0];
       }
       // ---------- ui handlers ---------- //
@@ -940,6 +940,7 @@ function controllerFunction($scope, $attrs) {
       $scope.getRowClass = function (item, index) {
         var rowClass = '';
         rowClass += $attrs.selectedItems && adStrapUtils.itemExistsInList(item, $scope.selectedItems) ? 'ad-selected' : '';
+        rowClass += adStrapUtils.itemExistsInList(index, $scope.localConfig.expandedItems) ? ' row-expanded' : '';
         if ($attrs.rowClassProvider) {
           rowClass += ' ' + $scope.$eval($attrs.rowClassProvider)(item, index);
         }
@@ -999,97 +1000,6 @@ function controllerFunction($scope, $attrs) {
   }
 ]);
 
-// Source: treebrowser.js
-angular.module('adaptv.adaptStrap.treebrowser', []).directive('adTreeBrowser', [
-  '$adConfig',
-  function ($adConfig) {
-    function controllerFunction($scope, $attrs) {
-      var templateToken = Math.random();
-      // scope initialization
-      $scope.attrs = $attrs;
-      $scope.iconClasses = $adConfig.iconClasses;
-      $scope.treeRoot = $scope.$eval($attrs.treeRoot) || {};
-      $scope.toggle = function (event, item) {
-        var toggleCallback;
-        event.stopPropagation();
-        toggleCallback = $scope.$eval($attrs.toggleCallback);
-        if (toggleCallback) {
-          toggleCallback(item);
-        } else {
-          item._ad_expanded = !item._ad_expanded;
-        }
-      };
-      $scope.onRowClick = function (item, level, event) {
-        var onRowClick = $scope.$parent.$eval($attrs.onRowClick);
-        if (onRowClick) {
-          onRowClick(item, level, event);
-        }
-      };
-      var hasChildren = $scope.$eval($attrs.hasChildren);
-      $scope.hasChildren = function (item) {
-        var found = item[$attrs.childNode] && item[$attrs.childNode].length > 0;
-        if (hasChildren) {
-          found = hasChildren(item);
-        }
-        return found;
-      };
-      // for unique template
-      $scope.localConfig = { rendererTemplateId: 'tree-renderer-' + templateToken + '.html' };
-    }
-    return {
-      restrict: 'E',
-      scope: true,
-      controller: [
-        '$scope',
-        '$attrs',
-        controllerFunction
-      ],
-      templateUrl: 'treebrowser/treebrowser.tpl.html'
-    };
-  }
-]).directive('adTreeBrowserNode', [
-  '$compile',
-  '$http',
-  '$templateCache',
-  function ($compile, $http, $templateCache) {
-    var tbNodeTemplate = $templateCache.get('treebrowser/treeBrowserNode.tpl.html');
-    var compiledTemplates = {};
-    function getTemplate(contentTpl) {
-      var tplUrl = contentTpl.config.url;
-      var compiledTpl = compiledTemplates[tplUrl];
-      if (!compiledTpl) {
-        var tbNodeHtml = tbNodeTemplate.replace(/%=nodeTemplate%/g, contentTpl.data);
-        compiledTemplates[tplUrl] = $compile(tbNodeHtml);
-      }
-      return compiledTemplates[tplUrl];
-    }
-    function linkFunction(scope, element, attrs) {
-      function compileTemplate(nodeTemplate) {
-        getTemplate(nodeTemplate)(scope, function (clonedElement) {
-          element.append(clonedElement);
-        });
-      }
-      $http({
-        cache: $templateCache,
-        url: scope.$eval(attrs.templateUrl),
-        method: 'GET'
-      }).then(compileTemplate);
-    }
-    return {
-      link: linkFunction,
-      scope: true,
-      restrict: 'E'
-    };
-  }
-]).directive('adTreeBrowserNodeToggle', function () {
-  return {
-    scope: true,
-    restrict: 'E',
-    replace: true,
-    templateUrl: 'treebrowser/treebrowserNodeToggle.tpl.html'
-  };
-});
-
 // Source: tablelite.js
 angular.module('adaptv.adaptStrap.tablelite', ['adaptv.adaptStrap.utils']).directive('adTableLite', [
   '$parse',
@@ -1148,7 +1058,7 @@ function controllerFunction($scope, $attrs) {
           }
         }
       }
-      if ($scope.items.paging.pageSizes.indexOf($scope.items.paging.pageSize) < 0) {
+      if (!$scope.items.paging.pageSize && $scope.items.paging.pageSizes[0]) {
         $scope.items.paging.pageSize = $scope.items.paging.pageSizes[0];
       }
       // ---------- ui handlers ---------- //
@@ -1325,6 +1235,7 @@ function controllerFunction($scope, $attrs) {
       $scope.getRowClass = function (item, index) {
         var rowClass = '';
         rowClass += $attrs.selectedItems && adStrapUtils.itemExistsInList(item, $scope.selectedItems) ? 'ad-selected' : '';
+        rowClass += adStrapUtils.itemExistsInList(index, $scope.localConfig.expandedItems) ? ' row-expanded' : '';
         if ($attrs.rowClassProvider) {
           rowClass += ' ' + $scope.$eval($attrs.rowClassProvider)(item, index);
         }
@@ -1404,6 +1315,97 @@ function controllerFunction($scope, $attrs) {
     };
   }
 ]);
+
+// Source: treebrowser.js
+angular.module('adaptv.adaptStrap.treebrowser', []).directive('adTreeBrowser', [
+  '$adConfig',
+  function ($adConfig) {
+    function controllerFunction($scope, $attrs) {
+      var templateToken = Math.random();
+      // scope initialization
+      $scope.attrs = $attrs;
+      $scope.iconClasses = $adConfig.iconClasses;
+      $scope.treeRoot = $scope.$eval($attrs.treeRoot) || {};
+      $scope.toggle = function (event, item) {
+        var toggleCallback;
+        event.stopPropagation();
+        toggleCallback = $scope.$eval($attrs.toggleCallback);
+        if (toggleCallback) {
+          toggleCallback(item);
+        } else {
+          item._ad_expanded = !item._ad_expanded;
+        }
+      };
+      $scope.onRowClick = function (item, level, event) {
+        var onRowClick = $scope.$parent.$eval($attrs.onRowClick);
+        if (onRowClick) {
+          onRowClick(item, level, event);
+        }
+      };
+      var hasChildren = $scope.$eval($attrs.hasChildren);
+      $scope.hasChildren = function (item) {
+        var found = item[$attrs.childNode] && item[$attrs.childNode].length > 0;
+        if (hasChildren) {
+          found = hasChildren(item);
+        }
+        return found;
+      };
+      // for unique template
+      $scope.localConfig = { rendererTemplateId: 'tree-renderer-' + templateToken + '.html' };
+    }
+    return {
+      restrict: 'E',
+      scope: true,
+      controller: [
+        '$scope',
+        '$attrs',
+        controllerFunction
+      ],
+      templateUrl: 'treebrowser/treebrowser.tpl.html'
+    };
+  }
+]).directive('adTreeBrowserNode', [
+  '$compile',
+  '$http',
+  '$templateCache',
+  function ($compile, $http, $templateCache) {
+    var tbNodeTemplate = $templateCache.get('treebrowser/treeBrowserNode.tpl.html');
+    var compiledTemplates = {};
+    function getTemplate(contentTpl) {
+      var tplUrl = contentTpl.config.url;
+      var compiledTpl = compiledTemplates[tplUrl];
+      if (!compiledTpl) {
+        var tbNodeHtml = tbNodeTemplate.replace(/%=nodeTemplate%/g, contentTpl.data);
+        compiledTemplates[tplUrl] = $compile(tbNodeHtml);
+      }
+      return compiledTemplates[tplUrl];
+    }
+    function linkFunction(scope, element, attrs) {
+      function compileTemplate(nodeTemplate) {
+        getTemplate(nodeTemplate)(scope, function (clonedElement) {
+          element.append(clonedElement);
+        });
+      }
+      $http({
+        cache: $templateCache,
+        url: scope.$eval(attrs.templateUrl),
+        method: 'GET'
+      }).then(compileTemplate);
+    }
+    return {
+      link: linkFunction,
+      scope: true,
+      restrict: 'E'
+    };
+  }
+]).directive('adTreeBrowserNodeToggle', function () {
+  return {
+    scope: true,
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'treebrowser/treebrowserNodeToggle.tpl.html'
+  };
+});
 
 // Source: utils.js
 angular.module('adaptv.adaptStrap.utils', []).factory('adStrapUtils', [
@@ -1671,27 +1673,29 @@ var deb = function (func, delay, immediate, ctx) {
           pagingArray: [],
           token: options.token
         };
-      var start = (options.pageNumber - 1) * options.pageSize, end = start + options.pageSize, i, itemsObject = options.localData, localItems = itemsObject;
-      if (options.sortKey && !options.draggable) {
-        localItems = $filter('orderBy')(itemsObject, options.sortKey, options.sortDirection);
-      }
-      response.items = localItems.slice(start, end);
-      response.allItems = itemsObject;
-      response.currentPage = options.pageNumber;
-      response.totalPages = Math.ceil(itemsObject.length / options.pageSize);
-      var TOTAL_PAGINATION_ITEMS = 5;
-      var minimumBound = options.pageNumber - Math.floor(TOTAL_PAGINATION_ITEMS / 2);
-      for (i = minimumBound; i <= options.pageNumber; i++) {
-        if (i > 0) {
+      if (angular.isDefined(options.localData)) {
+        var start = (options.pageNumber - 1) * options.pageSize, end = start + options.pageSize, i, itemsObject = options.localData, localItems = itemsObject;
+        if (options.sortKey && !options.draggable) {
+          localItems = $filter('orderBy')(itemsObject, options.sortKey, options.sortDirection);
+        }
+        response.items = localItems.slice(start, end);
+        response.allItems = itemsObject;
+        response.currentPage = options.pageNumber;
+        response.totalPages = Math.ceil(itemsObject.length / options.pageSize);
+        var TOTAL_PAGINATION_ITEMS = 5;
+        var minimumBound = options.pageNumber - Math.floor(TOTAL_PAGINATION_ITEMS / 2);
+        for (i = minimumBound; i <= options.pageNumber; i++) {
+          if (i > 0) {
+            response.pagingArray.push(i);
+          }
+        }
+        while (response.pagingArray.length < TOTAL_PAGINATION_ITEMS) {
+          if (i > response.totalPages) {
+            break;
+          }
           response.pagingArray.push(i);
+          i++;
         }
-      }
-      while (response.pagingArray.length < TOTAL_PAGINATION_ITEMS) {
-        if (i > response.totalPages) {
-          break;
-        }
-        response.pagingArray.push(i);
-        i++;
       }
       return response;
     };

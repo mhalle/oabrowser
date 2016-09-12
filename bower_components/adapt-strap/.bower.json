@@ -1,6 +1,6 @@
 {
   "name": "adapt-strap",
-  "version": "2.4.13",
+  "version": "2.6.1",
   "homepage": "https://github.com/Adaptv/adapt-strap",
   "authors": [
     "Kashyap Patel <kashyap@adap.tv>"
@@ -36,13 +36,13 @@
     "showdown": "~0.3.1",
     "angular-mocks": "~1.4.4"
   },
-  "_release": "2.4.13",
+  "_release": "2.6.1",
   "_resolution": {
     "type": "version",
-    "tag": "2.4.13",
-    "commit": "f45e38bdff15343c9de3277ae557bdfa91664aa1"
+    "tag": "2.6.1",
+    "commit": "b517006418f1a57e070b5a97acc4559df5d8d4ac"
   },
-  "_source": "git://github.com/Adaptv/adapt-strap.git",
+  "_source": "https://github.com/Adaptv/adapt-strap.git",
   "_target": "^2.4.12",
   "_originalSource": "adapt-strap"
 }
