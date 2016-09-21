@@ -11463,6 +11463,32 @@ button.close {
   overflow: auto;
 }
 
+.animate-row {
+  -webkit-transition: height .8s cubic-bezier(0, 1.05, 0, 1);
+  -moz-transition: height .8s cubic-bezier(0, 1.05, 0, 1);
+  -ms-transition: height .8s cubic-bezier(0, 1.05, 0, 1);
+  -o-transition: height .8s cubic-bezier(0, 1.05, 0, 1);
+  transition: height .8s cubic-bezier(0, 1.05, 0, 1);
+  -webkit-transition: top .8s cubic-bezier(0, 1.05, 0, 1);
+  -moz-transition: top .8s cubic-bezier(0, 1.05, 0, 1);
+  -ms-transition: top .8s cubic-bezier(0, 1.05, 0, 1);
+  -o-transition: top .8s cubic-bezier(0, 1.05, 0, 1);
+  transition: top .8s cubic-bezier(0, 1.05, 0, 1);
+}
+
+.animate-column {
+  -webkit-transition: width .8s cubic-bezier(0, 1.05, 0, 1);
+  -moz-transition: width .8s cubic-bezier(0, 1.05, 0, 1);
+  -ms-transition: width .8s cubic-bezier(0, 1.05, 0, 1);
+  -o-transition: width .8s cubic-bezier(0, 1.05, 0, 1);
+  transition: width .8s cubic-bezier(0, 1.05, 0, 1);
+  -webkit-transition: left .8s cubic-bezier(0, 1.05, 0, 1);
+  -moz-transition: left .8s cubic-bezier(0, 1.05, 0, 1);
+  -ms-transition: left .8s cubic-bezier(0, 1.05, 0, 1);
+  -o-transition: left .8s cubic-bezier(0, 1.05, 0, 1);
+  transition: left .8s cubic-bezier(0, 1.05, 0, 1);
+}
+
 .ui-splitbar {
   display: -webkit-box;
   /* OLD - iOS 6-, Safari 3.1-6 */
@@ -11479,7 +11505,7 @@ button.close {
   background-color: #ffffff;
   right: auto;
   position: absolute;
-  z-index: 1010;
+  z-index: 1;
 }
 
 .ui-layout-row > .ui-splitbar {
@@ -11489,6 +11515,8 @@ button.close {
   text-align: center;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+  overflow-y: hidden;
 }
 
 .ui-layout-column > .ui-splitbar {
@@ -11497,244 +11525,95 @@ button.close {
   cursor: col-resize;
   -webkit-flex-direction: column;
   flex-direction: column;
+  background: linear-gradient(to right, #fff 0%, #eee 100%);
+  overflow-x: hidden;
 }
 
 .ui-layout-column > .ui-splitbar > a,
 .ui-layout-row > .ui-splitbar > a {
-  color: #fff;
   cursor: pointer;
-  font-size: 9px;
-}
-/*! angularjs-slider - v2.11.0 -
- (c) Rafal Zajac <rzajac@gmail.com>, Valentin Hervieu <valentin@hervieu.me>, Jussi Saarivirta <jusasi@gmail.com>, Angelin Sirbu <angelin.sirbu@gmail.com> -
- https://github.com/angular-slider/angularjs-slider -
- 2016-04-01 */
-
-rzslider {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  height: 4px;
-  margin: 35px 0 15px 0;
-  vertical-align: middle;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-rzslider[disabled] {
-  cursor: not-allowed;
-}
-
-rzslider[disabled] .rz-pointer {
-  cursor: not-allowed;
-  background-color: #d8e0f3;
-}
-
-rzslider span {
-  position: absolute;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-rzslider .rz-base {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-}
-
-rzslider .rz-bar-wrapper {
-  left: 0;
-  z-index: 1;
-  width: 100%;
-  height: 20px;
-  padding-top: 10px;
-  margin-top: -10px;
-  box-sizing: border-box;
-}
-
-rzslider .rz-bar-wrapper.rz-draggable {
-  cursor: move;
-}
-
-rzslider .rz-bar {
-  left: 0;
-  z-index: 1;
-  width: 100%;
-  height: 4px;
-  background: #d8e0f3;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-}
-
-rzslider .rz-bar.rz-selection {
-  z-index: 2;
-  background: #0db9f0;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-}
-
-rzslider .rz-pointer {
-  top: -7px;
-  z-index: 3;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  background-color: #0db9f0;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-}
-
-rzslider .rz-pointer:after {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 8px;
-  height: 8px;
-  background: #ffffff;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  content: '';
-}
-
-rzslider .rz-pointer:hover:after {
-  background-color: #ffffff;
-}
-
-rzslider .rz-pointer.rz-active {
-  z-index: 4;
-}
-
-rzslider .rz-pointer.rz-active:after {
-  background-color: #451aff;
-}
-
-rzslider .rz-bubble {
-  bottom: 10px;
-  padding: 1px 3px;
-  color: #55637d;
-  cursor: default;
-}
-
-rzslider .rz-bubble.rz-selection {
-  top: 16px;
-}
-
-rzslider .rz-bubble.rz-limit {
-  color: #55637d;
-}
-
-rzslider .rz-ticks {
-  position: absolute;
-  top: -3px;
-  left: 0;
-  z-index: 1;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-  height: 0;
-  padding: 0 11px;
-  margin: 0;
-  list-style: none;
-  box-sizing: border-box;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-rzslider .rz-ticks .rz-tick {
-  width: 10px;
-  height: 10px;
   text-align: center;
-  cursor: pointer;
-  background: #d8e0f3;
-  border-radius: 50%;
+  font-size: 16px;
+  color: #aaa;
 }
 
-rzslider .rz-ticks .rz-tick.rz-selected {
-  background: #0db9f0;
+.ui-layout-column > .ui-splitbar > a:nth-child(2) {
+  margin-top: 0.35rem;
 }
 
-rzslider .rz-ticks .rz-tick .rz-tick-value {
-  position: absolute;
-  top: -30px;
-  transform: translate(-50%, 0);
+.ui-layout-row > .ui-splitbar > a:nth-child(2) {
+  margin-left: 0.35rem;
 }
 
-rzslider.rz-vertical {
-  position: relative;
-  width: 4px;
-  height: 100%;
-  padding: 0;
-  margin: 0 20px;
-  vertical-align: baseline;
-}
+/**
+* Icons
+**/
 
-rzslider.rz-vertical .rz-base {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-}
-
-rzslider.rz-vertical .rz-bar-wrapper {
-  top: auto;
-  left: 0;
-  width: 32px;
-  height: 100%;
-  padding: 0 0 0 16px;
-  margin: 0 0 0 -16px;
-}
-
-rzslider.rz-vertical .rz-bar {
-  bottom: 0;
-  left: auto;
-  width: 4px;
-  height: 100%;
-}
-
-rzslider.rz-vertical .rz-pointer {
-  top: auto;
-  bottom: 0;
-  left: -14px !important;
-}
-
-rzslider.rz-vertical .rz-bubble {
-  bottom: 0;
-  left: 16px !important;
-  margin-left: 3px;
-}
-
-rzslider.rz-vertical .rz-bubble.rz-selection {
-  top: auto;
-  left: 16px !important;
-}
-
-rzslider.rz-vertical .rz-ticks {
-  top: 0;
-  left: -3px;
-  z-index: 1;
+.ui-splitbar-icon {
   width: 0;
-  height: 100%;
-  padding: 11px 0;
-  -webkit-flex-direction: column-reverse;
-  -ms-flex-direction: column-reverse;
-  flex-direction: column-reverse;
+  height: 0;
+  display: inline-block;
 }
 
-rzslider.rz-vertical .rz-ticks .rz-tick {
-  vertical-align: middle;
+.ui-splitbar-icon-up {
+  border-left: 0.45em solid transparent;
+  border-right: 0.45em solid transparent;
+  border-bottom: 0.45em solid;
 }
 
-rzslider.rz-vertical .rz-ticks .rz-tick .rz-tick-value {
-  top: auto;
-  left: 22px;
-  transform: translate(0, -28%);
+.ui-splitbar-icon-down {
+  border-left: 0.45em solid transparent;
+  border-right: 0.45em solid transparent;
+  border-top: 0.45em solid;
+  margin-right: 0.45em;
+}
+
+.ui-splitbar-icon-right {
+  border-top: 0.45em solid transparent;
+  border-bottom: 0.45em solid transparent;
+  border-left: 0.45em solid;
+}
+
+.ui-splitbar-icon-left {
+  border-top: 0.45em solid transparent;
+  border-bottom: 0.45em solid transparent;
+  border-right: 0.45em solid;
+  margin-top: 0.45em;
+}
+
+/* Allow disabling of icons */
+
+.no-toggle .ui-splitbar-icon {
+  display: none;
+}
+
+@media only screen and (max-device-width: 480px) {
+  .no-mobile-toggle .ui-splitbar-icon {
+    display: none;
+  }
+}
+
+@media print {
+  .ui-splitbar {
+    display: none;
+  }
+
+  .stretch {
+    position: relative;
+  }
+
+  /* The last item can take up any amount of space. */
+
+  .stretch.ui-layout-container:last-child {
+    position: static;
+    overflow: visible;
+  }
+}
+
+/* Make sure hidden elements are in fact not rendered. */
+
+.ui-layout-hidden {
+  display: none;
 }
 tags-input {
   display: block;
