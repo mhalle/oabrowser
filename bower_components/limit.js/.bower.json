@@ -1,0 +1,29 @@
+{
+  "name": "limit.js",
+  "main": "limit.js",
+  "homepage": "https://github.com/m-gagne/limit.js",
+  "authors": [
+    "Marc Gagne <marc.gagne@hotmail.com>"
+  ],
+  "description": "limit.js serves to solve a simple problem, too many events. Sometimes you want to track browser resizing, or mouse movements but you don't need/want every single event (of which there can be thousands). This is where limit.js can help.",
+  "keywords": [
+    "throttle",
+    "debounce",
+    "limit"
+  ],
+  "ignore": [
+    "MIT-LICENSE.txt",
+    ".gitignore"
+  ],
+  "license": "MIT",
+  "_release": "2a47f3aa06",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "2a47f3aa068939e3e81ce34310c7fe83a59bc6c4"
+  },
+  "_source": "https://github.com/m-gagne/limit.js.git",
+  "_target": "*",
+  "_originalSource": "limit",
+  "_direct": true
+}
