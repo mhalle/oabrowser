@@ -28,7 +28,7 @@ const filesList = [
         "bower_components/tween.js/src/Tween.js",
         "bower_components/three.js/build/three.min.js",
         "bower_components/three.js/examples/js/controls/TrackballControls.js",
-        "bower_components/three.js/examples/js/libs/stats.min.js",
+        "libs/stats.min.js",
         "bower_components/three.js/examples/js/loaders/VTKLoader.js",
         "bower_components/three.js/examples/js/Detector.js",
         "bower_components/three.js/examples/js/loaders/NRRDLoader.js",
