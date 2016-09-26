@@ -30,6 +30,7 @@ const filesList = [
         "bower_components/three.js/examples/js/controls/TrackballControls.js",
         "libs/stats.min.js",
         "bower_components/three.js/examples/js/loaders/VTKLoader.js",
+        "bower_components/three.js/examples/js/loaders/STLLoader.js",
         "bower_components/three.js/examples/js/Detector.js",
         "bower_components/three.js/examples/js/loaders/NRRDLoader.js",
         "libs/jquery.mousewheel.js",

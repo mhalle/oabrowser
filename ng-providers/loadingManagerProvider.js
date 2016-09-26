@@ -5,6 +5,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         volumesManager = volumesManagerProvider.$get(),
         nrrdLoader = new THREE.NRRDLoader(),
         vtkLoader = new THREE.VTKLoader(),
+        stlLoader = new THREE.STLLoader(),
         singleton = {
             numberOfModelsLoaded : 0,
             numberOfVolumesLoaded : 0
@@ -109,6 +110,63 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         }
 
         vtkLoader.load(file, function (geometry) {
+
+            var item = structure;
+
+            geometry.computeVertexNormals();
+
+            var material = new THREE.MeshPhongMaterial({
+                wireframe : false,
+                morphTargets : false,
+                side : THREE.DoubleSide,
+                color : item.renderOption.color >> 8 //get rid of alpha
+            });
+
+            material.opacity = (item.renderOption.color & 0xff)/255;
+            material.visible = true;
+
+
+            if (material.opacity < 1) {
+                material.transparent = true;
+            }
+
+
+            var mesh = new THREE.Mesh(geometry, material);
+
+            onNewMesh(item, mesh, file);
+
+        });
+    }
+    function loadSTLModel(structure) {
+        var file;
+        if (Array.isArray(structure.sourceSelector)) {
+            var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
+            if (geometrySelector) {
+
+                //prepend base url if it exists
+                if (geometrySelector.dataSource.baseURL) {
+                    file = getUrl(geometrySelector.dataSource.baseURL.url + geometrySelector.dataSource.source);
+                }
+                else {
+                    file = getUrl(geometrySelector.dataSource.source);
+                }
+            }
+            else {
+                throw 'In case of multiple selectors, STL selector should have an array as @type which includes "GeometrySelector"';
+            }
+        }
+        else {
+
+            //prepend base url if it exists
+            if (structure.sourceSelector.dataSource.baseURL) {
+                file = getUrl(structure.sourceSelector.dataSource.baseURL.url + structure.sourceSelector.dataSource.source);
+            }
+            else {
+                file = getUrl(structure.sourceSelector.dataSource.source);
+            }
+        }
+
+        stlLoader.load(file, function (geometry) {
 
             var item = structure;
 
@@ -249,6 +307,15 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             }
         });
 
+        var stlStructures = atlasStructure.Structure.filter(item => {
+            if (Array.isArray(item.sourceSelector)) {
+                return item.sourceSelector.some(selector => /\.stl$/.test(selector.dataSource.source));
+            }
+            else {
+                return /\.stl$/.test(item.sourceSelector.dataSource.source);
+            }
+        });
+
         singleton.totalNumberOfModels = vtkStructures.length + objStructures.length;
 
 
@@ -260,6 +327,9 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             loadOBJModel(objStructures[i]);
         }
 
+        for (i = 0; i < stlStructures.length; i++) {
+            loadSTLModel(stlStructures[i]);
+        }
 
         //load labelmap and background
 
@@ -269,8 +339,6 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         for (i = 0; i < nrrdDatasource.length; i++) {
             loadVolume(nrrdDatasource[i]);
         }
-
-
 
         mainApp.emit('loadingManager.atlasStructureLoaded', atlasStructure);
 
