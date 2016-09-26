@@ -100,9 +100,18 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
 
             var gui = mainApp.gui;
             var volume = sliceSet.x.volume;
-            gui.add( compositingSlices.sagittal, "index", 0, volume.RASDimensions[0], 1 ).name( "index Sagittal" ).listen().onChange( function () {compositingSlices.sagittal.repaint(true);} );
-            gui.add( compositingSlices.coronal, "index", 0, volume.RASDimensions[1], 1 ).name( "index Coronal" ).listen().onChange( function () {compositingSlices.coronal.repaint(true);} );
-            gui.add( compositingSlices.axial, "index", 0, volume.RASDimensions[2], 1 ).name( "index Axial" ).listen().onChange( function () {compositingSlices.axial.repaint(true);} );
+            gui.add( compositingSlices.sagittal, "index", 0, volume.RASDimensions[0], 1 )
+                .name( "index Sagittal" )
+                .listen()
+                .onChange( function () {compositingSlices.sagittal.repaint(true);} );
+            gui.add( compositingSlices.coronal, "index", 0, volume.RASDimensions[1], 1 )
+                .name( "index Coronal" )
+                .listen()
+                .onChange( function () {compositingSlices.coronal.repaint(true);} );
+            gui.add( compositingSlices.axial, "index", 0, volume.RASDimensions[2], 1 )
+                .name( "index Axial" )
+                .listen()
+                .onChange( function () {compositingSlices.axial.repaint(true);} );
 
             if (firebaseView) {
                 setFirebaseSlicesBinding();
@@ -273,7 +282,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
         mainApp.on('firebaseView.viewChanged', function () {
             setTimeout(function () {
                 repaintCompositingSlices(true);
-            },5);
+            }, 5);
         });
     }
 
