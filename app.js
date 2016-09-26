@@ -46,6 +46,16 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         header = atlasStructure.Header;
     });
 
+    function encodeFirebaseAttribute(str) {
+        var disallowed = /[#\.[\]$\/]/;
+        if (disallowed.test(str)) {
+            return encodeURIComponent(str.replace('.', '%2e'));
+        }
+        else {
+            return str;
+        }
+    }
+    
     function bindHierarchyItemWithFirebase (item) {
         //fireobject can not sync properties starting with _ so we have to make a proxy
         if (item.visibleInTree === undefined) {
@@ -58,12 +68,18 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 }
             });
         }
-        //firebase binding for selection, visibility and visibility in tree
-        firebaseView.bind(item, ['selected', 'visibleInTree'],'models.'+item['@id']);
+        // Firebase doesn't like otherwise-not-special characters in its attribute names,
+        // so convert to base64 if needed. Note that URL quoting isn't quite enough,
+        // because "." is a special character for firebase and 
+        var safeItemId = encodeFirebaseAttribute(item['@id']);
 
-        //do not bind 'visible' property with group because they will fetch their property from their child
+        //firebase binding for selection, visibility and visibility in tree
+        firebaseView.bind(item, ['selected', 'visibleInTree'], `models.${safeItemId}.mesh`);
+
+        //do not bind 'visible' property with group because they will fetch their 
+        //property from their child
         if (item['@type'] !== 'Group') {
-            firebaseView.bind(item.mesh, ['visible'],'models.'+item['@id']+'.mesh');
+            firebaseView.bind(item.mesh, ['visible'], `models.${safeItemId}.mesh`);
         }
     }
 
