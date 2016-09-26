@@ -189,9 +189,9 @@ var FirebaseView = (function () {
 
         //propagate event on value
         function onValueFireEvent () {
-            requestAnimationFrame(function () {
+            setTimeout(function () {
                 mainApp.emit('firebaseView.viewChanged');
-            });
+            }, 50);
         }
         namespaces.root.listeners.push(onValueFireEvent);
 
@@ -455,7 +455,7 @@ var FirebaseView = (function () {
         ref.on('child_changed', function (snapshot) {
             setTimeout(function () {
                 onValue(snapshot, snapshot.key);
-            },100);
+            },10);
         });
 
         singleton.auth = firebase.auth().currentUser;
@@ -517,7 +517,10 @@ var FirebaseView = (function () {
                             namespaces[name].commiters.map(fn => fn());
                         }
                     }
-                    dbRootObj.$save();
+                    dbRootObj.$save().then(ref => {
+                    }, error => {
+                        console.log(error);
+                    });
 
                     //since user has created the view he does not have to load the initial view
                     createdView = false;
@@ -564,7 +567,12 @@ var FirebaseView = (function () {
                     }
                 }
             }
-            else if (singleton.auth && singleton.auth.uid === dbRootObj.lastModifiedBy && namespace !== 'root' && namespace !== 'viewers' && namespace !== 'sceneCrosshair' && namespace !== 'authors' && namespace !== 'crosshair') {
+            else if (singleton.auth && singleton.auth.uid === dbRootObj.lastModifiedBy &&
+                namespace !== 'root' &&
+                namespace !== 'viewers' &&
+                namespace !== 'sceneCrosshair' &&
+                namespace !== 'authors' &&
+                namespace !== 'crosshair') {
                 undoRedoManager.saveState(snapshot, namespace, dbRootObj.lastModifiedAt);
             }
         }
@@ -670,9 +678,9 @@ var FirebaseView = (function () {
 
     singleton.bind = function (obj, key, path) {
         var pathArray = path !== '' ? path.split('.') : [];
-
+        
         createBinding(obj, key, pathArray);
-
+        
         var bindObject = {
             obj : obj,
             key : key,
