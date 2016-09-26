@@ -21,7 +21,7 @@ const filesList = [
         "bower_components/firebase/firebase.js",
         "bower_components/angularfire/dist/angularfire.min.js",
         "bower_components/angular-ui-layout/src/ui-layout.js",
-        "bower_components/angularjs-slider/dist/rzslider.min.js",
+        "libs/rzslicer.js",
         "bower_components/moment/min/moment-with-locales.min.js",
         "bower_components/zlib.js/bin/zlib_and_gzip.min.js",
         "bower_components/dat.gui/dat.gui.min.js",
@@ -108,7 +108,7 @@ const styleList = [
     "libs/font-awesome/css/font-awesome.min.css",
     "bower_components/adapt-strap/dist/adapt-strap.min.css",
     "bower_components/angular-ui-layout/src/ui-layout.css",
-    "bower_components/angularjs-slider/dist/rzslicer.min.css",
+    "libs/rzslicer.css",
     "libs/ng-tags/ng-tags-input.min.css",
     "libs/ng-tags/ng-tags-input.bootstrap.min.css",
     "style.css"
