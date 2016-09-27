@@ -54,7 +54,7 @@ angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', funct
             }
         }
 
-        var colorTable = new Int32Array(Math.pow(2,8*volume.data.BYTES_PER_ELEMENT)),
+        var colorTable = {},
             structure,
             selector,
             structures = mainApp.atlasStructure.Structure,
