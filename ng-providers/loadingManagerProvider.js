@@ -80,64 +80,15 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
         }
     }
 
-    function loadVTKModel(structure) {
-        var file;
-        if (Array.isArray(structure.sourceSelector)) {
-            var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
-            if (geometrySelector) {
-
-                //prepend base url if it exists
-                if (geometrySelector.dataSource.baseURL) {
-                    file = getUrl(geometrySelector.dataSource.baseURL.url + geometrySelector.dataSource.source);
-                }
-                else {
-                    file = getUrl(geometrySelector.dataSource.source);
-                }
-            }
-            else {
-                throw 'In case of multiple selectors, VTK selector should have an array as @type which includes "GeometrySelector"';
-            }
-        }
-        else {
-
-            //prepend base url if it exists
-            if (structure.sourceSelector.dataSource.baseURL) {
-                file = getUrl(structure.sourceSelector.dataSource.baseURL.url + structure.sourceSelector.dataSource.source);
-            }
-            else {
-                file = getUrl(structure.sourceSelector.dataSource.source);
-            }
-        }
-
-        vtkLoader.load(file, function (geometry) {
-
-            var item = structure;
-
-            geometry.computeVertexNormals();
-
-            var material = new THREE.MeshPhongMaterial({
-                wireframe : false,
-                morphTargets : false,
-                side : THREE.DoubleSide,
-                color : item.renderOption.color >> 8 //get rid of alpha
-            });
-
-            material.opacity = (item.renderOption.color & 0xff)/255;
-            material.visible = true;
-
-
-            if (material.opacity < 1) {
-                material.transparent = true;
-            }
-
-
-            var mesh = new THREE.Mesh(geometry, material);
-
-            onNewMesh(item, mesh, file);
-
-        });
+    function loadSTLModel(structure) { 
+        return loadModel(structure, stlLoader);
     }
-    function loadSTLModel(structure) {
+
+    function loadVTKModel(structure) { 
+        return loadModel(structure, vtkLoader);
+    }
+
+    function loadModel(structure, threeLoader) {
         var file;
         if (Array.isArray(structure.sourceSelector)) {
             var geometrySelector = structure.sourceSelector.find(selector => selector['@type'].includes('GeometrySelector'));
@@ -152,7 +103,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
                 }
             }
             else {
-                throw 'In case of multiple selectors, STL selector should have an array as @type which includes "GeometrySelector"';
+                throw 'In case of multiple selectors, selector should have an array as @type which includes "GeometrySelector"';
             }
         }
         else {
@@ -166,10 +117,9 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             }
         }
 
-        stlLoader.load(file, function (geometry) {
+        threeLoader.load(file, function (geometry) {
 
             var item = structure;
-
             geometry.computeVertexNormals();
 
             var material = new THREE.MeshPhongMaterial({
@@ -182,16 +132,12 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             material.opacity = (item.renderOption.color & 0xff)/255;
             material.visible = true;
 
-
             if (material.opacity < 1) {
                 material.transparent = true;
             }
 
-
             var mesh = new THREE.Mesh(geometry, material);
-
             onNewMesh(item, mesh, file);
-
         });
     }
 
@@ -272,8 +218,6 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             }, function () {}, function () {} );
 
         });
-
-
     }
 
     function dealWithAtlasStructure(data) {
@@ -316,7 +260,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
             }
         });
 
-        singleton.totalNumberOfModels = vtkStructures.length + objStructures.length;
+        singleton.totalNumberOfModels = vtkStructures.length + objStructures.length + stlStructures.length;
 
 
         for (i = 0; i<vtkStructures.length; i++) {
