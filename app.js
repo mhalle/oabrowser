@@ -46,6 +46,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         header = atlasStructure.Header;
     });
 
+    // Firebase doesn't like otherwise-not-special characters in its attribute names,
+    // so convert to base64 if needed. Note that URL quoting isn't quite enough,
+    // because "." is a special character for firebase.
     function encodeFirebaseAttribute(str) {
         var disallowed = /[#\.[\]$\/]/;
         if (disallowed.test(str)) {
@@ -68,9 +71,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 }
             });
         }
-        // Firebase doesn't like otherwise-not-special characters in its attribute names,
-        // so convert to base64 if needed. Note that URL quoting isn't quite enough,
-        // because "." is a special character for firebase and 
+
         var safeItemId = encodeFirebaseAttribute(item['@id']);
 
         //firebase binding for selection, visibility and visibility in tree
@@ -365,6 +366,7 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 }
             }
             mainApp.emit('mouseOverScene', {object:object, point :point});
+            // console.log(point);
             mainApp.emit('mouseOverObject', object);
             needPickupUpdate = false;
         }
@@ -403,25 +405,25 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         position.x = ( (event.clientX-containerOffset.left) / container.clientWidth ) * 2 - 1;
         position.y = - ( (event.clientY-containerOffset.top) / container.clientHeight ) * 2 + 1;
 
-        if (time - mousedownDate < 300 && mousedownPosition.distanceTo(position)<5) {
-
+        if (time - mousedownDate < 300 && mousedownPosition.distanceTo(position) < 5) {
             raycaster.setFromCamera( position, camera );
-
             var intersects = raycaster.intersectObjects( meshesList );
+            var firstIntersect = intersects.length > 0 ? intersects[0] : null;
+            var intersectedAtlasStructure = firstIntersect ? firstIntersect.object.atlasStructure : null;
 
-            var object = null;
-            if (intersects.length > 0) {
-                object = intersects[0].object;
-                if (event.ctrlKey) {
-                    if (object.selected) {
-                        objectSelector.removeFromSelection(object.atlasStructure);
+            if(event.ctrlKey) {
+                if(firstIntersect) {
+                    if(intersectedAtlasStructure.selected) {
+                        objectSelector.removeFromSelection(intersectedAtlasStructure);
                     }
                     else {
-                        objectSelector.addToSelection(object.atlasStructure);
+                        objectSelector.addToSelection(firstIntersect.object.atlasStructure);
                     }
                 }
-                else if (event.altKey && volumesManager.compositingSlices.axial) {
-                    var point = intersects[0].point;
+            }
+            else if (event.altKey && volumesManager.compositingSlices.axial) {
+                if(firstIntersect) {
+                    var point = firstIntersect.point;
                     var offset = volumesManager.volumes[0].RASDimensions;
                     volumesManager.compositingSlices.sagittal.index = Math.floor(point.x + offset[0]/2);
                     volumesManager.compositingSlices.sagittal.repaint(true);
@@ -430,16 +432,15 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                     volumesManager.compositingSlices.axial.index = Math.floor(point.z + offset[2]/2);
                     volumesManager.compositingSlices.axial.repaint(true);
                 }
+            }
+            else {
+                if(firstIntersect) {
+                    objectSelector.select(intersectedAtlasStructure);
+                }
                 else {
-                    if (object.selected) {
-                        objectSelector.clearSelection();
-                    }
-                    else {
-                        objectSelector.select(object);
-                    }
+                    objectSelector.clearSelection();
                 }
             }
-
         }
 
     }
