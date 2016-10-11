@@ -230,3 +230,9 @@ LightKit.prototype = {
 
 
 };
+
+if ( typeof module === 'object' ) {
+
+        module.exports = LightKit;
+
+}
