@@ -114,8 +114,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         //send a signal to the modal
         mainApp.emit('modal.hierarchyLoaded');
-
-
     }
 
     function finishSceneSetup() {
@@ -140,13 +138,11 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         container.appendChild( renderer.domElement );
 
-
         // setup stats
         stats = new Stats();
         stats.domElement.style.position = 'absolute';
         stats.domElement.style.top = '0px';
         container.appendChild( stats.domElement );
-
 
         //save slices mesh in a list with model meshes for the pickup feature
         mainApp.on('insertSlice', function (data) {
@@ -154,7 +150,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 meshesAndSlicesList.push(data.slice.mesh);
             }
         });
-
 
         //setup resize feature
 
@@ -190,7 +185,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
     function init() {
 
         container = document.getElementById('rendererFrame');
-
 
         //set position according to global parameters
         var distanceToOrigin = window.globalViewerParameters.cameraInitialDistanceToOrigin || 300;
@@ -243,7 +237,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         lightKit = new LightKit(camera, controls, scene);
 
-
         //fetch atlas structure
 		var atlasStructurePath = window.localStorage.getItem('atlasStructureToLoad') || window.globalViewerParameters && window.globalViewerParameters.atlasStructurePath;
 		window.localStorage.removeItem('atlasStructureToLoad');
@@ -254,14 +247,10 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             throw 'Atlas structure path is not defined in global parameters';
         }
 
-
-
         setupGUI();
         setupInset();
 
         mainApp.on('loadingManager.atlasStructureLoaded', finishSceneSetup);
-
-
     }
 
     function setupGUI () {
@@ -317,7 +306,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         controls.handleResize();
 
         containerOffset = $(container).offset();
-
     }
 
     function animate(time) {
@@ -339,7 +327,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         stats.update();
         displayPickup();
         TWEEN.update(time);
-
     }
 
     function displayPickup() {
@@ -370,7 +357,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             mainApp.emit('mouseOverObject', object);
             needPickupUpdate = false;
         }
-
     }
 
     function onSceneMouseMove(event) {
@@ -386,17 +372,13 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         else {
             needPickupUpdate = false;
         }
-
-
     }
 
     function onSceneMouseDown (event) {
-
         mousedownPosition.x = ( (event.clientX-containerOffset.left) / container.clientWidth ) * 2 - 1;
         mousedownPosition.y = - ( (event.clientY-containerOffset.top) / container.clientHeight ) * 2 + 1;
         mousedownDate = Date.now();
         needPickupUpdate = false;
-
     }
 
     function onSceneMouseUp (event) {
@@ -442,7 +424,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
                 }
             }
         }
-
     }
 
     function setupInset() {
@@ -519,7 +500,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         var sprite = new THREE.Sprite( spriteMaterial );
         sprite.scale.set(fontsize,fontsize,1.0);
         return sprite;
-
     }
 
     function tweenCamera (position, target, up) {
@@ -597,9 +577,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         }
         //using custom bind because of the tween, we don't want the camera position to be changed immediatly
         firebaseView.customBind(cameraPlanesWatchCallback, cameraPlaneDbChangeCallback, ['cameraPlanes']);
-
-
-
     }
 
     function getSceneBoundingBox () {
@@ -616,7 +593,6 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             min.min(bb.min);
             max.max(bb.max);
         }
-
         return {min : min, max : max};
     }
 
