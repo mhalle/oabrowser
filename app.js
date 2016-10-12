@@ -2,7 +2,9 @@ if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
 }
 
-angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volumesManager", "firebaseView", "loadingManager", function (mainApp, objectSelector, atlasJson, volumesManager, firebaseView, loadingManager) {
+angular.module('atlasDemo')
+    .run(["mainApp", "objectSelector", "atlasJson", "volumesManager", "firebaseView", "loadingManager", 
+        function (mainApp, objectSelector, atlasJson, volumesManager, firebaseView, loadingManager) {
 
     var container,
         stats,
@@ -88,7 +90,8 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         if (item['@type']==='Group') {
             var childrenMeshes = item.member.map(getMesh);
-            //HierarchyGroup is used instead of THREE.Group because THREE.Group does not allow children to have multiple parents
+            //HierarchyGroup is used instead of THREE.Group because THREE.Group 
+            // does not allow children to have multiple parents
             item.mesh = new HierarchyGroup();
             item.mesh.atlasStructure = item;
             for (var i = 0; i< childrenMeshes.length; i++) {
@@ -238,7 +241,9 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         lightKit = new LightKit(camera, controls, scene);
 
         //fetch atlas structure
-		var atlasStructurePath = window.localStorage.getItem('atlasStructureToLoad') || window.globalViewerParameters && window.globalViewerParameters.atlasStructurePath;
+		var atlasStructurePath = (window.localStorage.getItem('atlasStructureToLoad') || 
+                            window.globalViewerParameters && 
+                            window.globalViewerParameters.atlasStructurePath);
 		window.localStorage.removeItem('atlasStructureToLoad');
         if (atlasStructurePath) {
             loadingManager.loadAtlasStructure(atlasStructurePath);
@@ -263,23 +268,33 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
 
         var lightKitGui = gui.addFolder('LightKit');
 
-        lightKitGui.add(lightKit, 'intensity',0,0.02).name('Light Intensity').onChange(function () {lightKit.updateIntensity();});
+        lightKitGui.add(lightKit, 'intensity',0,0.02)
+            .name('Light Intensity')
+            .onChange(function () {lightKit.updateIntensity();});
         var menu = lightKitGui.addFolder('Warmth');
         var id;
         for (id in lightKit.lights) {
-            menu.add(lightKit.warmth, id, 0,1).name(id+' warmth').onChange(function(){lightKit.updateColor();});
+            menu.add(lightKit.warmth, id, 0,1)
+                .name(id+' warmth')
+                .onChange(function(){lightKit.updateColor();});
         }
         menu = lightKitGui.addFolder('Intensity Ratio');
         for (id in lightKit.lights) {
-            menu.add(lightKit.ratio, id, 1,10).name(id+' intensity ratio').onChange(function(){lightKit.updateIntensity();});
+            menu.add(lightKit.ratio, id, 1,10)
+                .name(id+' intensity ratio')
+                .onChange(function(){lightKit.updateIntensity();});
         }
         menu = lightKitGui.addFolder('Longitude');
         for (id in lightKit.lights) {
-            menu.add(lightKit.longitude, id, -180, 180).name(id+' longitude').onChange(function(){lightKit.updatePosition();});
+            menu.add(lightKit.longitude, id, -180, 180)
+                .name(id+' longitude')
+                .onChange(function(){lightKit.updatePosition();});
         }
         menu = lightKitGui.addFolder('Latitude');
         for (id in lightKit.lights) {
-            menu.add(lightKit.latitude, id, -90,90).name(id+' latitude').onChange(function(){lightKit.updatePosition();});
+            menu.add(lightKit.latitude, id, -90,90)
+                .name(id+' latitude')
+                .onChange(function(){lightKit.updatePosition();});
         }
 
         var materialController = new THREE.MeshPhongMaterial({});
@@ -290,8 +305,12 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
             });
         }
         menu = gui.addFolder('Material');
-        menu.addColor(materialController, 'specular').name('Specular').onChange(function () {updateMaterials('specular');});
-        menu.add(materialController, 'shininess',0,100).name('Shininess').onChange(function () {updateMaterials('shininess');});
+        menu.addColor(materialController, 'specular')
+            .name('Specular')
+            .onChange(function () {updateMaterials('specular');});
+        menu.add(materialController, 'shininess',0,100)
+            .name('Shininess')
+            .onChange(function () {updateMaterials('shininess');});
 
         gui.close();
     }
@@ -600,9 +619,12 @@ angular.module('atlasDemo').run(["mainApp", "objectSelector", "atlasJson", "volu
         commitAfter = commitAfter || true;
         var bb = getSceneBoundingBox(),
             center = (new THREE.Vector3()).lerpVectors(bb.min, bb.max, 0.5),
-            height = 1.2*(Math.max(bb.max.y-center.y, bb.max.x - center.x)) / (Math.tan(camera.fov * Math.PI / 360)),
+            height = 1.2*(Math.max(bb.max.y-center.y, bb.max.x - center.x)) / 
+                         (Math.tan(camera.fov * Math.PI / 360)),
             initialPosition = window.globalViewerParameters.cameraInitialPositionVector || [0,0,1],
-            cameraPosition = new THREE.Vector3(center.x + height*initialPosition[0], center.y + height*initialPosition[1], center.z + height*initialPosition[2]),
+            cameraPosition = new THREE.Vector3(center.x + height*initialPosition[0], 
+                            center.y + height*initialPosition[1], 
+                            center.z + height*initialPosition[2]),
             initialUp = window.globalViewerParameters.cameraInitialUpVector || [0,1,0],
             up = new THREE.Vector3(initialUp[0], initialUp[1], initialUp[2]);
 
