@@ -1,17 +1,29 @@
 require("jquery");
+require("jquery-mousewheel");
 
 require("inobounce");
 require('angular');
 require("angular-sanitize");
 require("angular-animate");
-
-require("adapt-strap/dist/adapt-strap.min.js");
-require("adapt-strap/dist/adapt-strap.tpl.min.js");
 require("angularfire");
-require("angular-ui-layout");
-require("./libs/rzslicer.js");
+
+// strange bug in requiring the module itself
+require("adapt-strap/dist/adapt-strap.js");
+require("adapt-strap/dist/adapt-strap.tpl.js");
+require("adapt-strap/dist/adapt-strap.css");
 
 require("bootstrap");
+require("bootstrap/dist/css/bootstrap.css");
+
+require("angular-ui-layout");
+require("angular-ui-layout/src/ui-layout.css");
+
+require('ng-tags-input');
+require('ng-tags-input/build/ng-tags-input.css');
+require('ng-tags-input/build/ng-tags-input.bootstrap.css');
+
+require("./libs/rzslicer.js");
+require("./libs/rzslicer.css");
 
 require("./libs/three/TrackballControls.js");
 require("./libs/three/VTKLoader.js");
@@ -19,13 +31,10 @@ require("./libs/three/STLLoader.js");
 require("./libs/three/Detector.js");
 require("./libs/three/NRRDLoader.js");
 
+require("./libs/ui-bootstrap-tpls-1.3.1.min.js");
+
 require("./libs/MTLLoader.js");
 require("./libs/OBJLoader.js");
-
-require("./libs/jquery.mousewheel.js");
-require("./libs/ui-bootstrap-tpls-1.3.1.min.js");
-require("./libs/ng-tags/ng-tags-input.min.js");
-
 require("./libs/Volume.js");
 require("./libs/VolumeSlice.js");
 require("./libs/MultiVolumesSlice.js");
@@ -60,11 +69,5 @@ require("./ng-controllers/loginModalController.js");
 
 require("./app.js");
 
-require("bootstrap/dist/css/bootstrap.css");
-require("adapt-strap/dist/adapt-strap.min.css");
-require("angular-ui-layout/src/ui-layout.css");
-require("./libs/rzslicer.css");
-require("./libs/ng-tags/ng-tags-input.min.css");
-require("./libs/ng-tags/ng-tags-input.bootstrap.min.css");
-require("./libs/font-awesome/css/font-awesome.min.css");
+// require("./libs/font-awesome/css/font-awesome.min.css");
 require("./style.css");

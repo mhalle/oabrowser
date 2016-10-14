@@ -6,11 +6,12 @@ var webpack = require("webpack");
 
 
 var config = {
+    devtool: "source-map",
     entry: {
-       index: "./index"
+        index: "./index"
     },
     output: {
-        path: path.join(__dirname, 'buildwp'),
+        path: path.join(__dirname, 'build'),
         filename: "[name].bundle.js"
     },
     module: {
@@ -56,6 +57,10 @@ var config = {
                 }
             },
             {
+                test: /ng-templates.*.html$/,
+                loader: 'ngtemplate!html'
+            },
+            {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
             },
@@ -69,7 +74,8 @@ var config = {
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
-             "window.jQuery": "jquery",
+            "window.jQuery": "jquery",
+            THREE: "three",
         })
     ]
 }
