@@ -3,7 +3,6 @@
  *
  * @author angelxuanchang
  */
-const THREE = require('three');
 
 THREE.MTLLoader = function( manager ) {
 

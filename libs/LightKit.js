@@ -7,8 +7,6 @@
  * @param   {THREE.Camera} camera The camera to which lightkit will be bound
  */
 
-const THREE = require('three');
-
 function LightKit ( camera, controls, scene ) {
 
     this.camera = camera;

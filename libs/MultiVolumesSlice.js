@@ -3,7 +3,6 @@
  * @class
  * @see THREE.MultiVolumesSlice
  */
-const THREE = require('three');
 
 THREE.MultiVolumesSlice = function( ) {
 
