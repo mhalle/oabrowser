@@ -1,10 +1,11 @@
 const angular = require('angular');
 const moment = require('moment');
+const templateUrl = require('../ng-templates/messages.html');
 
 angular.module('atlasDemo').directive( 'messages', function () {
     return {
         restrict: 'EA',
-        templateUrl: 'ng-templates/messages.html',
+        templateUrl: templateUrl,
         scope: {},
         controller: ['$scope', '$element', 'mainApp', 'firebaseView', function ( $scope, $element, mainApp, firebaseView ) {
 

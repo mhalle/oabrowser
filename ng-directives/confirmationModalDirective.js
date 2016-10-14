@@ -1,9 +1,10 @@
 const angular = require('angular');
+const templateUrl = require('../ng-templates/confirmationModal.html');
 
 angular.module('atlasDemo').directive( 'confirmationModal', function () {
     return {
         restrict: 'EA',
-        templateUrl: 'ng-templates/confirmationModal.html',
+        templateUrl: templateUrl,
         scope: {},
         controller: ['$scope', '$element', 'mainApp', function ( $scope, $element, mainApp ) {
 

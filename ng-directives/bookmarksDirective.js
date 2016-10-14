@@ -1,9 +1,10 @@
 const angular = require('angular');
+const templateUrl = require('../ng-templates/bookmarks.html');
 
 angular.module('atlasDemo').directive( 'bookmarks', function () {
     return {
         restrict: 'EA',
-        templateUrl: 'ng-templates/bookmarks.html',
+        templateUrl: templateUrl,
         scope: {},
         controller: ['$scope', '$element', 'mainApp', 'firebaseView', function ( $scope, $element, mainApp, firebaseView ) {
 

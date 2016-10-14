@@ -1,11 +1,12 @@
 const angular = require('angular');
 const throttle = require('throttle-debounce').throttle;
+const templateUrl = require('../ng-templates/sceneCrosshair.html');
 
 angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
     return {
         restrict: 'EA',
         scope: {},
-        templateUrl : 'ng-templates/sceneCrosshair.html',
+        templateUrl : templateUrl,
         controller: ['$scope', '$element', 'mainApp', 'firebaseView', function ( $scope, $element, mainApp, firebaseView) {
 
             $scope.style = {

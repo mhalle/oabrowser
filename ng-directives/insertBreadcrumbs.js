@@ -1,10 +1,11 @@
 const angular = require('angular');
+const templateUrl = require('../ng-templates/breadcrumbs.html');
 
 angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', function (objectSelector) {
     return {
         restrict: 'A',
         scope: {},
-        templateUrl : "ng-templates/breadcrumbs.html",
+        templateUrl : templateUrl,
         controller: ['$scope', '$element', 'mainApp', 'atlasJson', function ( $scope, $element, mainApp, atlasJson ) {
 
             function getAllTheHierarchyPaths(object) {

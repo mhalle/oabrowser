@@ -1,10 +1,10 @@
 const angular = require('angular');
-
+const templateUrl = require('../ng-templates/slicePanel.html');
 
 angular.module('atlasDemo').directive( 'insertSlice', function () {
     return {
         restrict: 'A',
-        templateUrl: 'ng-templates/slicePanel.html',
+        templateUrl: templateUrl,
         scope: { sliceId : '=sliceid' },
         controller: ['$scope', '$element', 'mainApp', 'volumesManager', 'crosshair', 'firebaseView', function ( $scope, $element, mainApp, volumesManager, crosshair, firebaseView ) {
 

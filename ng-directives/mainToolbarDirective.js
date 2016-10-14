@@ -1,9 +1,10 @@
 const angular = require('angular');
+const templateUrl = require('../ng-templates/mainToolbar.html');
 
 angular.module('atlasDemo').directive( 'mainToolbar', function () {
     return {
         restrict: 'A',
-        templateUrl: 'ng-templates/mainToolbar.html',
+        templateUrl: templateUrl,
         scope: {},
         controller: ['$scope', '$element', '$uibModal', 'mainApp', 'volumesManager', 'crosshair', 'firebaseView', 'screenshotScene', function ( $scope, $element, $uibModal, mainApp, volumesManager, crosshair, firebaseView, screenshotScene) {
 
