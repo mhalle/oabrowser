@@ -21,8 +21,6 @@ require("./libs/three/NRRDLoader.js");
 
 require("./libs/MTLLoader.js");
 require("./libs/OBJLoader.js");
-require("./hierarchyGroup.js");
-require("./libs/LightKit.js");
 
 require("./libs/jquery.mousewheel.js");
 require("./libs/ui-bootstrap-tpls-1.3.1.min.js");

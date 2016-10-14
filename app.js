@@ -5,6 +5,7 @@ const HierarchyGroup = require('./libs/HierarchyGroup');
 const Stats = require('./libs/three/stats.min.js');
 const TWEEN = require('tween.js');
 const Detector = require('./libs/three/Detector');
+const THREE = require('three');
 
 if (!Detector.webgl) {
     Detector.addGetWebGLMessage();

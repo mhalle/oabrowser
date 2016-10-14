@@ -1,5 +1,6 @@
 const angular = require('angular');
 const throttle = require('throttle-debounce').throttle;
+const THREE = require('three');
 
 angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
     return {

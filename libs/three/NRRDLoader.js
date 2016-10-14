@@ -1,3 +1,4 @@
+const THREE = require('three');
 const zlib = require('pako');
 
 THREE.NRRDLoader = function( manager ) {

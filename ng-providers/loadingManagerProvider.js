@@ -1,6 +1,7 @@
 const angular = require('angular');
 const URI = require('urijs');
 const dat = require('dat-gui');
+const THREE = require('three');
 
 angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volumesManagerProvider', 'atlasJsonProvider', function (mainAppProvider, volumesManagerProvider, atlasJsonProvider) {
 

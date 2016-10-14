@@ -3,6 +3,7 @@
  * @author Alex Pletzer
  */
 
+const THREE = require('three');
 const zlib = require('pako');
 
 THREE.VTKLoader = function( manager ) {

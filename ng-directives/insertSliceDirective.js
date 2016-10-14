@@ -1,4 +1,5 @@
 const angular = require('angular');
+const THREE = require('three');
 
 angular.module('atlasDemo').directive( 'insertSlice', function () {
     return {

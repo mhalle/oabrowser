@@ -7,6 +7,8 @@
  * @param   {string}       [axis='z']      For now only 'x', 'y' or 'z' but later it will change to a normal vector
  * @see THREE.Volume
  */
+const THREE = require('three');
+
 THREE.VolumeSlice = function( volume, index, axis ) {
 
 	var slice = this;
