@@ -70,10 +70,8 @@ var config = {
             $: "jquery",
             jQuery: "jquery",
              "window.jQuery": "jquery",
-             moment: "moment",
-             Detector: "./node_modules/three/examples/js/Detector.js",
-            THREE: "three"
-            
+             "THREE": "three"
+                    
         })
     ]
 }

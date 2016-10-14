@@ -1,3 +1,4 @@
+const angular = require('angular');
 
 angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', function (objectSelector) {
     return {

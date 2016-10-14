@@ -1,3 +1,11 @@
+const angular = require('angular');
+const LightKit = require('./libs/LightKit');
+const dat = require('dat-gui');
+const HierarchyGroup = require('./libs/HierarchyGroup');
+const Stats = require('./libs/three/stats.min.js');
+const TWEEN = require('tween.js');
+const Detector = require('./libs/three/Detector');
+
 if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
 }

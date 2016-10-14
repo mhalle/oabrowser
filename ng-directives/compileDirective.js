@@ -1,3 +1,5 @@
+const angular = require('angular');
+
 //this directive compile the given string and insert it as child of the element
 //I have found here : http://stackoverflow.com/a/17426614/5866184
 //example : <div compile="text"> with $scope.text = '<a ng-click="action()"></a>'

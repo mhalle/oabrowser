@@ -1,3 +1,5 @@
+const angular = require('angular');
+
 angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', function (mainAppProvider) {
 
     var mainApp = mainAppProvider.$get(),

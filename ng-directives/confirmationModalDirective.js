@@ -1,3 +1,5 @@
+const angular = require('angular');
+
 angular.module('atlasDemo').directive( 'confirmationModal', function () {
     return {
         restrict: 'EA',

@@ -1,3 +1,5 @@
+const angular = require('angular');
+
 angular.module('atlasDemo').directive( 'bookmarks', function () {
     return {
         restrict: 'EA',

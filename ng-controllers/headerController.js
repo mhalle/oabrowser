@@ -1,3 +1,5 @@
+const angular = require('angular');
+
 angular.module('atlasDemo').controller('HeaderCtrl',['$scope', 'mainApp', function ($scope, mainApp) {
 
     $scope.data = {

@@ -1,3 +1,5 @@
+const THREE = require('three');
+
 function HierarchyGroup () {
     this.children =[];
     this.hierarchyParents = [];
@@ -91,3 +93,5 @@ HierarchyGroup.prototype = {
 		return this;
     }
 };
+
+module.exports = HierarchyGroup;

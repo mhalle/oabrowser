@@ -1,3 +1,5 @@
+const angular = require('angular');
+
 //this filter converts a dictionnary of object to an array of object but keep the key as the $key attribute of each object
 angular.module('atlasDemo').filter('toArray', function () {
     'use strict';

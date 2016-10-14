@@ -1,3 +1,5 @@
+const angular = require('angular');
+
 angular.module('atlasDemo').controller('LoginModalController', ['$scope', '$uibModalInstance', 'firebaseView', function ($scope, $uibModalInstance, firebaseView) {
 
 

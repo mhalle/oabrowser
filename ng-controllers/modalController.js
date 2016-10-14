@@ -1,3 +1,5 @@
+const angular = require('angular');
+
 angular.module('atlasDemo').controller('ModalDemoCtrl', ['$scope', '$uibModal', function ($scope, $uibModal) {
 
     $uibModal.open({

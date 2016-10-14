@@ -1,3 +1,8 @@
+const angular = require('angular');
+const firebase = require('firebase');
+const debounce = require('throttle-debounce').debounce;
+
+
 var FirebaseView = (function () {
     var singleton = {},
         $root,
@@ -476,12 +481,12 @@ var FirebaseView = (function () {
         }
 
 
-        var onMouseUp = (function () {
+        var onMouseUp =  debounce(30, function () {
             commit();
-        }).debounce(30);
-        var onMouseWheel = (function () {
+        });
+        var onMouseWheel = debounce(1000, function () {
             commit();
-        }).debounce(1000);
+        });
         $body = $(document.body);
         $body.on('mouseup', onMouseUp);
         $body.on('mousewheel', onMouseWheel);

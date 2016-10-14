@@ -1,3 +1,6 @@
+const angular = require('angular');
+const throttle = require('throttle-debounce').throttle;
+
 angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
     return {
         restrict: 'EA',
@@ -14,11 +17,11 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
 
 
             var canvas = $('#rendererFrame canvas'),
-                debouncedCommit = (function () {
+                debouncedCommit = throttle(150, function () {
                     if (firebaseView.isLastModifier()) {
                         firebaseView.commit('sceneCrosshair');
                     }
-                }).throttle(150);
+                });
 
             $scope.safeApply = function(fn) {
                 //if scope has been destroyed, ie if modal has been dismissed, $root is null

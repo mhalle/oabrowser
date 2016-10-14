@@ -1,3 +1,5 @@
+const angular = require('angular');
+
 var UndoRedoManager = (function () {
 
     var singleton = {},

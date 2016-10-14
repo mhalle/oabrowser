@@ -1,3 +1,6 @@
+const angular = require('angular');
+const debounce = require('throttle-debounce').debounce;
+
 angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesManagerProvider", function (mainAppProvider, volumesManagerProvider) {
 
     var singleton = {},
@@ -8,12 +11,11 @@ angular.module('atlasDemo').provider("crosshair", ["mainAppProvider", "volumesMa
         visible = false,
         mouseOverCrosshair = {},
         firebaseView,
-        debouncedCommit = (function () {
+        debouncedCommit = debounce(150, function () {
             if(firebaseView) {
                 firebaseView.commit('crosshair');
             }
-        }).debounce(150);
-
+        });
 
     function computeCrosshairPosition () {
         var sagittal = volumesManager.compositingSlices.sagittal,

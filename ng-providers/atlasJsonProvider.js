@@ -1,3 +1,5 @@
+const angular = require('angular');
+
 angular.module('atlasDemo').provider('atlasJson', [function () {
 
     var ids,

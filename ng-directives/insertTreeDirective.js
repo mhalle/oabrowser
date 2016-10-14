@@ -1,3 +1,4 @@
+const angular = require('angular');
 
 angular.module('atlasDemo').directive( 'insertTree', ['$compile', function ( $compile ) {
     return {

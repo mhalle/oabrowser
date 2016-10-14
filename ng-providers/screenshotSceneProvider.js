@@ -1,4 +1,6 @@
 
+const angular = require('angular');
+
 angular.module('atlasDemo').provider('screenshotScene', ['mainAppProvider', function (mainAppProvider) {
 
     var singleton = {},

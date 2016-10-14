@@ -1,3 +1,4 @@
+const angular = require('angular');
 
 angular.module('atlasDemo').directive( 'mainToolbar', function () {
     return {
