@@ -1,4 +1,3 @@
-//
 /**
  * @author Eberhard Graether / http://egraether.com/
  * @author Mark Lundin 	/ http://mark-lundin.com
@@ -207,7 +206,6 @@ THREE.TrackballControls = function ( object, domElement ) {
 		var factor;
 
 		if ( _state === STATE.TOUCH_ZOOM_PAN ) {
-
 			factor = _touchZoomDistanceStart / _touchZoomDistanceEnd;
 			_touchZoomDistanceStart = _touchZoomDistanceEnd;
 			_eye.multiplyScalar( factor );
@@ -220,17 +218,17 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 				_eye.multiplyScalar( factor );
 
-				if ( _this.staticMoving ) {
+			}
 
-					_zoomStart.copy( _zoomEnd );
+			if ( _this.staticMoving ) {
 
-				} else {
+				_zoomStart.copy( _zoomEnd );
 
-					_zoomStart.y += ( _zoomEnd.y - _zoomStart.y ) * this.dynamicDampingFactor;
-
-				}
+			} else {
+				_zoomStart.y += ( _zoomEnd.y - _zoomStart.y ) * this.dynamicDampingFactor;
 
 			}
+			
 
 		}
 
