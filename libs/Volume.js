@@ -11,7 +11,6 @@
  * @param   {string}        type            The type of data (uint8, uint16, ...)
  * @param   {ArrayBuffer}   arrayBuffer     The buffer with volume data
  */
-const THREE = require('three');
 
 THREE.Volume = function( xLength, yLength, zLength, type, arrayBuffer ) {
 

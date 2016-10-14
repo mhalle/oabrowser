@@ -1,5 +1,4 @@
 const angular = require('angular');
-const THREE = require('three');
 
 angular.module('atlasDemo').provider('volumesManager', ['mainAppProvider', function (mainAppProvider) {
 

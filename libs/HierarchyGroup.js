@@ -1,5 +1,3 @@
-const THREE = require('three');
-
 function HierarchyGroup () {
     this.children =[];
     this.hierarchyParents = [];

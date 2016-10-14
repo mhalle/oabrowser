@@ -1,7 +1,6 @@
 /**
  * @author mrdoob / http://mrdoob.com/
  */
-const THREE = require('three');
 
 THREE.OBJLoader = function ( manager ) {
 
