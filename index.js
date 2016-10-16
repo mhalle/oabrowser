@@ -17,6 +17,7 @@ require("bootstrap/dist/css/bootstrap.css");
 
 require("angular-ui-layout");
 require("angular-ui-layout/src/ui-layout.css");
+require("./ng-templates/treeNode.html");
 
 require('ng-tags-input');
 require('ng-tags-input/build/ng-tags-input.css');

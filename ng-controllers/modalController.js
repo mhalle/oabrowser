@@ -1,10 +1,11 @@
 const angular = require('angular');
+const templateUrl = require('../ng-templates/modalContent.html');
 
 angular.module('atlasDemo').controller('ModalDemoCtrl', ['$scope', '$uibModal', function ($scope, $uibModal) {
 
     $uibModal.open({
         animation: true,
-        templateUrl: 'ng-templates/modalContent.html',
+        templateUrl: templateUrl,
         controller: 'ModalInstanceCtrl',
         resolve: {}
     });

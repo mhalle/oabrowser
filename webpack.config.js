@@ -57,8 +57,14 @@ var config = {
                 }
             },
             {
-                test: /ng-templates.*.html$/,
-                loader: 'ngtemplate!html'
+                test: /\.html$/,
+                // this strange configuration corrects for the fact that
+                // 1. we have templates in a separate directory,
+                // 2. ngtemplate-loader encodes full pathname into
+                //    the template cache names. 
+                // This trick strips off the prefix, then adds a normalized 
+                // one back.
+                loader: 'ngtemplate?relativeTo=ng-templates/&prefix=ng-templates/!html'
             },
             {
                 test: /\.css$/,
