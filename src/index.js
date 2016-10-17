@@ -23,22 +23,22 @@ require('ng-tags-input');
 require('ng-tags-input/build/ng-tags-input.css');
 require('ng-tags-input/build/ng-tags-input.bootstrap.css');
 
-require("./libs/rzslicer.js");
-require("./libs/rzslicer.css");
+require("../libs/rzslicer.js");
+require("../libs/rzslicer.css");
 
-require("./libs/three/TrackballControls.js");
-require("./libs/three/VTKLoader.js");
-require("./libs/three/STLLoader.js");
-require("./libs/three/Detector.js");
-require("./libs/three/NRRDLoader.js");
+require("../libs/three/TrackballControls.js");
+require("../libs/three/VTKLoader.js");
+require("../libs/three/STLLoader.js");
+require("../libs/three/Detector.js");
+require("../libs/three/NRRDLoader.js");
 
-require("./libs/ui-bootstrap-tpls-1.3.1.min.js");
+require("../libs/ui-bootstrap-tpls-1.3.1.min.js");
 
-require("./libs/MTLLoader.js");
-require("./libs/OBJLoader.js");
-require("./libs/Volume.js");
-require("./libs/VolumeSlice.js");
-require("./libs/MultiVolumesSlice.js");
+require("../libs/MTLLoader.js");
+require("../libs/OBJLoader.js");
+require("./Volume.js");
+require("./VolumeSlice.js");
+require("./MultiVolumesSlice.js");
 
 require("font-awesome/css/font-awesome.css");
 
@@ -71,4 +71,4 @@ require("./ng-controllers/headerController.js");
 require("./ng-controllers/loginModalController.js");
 
 require("./app.js");
-require("./style.css");
+require("../styles/style.css");

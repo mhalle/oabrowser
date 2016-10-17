@@ -8,7 +8,7 @@ var webpack = require("webpack");
 var config = {
     devtool: "source-map",
     entry: {
-        index: "./index"
+        index: "./src/index"
     },
     output: {
         path: path.join(__dirname, 'build'),
