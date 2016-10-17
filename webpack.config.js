@@ -25,36 +25,24 @@ var config = {
                 }
             },
             {
-                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: 'file',
-                query: {
-                    mimetype: 'application/font-woff',
-                    limit: 50000,
-                    name: './fonts/[hash].[ext]'
-                }
+                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+                loader: 'url?limit=650000&mimetype=image/svg+xml&name=fonts/[name].[ext]'
+            },
+            {
+                test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+                loader: 'url?limit=65000&mimetype=application/font-woff&name=fonts/[name].[ext]'
+            },
+            {
+                test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+                loader: 'url?limit=65000&mimetype=application/font-woff2&name=fonts/[name].[ext]'
+            },
+            {
+                test: /\.[ot]tf(\?v=\d+\.\d+\.\d+)?$/,
+                loader: 'url?limit=65000&mimetype=application/octet-stream&name=fonts/[name].[ext]'
             },
             {
                 test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file',
-                query: {
-                    name: './fonts/[hash].[ext]'
-                },
-            },
-            {
-                test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file',
-                query: {
-                    name: './fonts/[hash].[ext]'
-                }
-            },
-            {
-                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file',
-                query: {
-                    mimetype: 'image/svg+xml',
-                    limit: 10000,
-                    name: './fonts/[hash].[ext]'
-                }
+                loader: 'url?limit=65000&mimetype=application/vnd.ms-fontobject&name=fonts/[name].[ext]'
             },
             {
                 test: /\.html$/,
@@ -68,6 +56,7 @@ var config = {
             },
             {
                 test: /\.css$/,
+                // loader: "style-loader!css-loader",
                 loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
             },
         ]
