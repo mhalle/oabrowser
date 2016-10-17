@@ -2,3 +2,4 @@ node_modules/*
 babel/*
 tmp/*
 .brackets.json
+.vscode/*
