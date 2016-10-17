@@ -40,6 +40,8 @@ require("./libs/Volume.js");
 require("./libs/VolumeSlice.js");
 require("./libs/MultiVolumesSlice.js");
 
+require("font-awesome/css/font-awesome.css");
+
 require("./angularInit.js");
 require("./ng-providers/mainAppProvider.js");
 require("./ng-providers/atlasJsonProvider.js");
@@ -69,6 +71,4 @@ require("./ng-controllers/headerController.js");
 require("./ng-controllers/loginModalController.js");
 
 require("./app.js");
-
-// require("./libs/font-awesome/css/font-awesome.min.css");
 require("./style.css");
