@@ -10,21 +10,33 @@
 
 #structureList {
     width: 100%;
-    padding-right: 10px;
+    padding-right: 5px;
     overflow: auto;
-    font-size: 11px;
+    font-size: 12px;
     line-height: normal;
+    white-space: nowrap;
 }
 
 #structureList input[type=checkbox] {
-    transform: scale(0.9) translate(0px, 2px);
-    font-size: 11px;
-    margin : 0;
+    transform: translate(0px, -0.2rem);
 }
 
 #structureList label {
     font-weight: normal;
     margin: 0;
+}
+
+#structureList .tree-item-control {
+    margin-right: 3px;
+}
+
+#structureList label.tree-item-has-children {
+    font-weight: 600;
+    font-style: normal;
+    color: #337add;
+}
+#structureList .tree-level {
+    border: 0px;
 }
 
 #breadcrumbsList {
