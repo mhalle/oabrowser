@@ -1,5 +1,6 @@
 const angular = require('angular');
 const templateUrl = require('../ng-templates/mainToolbar.html');
+require('../ng-templates/loginModal.html');
 
 angular.module('atlasDemo').directive( 'mainToolbar', function () {
     return {
