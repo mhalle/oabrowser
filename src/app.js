@@ -179,6 +179,7 @@ angular.module('atlasDemo')
         container.addEventListener('mousemove', onSceneMouseMove, false);
         container.addEventListener('mousedown', onSceneMouseDown);
         container.addEventListener('mouseup', onSceneMouseUp);
+        container.addEventListener('mouseleave', onSceneLeaveWindow);
 
         //init offset
         containerOffset = $(container).offset();
@@ -386,6 +387,7 @@ angular.module('atlasDemo')
         }
     }
 
+    function onSceneLeaveWindow(event) {     
     function onSceneMouseMove(event) {
 
         //check if we are not doing a drag (trackball controls)
