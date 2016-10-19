@@ -630,16 +630,19 @@ angular.module('atlasDemo')
 
     function autocenterCamera (commitAfter) {
         commitAfter = commitAfter || true;
-        var bb = getSceneBoundingBox(),
-            center = (new THREE.Vector3()).lerpVectors(bb.min, bb.max, 0.5),
-            height = 1.2*(Math.max(bb.max.y-center.y, bb.max.x - center.x)) / 
-                         (Math.tan(camera.fov * Math.PI / 360)),
-            initialPosition = window.globalViewerParameters.cameraInitialPositionVector || [0,0,1],
-            cameraPosition = new THREE.Vector3(center.x + height*initialPosition[0], 
+        var bb = getSceneBoundingBox();
+        var center = (new THREE.Vector3()).lerpVectors(bb.min, bb.max, 0.5);
+
+        var height = 1.2*(Math.max(bb.max.y-center.y, bb.max.x - center.x)) / 
+                         (Math.tan(camera.fov * Math.PI / 360));
+
+        var initialPosition = window.globalViewerParameters.cameraInitialPositionVector || [0,0,1];
+        var cameraPosition = new THREE.Vector3(center.x + height*initialPosition[0], 
                             center.y + height*initialPosition[1], 
-                            center.z + height*initialPosition[2]),
-            initialUp = window.globalViewerParameters.cameraInitialUpVector || [0,1,0],
-            up = new THREE.Vector3(initialUp[0], initialUp[1], initialUp[2]);
+                            center.z + height*initialPosition[2]);
+
+        var initialUp = window.globalViewerParameters.cameraInitialUpVector || [0,1,0];
+        var up = new THREE.Vector3(initialUp[0], initialUp[1], initialUp[2]);
 
         up.normalize();
 
