@@ -389,6 +389,8 @@ angular.module('atlasDemo')
 
     function onSceneLeaveWindow(event) {     
             mainApp.emit('mouseOverObject', null);
+    }
+
     function onSceneMouseMove(event) {
 
         //check if we are not doing a drag (trackball controls)
