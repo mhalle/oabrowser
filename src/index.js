@@ -15,6 +15,7 @@ require("adapt-strap/dist/adapt-strap.css");
 require("bootstrap");
 require("bootstrap/dist/css/bootstrap.css");
 
+require("angular-ui-bootstrap");
 require("angular-ui-layout");
 require("angular-ui-layout/src/ui-layout.css");
 require("./ng-templates/treeNode.html");
@@ -32,7 +33,6 @@ require("../libs/three/STLLoader.js");
 require("../libs/three/Detector.js");
 require("../libs/three/NRRDLoader.js");
 
-require("../libs/ui-bootstrap-tpls-1.3.1.min.js");
 
 require("../libs/MTLLoader.js");
 require("../libs/OBJLoader.js");
