@@ -3,3 +3,4 @@ babel/*
 tmp/*
 .brackets.json
 .vscode/*
+build/*
