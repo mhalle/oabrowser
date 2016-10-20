@@ -272,7 +272,7 @@ var FirebaseView = (function () {
         if (!singleton.auth || !singleton.auth.uid || singleton.auth.isAnonymous) {
             return ;
         }
-        var ref = rootRef.child("users/"+singleton.auth.uid);
+        var ref = rootRef.child(`users/${singleton.auth.uid}`);
 
         ref.once('value', function(snapshot) {
             var val = snapshot.val();
@@ -293,7 +293,7 @@ var FirebaseView = (function () {
     }
 
     function loadViewerConnection () {
-        var viewerRef = rootRef.child("views/"+uuid+"/viewers/"+singleton.auth.uid);
+        var viewerRef = rootRef.child(`views/${uuid}/viewers/${singleton.auth.uid}`);
 
         //simple boolean to know if user is online
         var amOnline = rootRef.child('.info/connected');
@@ -329,7 +329,7 @@ var FirebaseView = (function () {
     }
 
     function loadAuthorConnection () {
-        var ref = rootRef.child("authors/"+uuid);
+        var ref = rootRef.child(`authors/${uuid}`);
 
         function commit () {
             //add himself to the list of authors
@@ -353,7 +353,7 @@ var FirebaseView = (function () {
     }
 
     function loadMessagesConnection () {
-        var messagesRef = rootRef.child("messages/"+singleton.auth.uid);
+        var messagesRef = rootRef.child(`messages/${singleton.auth.uid}`);
 
         messagesRef.on('value', function(snapshot) {
             if (snapshot.val()) {
@@ -367,7 +367,7 @@ var FirebaseView = (function () {
             }
         });
 
-        var sentMessagesRef = rootRef.child("sent-messages/"+singleton.auth.uid);
+        var sentMessagesRef = rootRef.child(`sent-messages/${singleton.auth.uid}`);
 
         sentMessagesRef.on('value', function(snapshot) {
             if (snapshot.val()) {
@@ -411,7 +411,7 @@ var FirebaseView = (function () {
         });
 
         if (singleton.auth && singleton.auth.uid && !singleton.auth.isAnonymous && singleton.auth.providerData[0]) {
-            var userNameRef = rootRef.child("userNames/"+singleton.auth.uid);
+            var userNameRef = rootRef.child(`userNames/${singleton.auth.uid}`);
             userNameRef.set({
                 name : singleton.auth.providerData[0].displayName || null,
                 photoURL : singleton.auth.providerData[0].photoURL || null
@@ -426,7 +426,7 @@ var FirebaseView = (function () {
 
     function loadDatabaseConnection () {
 
-        var ref = rootRef.child("views/"+uuid);
+        var ref = rootRef.child(`views/${uuid}`);
 
         //if dbRootObj is defined then we are changing view and need to destroy previous references
         if (dbRootObj) {
@@ -785,7 +785,7 @@ var FirebaseView = (function () {
     };
 
     singleton.getBookmarkAnnotation = function (viewId, callback) {
-        var ref = rootRef.child("bookmarks/"+viewId+"/annotation");
+        var ref = rootRef.child(`bookmarks/${viewId}/annotation`);
 
         ref.on('value', function (snapshot) {
             var val = snapshot.val();
@@ -795,7 +795,7 @@ var FirebaseView = (function () {
 
     singleton.getUserBookmarks = function (valueCallback, childCallback) {
         if (singleton.auth) {
-            var ref = rootRef.child("users/"+singleton.auth.uid+"/bookmarks");
+            var ref = rootRef.child(`users/${singleton.auth.uid}/bookmarks`);
             ref.once('value', function (snapshot) {
                 var val = snapshot.val();
                 valueCallback(val);
@@ -821,7 +821,7 @@ var FirebaseView = (function () {
         function copyCurrentView() {
             //copy the current view in a new
             singleton.ref.once('value', function (snapshot) {
-                var bookmarkRef = rootRef.child("bookmarks/"+bookmarkUuid);
+                var bookmarkRef = rootRef.child(`bookmarks/${bookmarkUuid}`);
                 var view = snapshot.val();
                 view.bookmarkedBy = singleton.auth && singleton.auth.uid;
                 view.annotation = {
@@ -837,7 +837,7 @@ var FirebaseView = (function () {
 
 
         //register the bookmark in the user profile
-        var ref = rootRef.child("users/"+singleton.auth.uid+"/bookmarks");
+        var ref = rootRef.child(`users/${singleton.auth.uid}/bookmarks`);
         ref.once('value', function (snapshot) {
             var value = snapshot.val() || {};
             value[bookmarkUuid] = true;
@@ -851,13 +851,13 @@ var FirebaseView = (function () {
 
     singleton.deleteBookmark = function (viewId) {
         if (viewId && typeof viewId === 'string' && viewId.length >0) {
-            var ref = rootRef.child("users/"+singleton.auth.uid+"/bookmarks/"+viewId);
+            var ref = rootRef.child(`users/${singleton.auth.uid}/bookmarks/${viewId}`);
             ref.remove();
         }
     };
 
     singleton.loadBookmark = function (bookmarkUuid) {
-        var bookmarkRef = rootRef.child("bookmarks/"+bookmarkUuid);
+        var bookmarkRef = rootRef.child(`bookmarks/${bookmarkUuid}`);
         bookmarkRef.once('value', function (snapshot) {
             if (snapshot.val() && snapshot.val().atlasStructureURL !== currentAtlasStructurePath) {
 
@@ -882,7 +882,7 @@ var FirebaseView = (function () {
 
     singleton.sendMessage = function (recipient, subject, text) {
         var messageId = generateUUID();
-        var messageRef = rootRef.child("messages/"+recipient+"/"+messageId);
+        var messageRef = rootRef.child(`messages/${recipient}/${messageId}`);
         var messageObject = {
             author : singleton.auth.uid,
             text : text || '',
@@ -899,7 +899,7 @@ var FirebaseView = (function () {
             return;
         }
         var messageId = generateUUID();
-        var messageRef = rootRef.child("sent-messages/"+singleton.auth.uid+"/"+messageId);
+        var messageRef = rootRef.child(`sent-messages/${singleton.auth.uid}/${messageId}`);
         var messageObject = {
             recipients : recipients.map(r => r.name),
             text : text || '',
@@ -912,13 +912,13 @@ var FirebaseView = (function () {
     singleton.deleteMessage = function (messageId, type) {
         if (messageId && typeof messageId === 'string' && messageId.length >0) {
             var messageType = type === 'sent' ? 'sent-messages' : 'messages';
-            var ref = rootRef.child(messageType+"/"+singleton.auth.uid+"/"+messageId);
+            var ref = rootRef.child(`${messageType}/${singleton.auth.uid}/${messageId}`);
             ref.remove();
         }
     };
 
     singleton.markAllMessagesAsRead = function () {
-        var ref = rootRef.child("messages/"+singleton.auth.uid);
+        var ref = rootRef.child(`messages/${singleton.auth.uid}`);
         ref.once('value', function (snapshot) {
             var val = snapshot.val();
             if (val) {
