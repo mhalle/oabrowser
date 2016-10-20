@@ -19,6 +19,7 @@ require("angular-ui-bootstrap");
 require("angular-ui-layout");
 require("angular-ui-layout/src/ui-layout.css");
 require("./ng-templates/treeNode.html");
+require("./ng-templates/controlsPopover.html");
 
 require('ng-tags-input');
 require('ng-tags-input/build/ng-tags-input.css');
