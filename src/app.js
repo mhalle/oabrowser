@@ -5,6 +5,8 @@ const HierarchyGroup = require('./HierarchyGroup');
 const Stats = require('../libs/three/stats.min.js');
 const TWEEN = require('tween.js');
 const Detector = require('../libs/three/Detector');
+const throttle = require('throttle-debounce').throttle;
+
 
 if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
@@ -180,6 +182,10 @@ angular.module('atlasDemo')
         container.addEventListener('mousedown', onSceneMouseDown);
         container.addEventListener('mouseup', onSceneMouseUp);
         container.addEventListener('mouseleave', onSceneLeaveWindow);
+
+        container.addEventListener('wheel', throttle(250, firebaseView.commit), false);
+        container.addEventListener('mousemove', throttle(250, firebaseView.commit), false);
+
 
         //init offset
         containerOffset = $(container).offset();
