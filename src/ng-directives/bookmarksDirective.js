@@ -129,10 +129,13 @@ angular.module('atlasDemo').directive( 'bookmarks', function () {
             mainApp.on('firebaseView.userSignedIn', fetchBookmarks);
 
             $scope.openBookmarks = function () {
+                $('#bookmarksModal').appendTo('body');
                 $('#bookmarksModal').modal('show');
             };
 
             $scope.openNewBookmark = function () {
+                $('#bookmarksModal').modal('hide');
+                $('#newBookmarkModal').appendTo('body');
                 $('#newBookmarkModal').modal('show');
             };
 

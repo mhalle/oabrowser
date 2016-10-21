@@ -24,6 +24,7 @@ var FirebaseView = (function () {
         createdView = false,
         namespaces = {},
         undoRedoManager,
+        viewSync = true,
         config = {
             apiKey: "AIzaSyD3pMiEmPlkA1SZfYywK_JxtT6ruzyfk3k",
             authDomain: "atlas-viewer.firebaseapp.com",
@@ -289,11 +290,14 @@ var FirebaseView = (function () {
                 ref.set(user);
             }
         });
+    }
 
+    function getViewerRef(uid) {
+        return rootRef.child(`views/${uuid}/viewers/${uid}`);
     }
 
     function loadViewerConnection () {
-        var viewerRef = rootRef.child(`views/${uuid}/viewers/${singleton.auth.uid}`);
+        var viewerRef = getViewerRef(singleton.auth.uid);
 
         //simple boolean to know if user is online
         var amOnline = rootRef.child('.info/connected');
@@ -301,10 +305,23 @@ var FirebaseView = (function () {
         amOnline.on('value', function(snapshot) {
             if (snapshot.val()) {
                 viewerRef.onDisconnect().remove();
-                viewerRef.set({
-                    lastUpdate : firebase.database.ServerValue.TIMESTAMP,
-                    name : singleton.auth && singleton.auth.displayName || null
-                });
+                var viewerInfo = {
+                    lastUpdate : firebase.database.ServerValue.TIMESTAMP
+                };
+                if (singleton.auth && !singleton.auth.isAnonymous && singleton.auth.providerData[0]) {
+                    viewerInfo.name = (singleton.auth.providerData[0].displayName || 
+                                    singleton.auth.providerData[0].email || '<unknown>');
+                    viewerInfo.email = singleton.auth.providerData[0].email || '<unknown>';
+                    viewerInfo.providerId = singleton.auth.providerData[0].providerId|| null;
+                    viewerInfo.photoURL = singleton.auth.providerData[0].photoURL || null;
+                }
+                else {
+                    viewerInfo.name = `${singleton.auth.uid}`;
+                    viewerInfo.email = '<unknown>';
+                    viewerInfo.providerId = 'anon';
+                    viewerInfo.photoURL = null;
+                }
+                viewerRef.set(viewerInfo);
             }
         });
 
@@ -495,7 +512,7 @@ var FirebaseView = (function () {
             ref.off();
             $body.off('mouseup', onMouseUp);
             $body.off('mousewheel', onMouseWheel);
-            var otherViewers = singleton.getOtherViewersId();
+            var otherViewers = singleton.getOtherViewers();
             if (otherViewers.length === 0) {
                 ref.remove();
             }
@@ -508,7 +525,7 @@ var FirebaseView = (function () {
     }
 
     function commit (namespace) {
-        if (dbRootObj && !dbRootObj.locked) {
+        if (dbRootObj && viewSync && !dbRootObj.locked) {
             if (!loadingManager.isLoading() || createdView){
                 //if there is a namespace, commit only the namespace
                 if (namespace && namespaces[namespace] && namespaces[namespace].commiters) {
@@ -722,16 +739,29 @@ var FirebaseView = (function () {
         return dbRootObj && dbRootObj.camera;
     };
 
-    singleton.getOtherViewersId = function () {
-        if (dbRootObj && dbRootObj.viewers) {
-            var list = Object.keys(dbRootObj.viewers);
-            var index = list.indexOf(singleton.auth.uid);
-            if (index > -1) {
-                list.splice(index,1);
-            }
-            return list;
+    singleton.setViewSync = function (s) {
+        viewSync = !!s;
+        if (s) {
+            commit();
         }
-        return [];
+    }
+
+    singleton.isViewSync = function () {
+        return viewSync;
+    }
+
+    singleton.getOtherViewers = function () {
+        var otherViewers = [];
+        if (dbRootObj && dbRootObj.viewers) {
+            for (var key in dbRootObj.viewers) {
+                if (key != singleton.auth.uid) {
+                    otherViewers.push(Object.assign({}, 
+                        dbRootObj.viewers[key], 
+                        {id: key}));
+                }
+            }
+        }
+        return otherViewers;
     };
 
     singleton.isLastModifier = function () {
@@ -758,6 +788,7 @@ var FirebaseView = (function () {
     singleton.authWithProvider = function (provider) {
         unbindAllUserRelatedCallbacks();
 
+        var oldUid = (singleton.auth && singleton.auth.uid) || null;
         firebase.auth().signInWithPopup(providers[provider]).then(function(user) {
             console.log("Logged in as:", user.user.uid);
             singleton.auth = user.user;
@@ -765,13 +796,26 @@ var FirebaseView = (function () {
             loadViewerConnection();
             loadMessagesConnection();
             loadUserNamesConnection();
+            if (oldUid) {
+                var viewerRef = getViewerRef(oldUid);
+                if (viewerRef) {
+                    viewerRef.remove();
+                }
+            }
         }).catch(function(error) {
             console.error("Authentication failed:", error);
         });
     };
 
     singleton.unauth = function () {
+        var oldUid = singleton.auth.uid;
         firebase.auth().signOut();
+        if (oldUid) {
+            var viewerRef = getViewerRef(oldUid);
+            if (viewerRef) {
+                viewerRef.remove();
+            }
+        }
     };
 
     singleton.getViewThumbnail = function (viewId, callback, isBookmark) {

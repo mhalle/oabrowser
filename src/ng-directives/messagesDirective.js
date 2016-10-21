@@ -121,11 +121,14 @@ angular.module('atlasDemo').directive( 'messages', function () {
             mainApp.on('firebaseView.userNames', initUserNames);
 
             $scope.openNewMessageForm = function () {
+                $('#messagesListModal').modal('hide');
+                $('#newMessageModal').appendTo('body');
                 $('#newMessageModal').modal('show');
             };
 
             $scope.openMessagesList = function () {
                 $scope.unreadMessages = 0;
+                $('#messagesListModal').appendTo('body');
                 $('#messagesListModal').modal('show');
                 firebaseView.markAllMessagesAsRead();
             };

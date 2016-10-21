@@ -63,7 +63,7 @@ angular.module('atlasDemo').directive( 'mainToolbar', function () {
                     opacity;
 
                 if (firebaseView.isAuthor()) {
-                    $scope.otherViewers = firebaseView.getOtherViewersId();
+                    $scope.otherViewers = firebaseView.getOtherViewers();
                 }
 
                 $scope.sliders = {};

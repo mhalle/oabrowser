@@ -1,16 +1,20 @@
 
 <!-- ADD BOOKMARK -->
-<button ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default btn-sm" aria-label="AddBookmark" ng-click="openNewBookmark()" uib-tooltip="Save the current view as a bookmark in your profile, you will be able to load this state later or share it with someone" tooltip-placement="bottom" tooltip-append-to-body="true">
+<!-- 
+<button ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default" aria-label="AddBookmark" ng-click="openNewBookmark()" uib-tooltip="Save the current view as a bookmark in your profile, you will be able to load this state later or share it with someone" tooltip-placement="bottom" tooltip-append-to-body="true">
     <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
     <span>Save bookmark</span>
 </button>
-
+-->
 
 <!-- Open the modal -->
-<button ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default btn-sm" aria-label="Bookmarks" ng-click="openBookmarks()" uib-tooltip="Display your bookmarks" tooltip-placement="bottom" tooltip-append-to-body="true">
+<div class="btn-group btn-group-sm" role="group">
+
+<button ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default" aria-label="Bookmarks" ng-click="openBookmarks()" uib-tooltip="Display your bookmarks" tooltip-placement="bottom" tooltip-append-to-body="true">
     <i class="fa fa-bookmark" aria-hidden="true"></i>
     <span>Bookmarks</span>
 </button>
+</div>
 
 <!--Modal --->
 <div class="modal fade" id="bookmarksModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -21,6 +25,13 @@
                 <h4 class="modal-title" id="myModalLabel">Your Bookmarks</h4>
             </div>
             <div class="modal-body">
+                <!-- send a new message -->
+                <div>
+                <button ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-primary btn-sm" aria-label="newBookmark" ng-click="openNewBookmark()" uib-tooltip="Create a new bookmark" tooltip-placement="bottom" tooltip-append-to-body="true"  style="margin-bottom:10px;">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <span>New Bookmark</span>
+                </button>
+                </div>
                 <div ng-if="noBookmark">You do not have any bookmark yet.</div>
                 <div class="row" ng-repeat="(key,value) in bookmarks" style="margin-bottom:10px;">
                     <div class="col-xs-2">
