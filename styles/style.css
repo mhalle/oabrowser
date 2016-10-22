@@ -304,4 +304,11 @@ links inside the distant breadcrumbs
     -webkit-overflow-scrolling: touch;
 }
 
+.btn-toolbar .btn-text {
+  display: block;
+  float: left;
+  margin-top: 8px; /* Recover part of margin set in child Header nodes */
+  margin-left: 10px;
+  font-size: 12px;
+}
 
