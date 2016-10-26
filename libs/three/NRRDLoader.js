@@ -529,7 +529,7 @@ Object.assign( THREE.NRRDLoader.prototype, THREE.EventDispatcher.prototype, {
 
 		'space origin' : function( data ) {
 
-			return this.space_origin = data.split( "(" )[ 1 ].split( ")" )[ 0 ].split( "," );
+			return this.space_origin = data.split( "(" )[ 1 ].split( ")" )[ 0 ].split( "," ).map(parseFloat);
 
 		},
 
