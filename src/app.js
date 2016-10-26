@@ -13,6 +13,13 @@ if (!Detector.webgl) {
 }
 
 angular.module('atlasDemo')
+    .config(['$uibTooltipProvider', function ($uibTooltipProvider) {
+        // disable tooltips on mobile devices
+        var touch = 'ontouchstart' in document.documentElement;
+        if (touch){
+             $uibTooltipProvider.options({trigger: 'dontTrigger'});
+        }
+        }])
     .run(["mainApp", "objectSelector", "atlasJson", "volumesManager", "firebaseView", "loadingManager", 
         function (mainApp, objectSelector, atlasJson, volumesManager, firebaseView, loadingManager) {
 
