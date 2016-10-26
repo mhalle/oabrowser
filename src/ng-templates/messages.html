@@ -9,7 +9,7 @@
 
 <!-- Open the messages list modal -->
 <div class="btn-group btn-group-sm" role="group">
-<a ng-if="isMessageEnabled()" role="button" class="btn btn-default" aria-label="messagesList" ng-click="openMessagesList()" uib-tooltip="Messages" tooltip-placement="bottom" tooltip-append-to-body="true">
+<a ng-if="isMessageEnabled()" role="button" class="btn btn-default" aria-label="messagesList" ng-click="openMessagesList()" uib-tooltip="Messages" tooltip-placement="bottom-left" tooltip-append-to-body="true">
     <i class="fa fa-envelope" aria-hidden="true"></i>
     <span ng-if="unreadMessages > 0" class="badge unread-messages">{{unreadMessages}}</span>
 </a>

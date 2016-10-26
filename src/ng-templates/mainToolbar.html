@@ -52,14 +52,18 @@
 <!-- LOCK VIEW -->
 <a type="button" class="btn btn-default" aria-label="ViewSync" 
         ng-click="firebaseView.setViewSync(!firebaseView.isViewSync())" 
-        tooltip-append-to-body="true">
+        tooltip-append-to-body="true"
+        uib-tooltip="enable or disable view sharing" 
+        tooltip-placement="bottom-left"
+        
+        >
     <i class="fa fa-check-square-o" aria-hidden="true" ng-if="firebaseView.isViewSync()"></i>
     <i class="fa fa-square-o" aria-hidden="true" ng-if="!firebaseView.isViewSync()""></i>
 </a>
 
 <!-- SHARE VIEW -->
 <a ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default" aria-label="ShareView" ng-click="shareView()" uib-tooltip="Invite new users to share view" tooltip-placement="bottom-left" tooltip-append-to-body="true">
-    <span class="fa fa-television" aria-hidden="true"></span>
+    <span class="fa fa-user-plus" aria-hidden="true"></span>
     <span>Invite</span>
 </a>
 
