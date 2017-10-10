@@ -242,7 +242,7 @@ angular.module('atlasDemo').provider('loadingManager', ['mainAppProvider', 'volu
 
         var objStructures = atlasStructure.Structure.filter(item => {
             if (Array.isArray(item.sourceSelector)) {
-                return item.sourceSelector.some(selector => /\.obj$/.test(selector.dataSource.source));
+                return item.sourceSelector.some(selector => /\.obj$/.test(selector.dataSource && selector.dataSource.source));
             }
             else {
                 return /\.obj$/.test(item.sourceSelector.dataSource.source);
