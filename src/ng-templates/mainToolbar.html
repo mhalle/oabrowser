@@ -1,0 +1,137 @@
+
+<div class="btn-toolbar" role="toolbar" aria-label="main toolbar">
+    <div class="btn-text">Slices:</div>
+
+<div class="btn-group btn-group-sm" role="group" aria-label="Slice operations">
+<!-- POPOVER -->
+<a type="button" class="btn btn-default" aria-label="Pin" ng-click="togglePopover()" uib-popover-template="'ng-templates/controlsPopover.html'" popover-placement="bottom-left" popover-append-to-body="true" uib-tooltip="Threshold and label map transparency" tooltip-placement="bottom-left" tooltip-append-to-body="true">
+    <span class="glyphicon glyphicon-collapse-down slice-controls-true" aria-hidden="true" ng-if="popoverIsOpen"></span>
+    <span class="glyphicon glyphicon-collapse-up" aria-hidden="true" ng-if="!popoverIsOpen"></span>
+</a>
+
+<!-- CROSSHAIR -->
+<a type="button" class="btn btn-default" aria-label="Crosshair" ng-click="toggleCrosshair($event)" uib-tooltip="Toggle the crosshair in the slice views" tooltip-placement="bottom-left" tooltip-append-to-body="true">
+    <span class="glyphicon glyphicon-screenshot slice-controls-true" aria-hidden="true" ng-if="crosshair.visible"></span>
+    <span class="glyphicon glyphicon-screenshot slice-controls-false" aria-hidden="true" ng-if="!crosshair.visible"></span>
+</a>
+
+<!-- RECENTER CAMERA -->
+<a type="button" class="btn btn-default" aria-label="CenterCamera" ng-click="autocenterCamera($event)" uib-tooltip="Resize the view to fit the whole scene" tooltip-placement="bottom-left" tooltip-append-to-body="true">
+    <span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span>
+</a>
+
+<!-- LAYERS SELECTION -->
+<div class="btn-group btn-group-sm" uib-dropdown dropdown-append-to-body="true">
+    <a id="single-button" type="button" class="btn btn-default dropdown-toggle" uib-dropdown-toggle uib-tooltip="Volumes to display" tooltip-placement="right" tooltip-append-to-body="true">
+        <span class="glyphicon glyphicon-list" aria-hidden="true"></span> <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+        <li class="dropdown-header">Background</li>
+
+        <li role="menuitem" ng-repeat="item in controls.backgrounds" ng-click="toggleVisibility(item)">
+            <a>
+                {{item.name}}
+                <span ng-if="item.visible" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            </a>
+        </li>
+
+        <li class="dropdown-header">Label map</li>
+
+        <li role="menuitem" ng-repeat="item in controls.labelMaps" ng-click="toggleVisibility(item)">
+            <a>
+                {{item.name}}
+                <span ng-if="item.visible" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+            </a>
+        </li>
+    </ul>
+</div>
+</div>
+
+<div class="btn-text">View sharing:</div>
+<div class="btn-group btn-group-sm" role="group" aria-label="View sharing">
+<!-- LOCK VIEW -->
+<a type="button" class="btn btn-default" aria-label="ViewSync" 
+        ng-click="firebaseView.setViewSync(!firebaseView.isViewSync())" 
+        tooltip-append-to-body="true"
+        uib-tooltip="enable or disable view sharing" 
+        tooltip-placement="bottom-left"
+        
+        >
+    <i class="fa fa-check-square-o" aria-hidden="true" ng-if="firebaseView.isViewSync()"></i>
+    <i class="fa fa-square-o" aria-hidden="true" ng-if="!firebaseView.isViewSync()""></i>
+</a>
+
+<!-- SHARE VIEW -->
+<a ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default" aria-label="ShareView" ng-click="shareView()" uib-tooltip="Invite new users to share view" tooltip-placement="bottom-left" tooltip-append-to-body="true">
+    <span class="fa fa-user-plus" aria-hidden="true"></span>
+    <span>Invite</span>
+</a>
+
+<!-- OTHER VIEWERS -->
+<div class="btn-group btn-group-sm" uib-dropdown dropdown-append-to-body="true" 
+ng-if="firebaseView.isViewSync() && firebaseView.isAuthor() && otherViewers.length > 0">
+    <a id="single-button" type="button" class="btn btn-default dropdown-toggle" uib-dropdown-toggle uib-tooltip="list of connected viewers" tooltip-placement="right" tooltip-append-to-body="true">
+        {{otherViewers.length}} viewer(s)<span class="caret"></span>
+    </a>
+    <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+
+        <li role="menuitem" ng-repeat="uid in otherViewers" ng-click="">
+            <a>
+                <span ng-switch on="uid.providerId">
+                    <i ng-switch-when="google.com" class="fa fa-google-plus"></i>
+                    <i ng-switch-when="github.com" class="fa fa-github"></i>
+                    <i ng-switch-when="facebook.com" class="fa fa-facebook"></i>
+                    <i ng-switch-when="twitter.com" class="fa fa-twitter"></i>
+                    <span ng-switch-default>({{uid.providerId}})</span>
+                </span>
+                {{uid.name}} 
+            </a>
+        </li>
+
+    </ul>
+</div>
+</div>
+
+<!-- DOWNLOAD SCREENSHOT -->
+<div class="btn-group btn-group-sm" role="group" aria-label="Utilities">
+<a type="button" class="btn btn-default" aria-label="SceneScreenshot" ng-click="downloadScreenshot()" uib-tooltip="Screenshot" tooltip-placement="bottom-left" tooltip-append-to-body="true">
+    <span class="fa fa-camera-retro" aria-hidden="true"></span>
+</a>
+</div>
+
+<!-- bookmarks -->
+<bookmarks></bookmarks>
+
+<!-- messages -->
+<messages></messages>
+
+<div class="btn-group btn-group-sm" role="group" aria-label="Social">
+<!-- LOGIN -->
+<a ng-if="!firebaseView.auth || firebaseView.auth.isAnonymous" type="button" class="btn btn-default" aria-label="Login" ng-click="openLoginModal()" uib-tooltip="Log yourself in to access the bookmark and message features" tooltip-placement="bottom-left" tooltip-append-to-body="true">
+    <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+    <span>Login</span>
+</a>
+
+<!-- LOGOUT -->
+
+<!-- 
+<div class="btn-group btn-group-sm" uib-dropdown dropdown-append-to-body="true" 
+ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous">
+    <a id="logout-button" type="button" class="btn btn-default dropdown-toggle" uib-dropdown-toggle uib-tooltip="Logout" tooltip-placement="right" tooltip-append-to-body="true">
+            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            <span>Logout</span> <span class="caret" aria-hidden="true"></span>
+    </a>
+    <ul uib-dropdown-menu class="dropdown-menu" role="menu" aria-labelledby="logout-button">
+        <li role="menuitem" ng-click="firebaseView.unauth()">
+            <a><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>Logout</a></li>
+    </ul>
+</div>
+-->
+<a ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default" aria-label="Logout" ng-click="firebaseView.unauth()">
+    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+    <span>Logout</span>
+</a>
+
+</div>
+</div>
+

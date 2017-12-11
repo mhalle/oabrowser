@@ -1,0 +1,85 @@
+
+<!-- ADD BOOKMARK -->
+<!-- 
+<button ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default" aria-label="AddBookmark" ng-click="openNewBookmark()" uib-tooltip="Save the current view as a bookmark in your profile, you will be able to load this state later or share it with someone" tooltip-placement="bottom" tooltip-append-to-body="true">
+    <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+    <span>Save bookmark</span>
+</button>
+-->
+
+<!-- Open the modal -->
+<div class="btn-group btn-group-sm" role="group">
+
+<button ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-default" aria-label="Bookmarks" ng-click="openBookmarks()" uib-tooltip="Bookmarks" tooltip-placement="bottom-left" tooltip-append-to-body="true">
+    <i class="fa fa-bookmark" aria-hidden="true"></i>
+</button>
+</div>
+
+<!--Modal --->
+<div class="modal fade" id="bookmarksModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Your Bookmarks</h4>
+            </div>
+            <div class="modal-body">
+                <!-- send a new message -->
+                <div>
+                <button ng-if="firebaseView.auth && !firebaseView.auth.isAnonymous" type="button" class="btn btn-primary btn-sm" aria-label="newBookmark" ng-click="openNewBookmark()" uib-tooltip="Create a new bookmark" tooltip-placement="bottom" tooltip-append-to-body="true"  style="margin-bottom:10px;">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <span>New Bookmark</span>
+                </button>
+                </div>
+                <div ng-if="noBookmark">You do not have any bookmark yet.</div>
+                <div class="row" ng-repeat="(key,value) in bookmarks" style="margin-bottom:10px;">
+                    <div class="col-xs-2">
+                        <a ng-click="loadBookmark(key)">
+                            <img class="img-responsive" ng-src="{{value && value.thumbnail || imgPlaceholder}}" alt="thumbnail" style="width:64px;height:64px;">
+                        </a>
+                    </div>
+                    <div class="col-xs-10">
+                        <i class="fa fa-share-alt pull-right bookmark-button" aria-hidden="true" ng-click="shareBookmark(key)"></i>
+                        <i class="fa fa-trash-o pull-right bookmark-button" aria-hidden="true" ng-click="firebaseView.deleteBookmark(key)"></i>
+                        <h4 class="media-heading" ng-click="loadBookmark(key)">{{value.annotation.title}}</h4>
+                        {{value.annotation.description}}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New bookmark modal --->
+<div class="modal fade" id="newBookmarkModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">New Bookmark</h4>
+            </div>
+            <div class="modal-body">
+                <form name="newBookmarkForm">
+                    <div class="form-group">
+                        <label for="titleInput"  uib-tooltip="Title is required, keep it short but meaningful" tooltip-placement="top"  tooltip-append-to-body="true">Title <span class="input-error-message">*</span></label>
+                        <input id="titleInput" name="title" type="text" ng-model="newBookmark.title" class="form-control" required placeholder="Title" ng-class="{'input-error' : newBookmarkForm.title.$dirty && !newBookmarkForm.title.$valid, 'input-valid' : newBookmarkForm.title.$dirty && newBookmarkForm.title.$valid}">
+                        <span ng-if="newBookmarkForm.title.$dirty && !newBookmarkForm.title.$valid" class="input-error-message" >Required</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="contentInput">Description</label>
+                        <textarea id="contentInput" class="form-control" rows="3" ng-model="newBookmark.description" ></textarea>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="emptyForm()">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createBookmark()" ng-disabled="(newBookmark.title || '') .length === 0">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+

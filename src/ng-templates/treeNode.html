@@ -1,0 +1,20 @@
+<div>
+
+
+    <span class="pull-left">
+    <span class="tree-item-control">
+            <span ng-if="item.mesh.visible" ng-click="item.mesh.visible=false" class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            <span ng-if="!item.mesh.visible" ng-click="item.mesh.visible=true" class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+    </span>
+
+    <span class="tree-item-control">
+        <input type="checkbox" ng-checked="item.selected" ng-click="select(item)"/>
+    </span>
+    </span>
+
+    <span class="name-cell">
+        <label ng-class="{'tree-item-has-children': hasChildren(item)}">
+            {{ item.annotation.name }}
+        </label>
+    </span>
+</div>

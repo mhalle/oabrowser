@@ -1,0 +1,314 @@
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+#rendererFrame {
+    background-color: #000000;
+    width : 100%;
+    height : 100%;
+}
+
+#structureList {
+    width: 100%;
+    padding-right: 5px;
+    overflow: auto;
+    font-size: 12px;
+    line-height: normal;
+    white-space: nowrap;
+}
+
+#structureList input[type=checkbox] {
+    transform: translate(0px, -0.2rem);
+}
+
+#structureList label {
+    font-weight: normal;
+    margin: 0;
+}
+
+#structureList .tree-item-control {
+    margin-right: 3px;
+}
+
+#structureList label.tree-item-has-children {
+    font-weight: 600;
+    font-style: normal;
+    color: #337add;
+}
+#structureList .tree-level {
+    border: 0px;
+}
+
+#breadcrumbsList {
+    overflow: auto;
+}
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.name-cell {
+    text-align: left;
+}
+
+.tinyText {
+    font-size: 0.8em;
+}
+
+#logoBox {
+    height: 100px;
+    width: 100%;
+    text-align: center;
+}
+
+#logoBox.img {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.ad-tree-browser-container.tree-bordered {
+    border: 0;
+}
+#inset  {
+    width: 150px;
+    height: 150px;
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0px;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    z-index: 100;
+    pointer-events: none;
+}
+.dg {
+    z-index: 10 !important;
+}
+.dg * {
+    box-sizing: content-box;
+}
+.dg input {
+    line-height: normal;
+}
+
+#gui-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+}
+
+div#stats {
+    bottom: 0px !important;
+    right: 0px !important;
+    top: inherit !important;
+}
+
+#centerContainer {
+    overflow: hidden;
+}
+
+.slice-container {
+    overflow: hidden;
+    width: 100%;
+    height: calc(100% - 35px);
+    background-color: black;
+}
+.glyphicon-chevron-left,
+.glyphicon-chevron-right,
+.glyphicon-chevron-up,
+.glyphicon-chevron-down{
+    color: #aaa;
+}
+#rendererFrame canvas {
+    background: linear-gradient(#657FB5, #D3E2FF);
+}
+
+
+.slice-controls {
+    width : 100%;
+    height: 43px;
+    overflow: hidden;
+}
+
+.slice-index-control {
+    width : calc(100% - 35px);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.slice-controls-true {
+    color : #5cb85c;
+}
+.slice-controls-false {
+    color: #d9534f;
+}
+
+/*Modify dropdown padding in the slice controls to save space*/
+.slice-controls .btn-group.btn-sm.dropdown {
+    padding: 0;
+}
+
+.slice-controls .btn-sm {
+    padding: 1px 5px;
+}
+
+[insert-slice] {
+    width: 100%;
+    height: 100%;
+}
+
+
+#topContainer .btn-sm {
+    padding: 1px 5px;
+    font-size: 12px;
+}
+
+.dropdown-menu {
+    z-index: 1020;
+}
+
+/*
+prevent an element from being selected on drag or on click
+*/
+body {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/*
+allow selection of text in the right container
+*/
+#rightSideContainer {
+    -moz-user-select: initial;
+    -khtml-user-select: initial;
+    -webkit-user-select: initial;
+    -ms-user-select: initial;
+    user-select: initial;
+}
+
+/*
+links inside the distant breadcrumbs
+*/
+.breadcrumb.alert-warning a, .breadcrumbs.alert-warning a:visited {
+    color : #730E0E;
+}
+.breadcrumb.alert-warning a:hover, .breadcrumbs.alert-warning a:focus {
+    color : #730E0E;
+}
+
+.modal .bookmark-button {
+    font-size: 2em;
+}
+
+.modal .bookmark-button:hover {
+    font-size: 2em;
+    cursor: pointer;
+}
+
+.modal .message-button {
+    font-size: 2em;
+}
+
+.modal .message-button:hover {
+    font-size: 2em;
+    cursor: pointer;
+}
+
+.modal [ng-click]:hover {
+    cursor: pointer;
+}
+
+.modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.badge.unread-messages {
+    font-size: 9px;
+    padding: 2px 7px;
+    background-color: #337ab7;
+}
+
+.input-valid {
+    border-color: #3c763d;
+}
+
+.input-error {
+    border-color: #843534;
+}
+
+.input-error-message {
+    color:  #843534;
+}
+
+.tooltip {
+    /*else tooltip appear under the modal */
+    z-index: 1100;
+}
+
+.message-profile-picture {
+    margin-right: 10px;
+    float: left;
+}
+
+.message-profile-picture-placeholder {
+    height: 64px;
+    width: 64px;
+    float: left;
+    margin-right: 10px;
+    font-size: 50px;
+    text-align: center;
+}
+
+.users-autocompletion.left-panel {
+  float: left;
+}
+
+.users-autocompletion.left-panel img {
+  width: 48px;
+  height: 48px;
+  vertical-align: middle;
+}
+
+.users-autocompletion.right-panel {
+  float: left;
+  margin-left: 5px;
+  margin-top: 7px;
+  height : 40px;
+  vertical-align:middle;
+}
+
+.users-autocompletion.right-panel span:first-child {
+  width:100%;
+  height:48px;
+  font-size: 16px;
+  vertical-align:middle;
+  position : relative;
+  top:5px;
+}
+
+#messagesListModal .tab-content {
+    padding: 5px;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+/* allow touch scrolling in bottom and right container */
+#rightSideContainer, #bottomContainer {
+    -webkit-overflow-scrolling: touch;
+}
+
+.btn-toolbar .btn-text {
+  display: block;
+  float: left;
+  margin-top: 8px; /* Recover part of margin set in child Header nodes */
+  margin-left: 10px;
+  font-size: 12px;
+}
+
