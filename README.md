@@ -8,12 +8,12 @@ npm install
 ```
 
 ## Deployment
-This code is designed to run in a subdirectory of an atlas data directory, such as `viewer/`.  For example, check out the atlas repository [spl-brain-atlas](https://github.com/mhalle/spl-brain-atlas) and place the `viewer` subdirectory of the `slicer` directory.
+This code is designed to run in a subdirectory of an atlas data directory, such as `viewer/`.  For example, check out the atlas repository [spl-brain-atlas](https://github.com/mhalle/spl-brain-atlas) and place the `viewer` subdirectory in the `slicer` directory.
 
 Use a local web server to serve the atlas repository, and direct your browser to the `viewer` directory.  The `index.html` in that directory should load OABrowser.
 
 ###Demos
-[dev.openanatomy.org/atlases](https://dev.openanatomy.org/atlases)
+[openanatomy.org/atlases](https://dev.openanatomy.org/atlases)
 
 ###Working with service workers :
 (Currently, Service Workers as disabled to simplify development.) 
