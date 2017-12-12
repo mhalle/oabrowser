@@ -130,7 +130,7 @@ THREE.Volume = function( xLength, yLength, zLength, type, arrayBuffer ) {
 	this.matrix = new THREE.Matrix4();
 	this.matrix.identity();
 	/**
-     * @member {THREE.Martri43} inverseMatrix The RAS to IJK matrix
+     * @member {THREE.Martrix4} inverseMatrix The RAS to IJK matrix
      */
 	/**
 	 * @member {number} lowerThreshold The voxels with values under this threshold won't appear in the slices.
