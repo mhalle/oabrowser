@@ -125,12 +125,12 @@ THREE.Volume = function( xLength, yLength, zLength, type, arrayBuffer ) {
      */
 	this.offset = [ 0, 0, 0 ];
 	/**
-     * @member {THREE.Martrix3} matrix The IJK to RAS matrix
+     * @member {THREE.Martrix4} matrix The IJK to RAS matrix
      */
-	this.matrix = new THREE.Matrix3();
+	this.matrix = new THREE.Matrix4();
 	this.matrix.identity();
 	/**
-     * @member {THREE.Martrix3} inverseMatrix The RAS to IJK matrix
+     * @member {THREE.Martri43} inverseMatrix The RAS to IJK matrix
      */
 	/**
 	 * @member {number} lowerThreshold The voxels with values under this threshold won't appear in the slices.
@@ -246,7 +246,7 @@ THREE.Volume.prototype = {
      */
 	access : function( i, j, k ) {
 
-		return k * this.xLength * this.yLength + j * this.xLength + i;
+		return (k*this.yLength + j)*this.xLength + i;
 
 	},
 
