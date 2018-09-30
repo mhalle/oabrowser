@@ -13,7 +13,7 @@ This code is designed to run in a subdirectory of an atlas data directory, such 
 Use a local web server to serve the atlas repository, and direct your browser to the `viewer` directory.  The `index.html` in that directory should load OABrowser.
 
 ###Demos
-[openanatomy.org/atlases](https://www.openanatomy.org/)
+[https://www.openanatomy.org/](https://www.openanatomy.org/)
 
 ###Working with service workers :
 (Currently, Service Workers as disabled to simplify development.) 
