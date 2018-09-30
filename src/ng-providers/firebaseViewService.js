@@ -456,7 +456,6 @@ var FirebaseView = (function () {
         // this waits for the data to load and then logs the output.
         dbRootObj.$loaded()
             .then(function() {
-            console.log(dbRootObj);
         })
             .catch(function(err) {
             console.error(err);
@@ -541,7 +540,7 @@ var FirebaseView = (function () {
                     }
                     dbRootObj.$save().then(ref => {
                     }, error => {
-                        console.log(error);
+                        console.error(error);
                     });
 
                     //since user has created the view he does not have to load the initial view
