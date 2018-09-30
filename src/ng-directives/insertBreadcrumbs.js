@@ -10,6 +10,9 @@ angular.module('atlasDemo').directive( 'insertBreadcrumbs', ['objectSelector', f
 
             function getAllTheHierarchyPaths(object) {
                 var result = [];
+                if(!object || !object.hierarchyParents) {
+                    return result;
+                }
                 function addParents (object, path) {
                     if (object.hierarchyParents.length === 0) {
                         path.push(object);

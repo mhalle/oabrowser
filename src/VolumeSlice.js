@@ -213,7 +213,7 @@ THREE.VolumeSlice.prototype = {
 		this.ctx = this.canvas.getContext( '2d' );
 		this.ctxBuffer = this.canvasBuffer.getContext( '2d' );
 
-		this.geometry = new THREE.PlaneGeometry( extracted.planeWidth, extracted.planeHeight );
+		this.geometry = new THREE.PlaneBufferGeometry( extracted.planeWidth, extracted.planeHeight );
 
 		if ( this.mesh ) {
 
@@ -221,7 +221,6 @@ THREE.VolumeSlice.prototype = {
 			//reset mesh matrix
 			this.mesh.matrix = ( new THREE.Matrix4() ).identity();
 			this.mesh.applyMatrix( this.matrix );
-
 		}
 
 		this.geometryNeedsUpdate = false;

@@ -4,3 +4,6 @@ tmp/*
 .brackets.json
 .vscode/*
 build/*
+yarn.lock
+package-lock.json
+.jshintrc

@@ -42,7 +42,7 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                 var color = mesh.material && mesh.material.color,
                     oppositeColor = new THREE.Color("white");
                 if (color) {
-                    var hsl = color.getHSL();
+                    var hsl = color.getHSL(new THREE.Vector3());
                     oppositeColor.setHSL((hsl.h+180)%360, hsl.s, hsl.l);
                 }
                 return oppositeColor.getStyle();
@@ -59,7 +59,7 @@ angular.module('atlasDemo').directive( 'sceneCrosshair', [function () {
                 var pos = position.clone();
                 var projScreenMat = new THREE.Matrix4();
                 projScreenMat.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
-                pos = pos.applyProjection(projScreenMat);
+                pos = pos.applyMatrix4(projScreenMat);
 
                 return { x: ( pos.x + 1 ) * canvas.width() / 2 + canvas.offset().left,
                         y: ( - pos.y + 1) * canvas.height() / 2 + canvas.offset().top };

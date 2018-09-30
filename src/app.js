@@ -1,6 +1,6 @@
 const angular = require('angular');
 const LightKit = require('./LightKit');
-const dat = require('dat-gui');
+const dat = require('dat.gui');
 const HierarchyGroup = require('./HierarchyGroup');
 const Stats = require('../libs/three/stats.min.js');
 const TWEEN = require('tween.js');
@@ -116,7 +116,7 @@ angular.module('atlasDemo')
                     item.mesh.add(childrenMeshes[i]);
                 }
                 catch (e) {
-                    console.log(e);
+                    console.error(e);
                 }
             }
         }
@@ -493,7 +493,7 @@ angular.module('atlasDemo')
         camera2.up = camera.up; // important!
 
         // axes
-        axes2 = new THREE.AxisHelper( axisLength );
+        axes2 = new THREE.AxesHelper( axisLength );
         scene2.add( axes2 );
 
         //create sprites
