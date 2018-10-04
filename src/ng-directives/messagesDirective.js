@@ -175,7 +175,8 @@ angular.module('atlasDemo').directive( 'messages', function () {
             }
 
             $scope.isMessageEnabled = function () {
-                return firebaseView.auth && !firebaseView.auth.isAnonymous;
+                return false;
+                // return firebaseView.auth && !firebaseView.auth.isAnonymous;
             };
 
             $scope.loadBookmark = function (bookmarkId) {

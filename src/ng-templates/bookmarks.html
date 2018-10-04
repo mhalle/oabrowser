@@ -31,7 +31,7 @@
                     <span>New Bookmark</span>
                 </button>
                 </div>
-                <div ng-if="noBookmark">You do not have any bookmark yet.</div>
+                <div ng-if="noBookmark">You do not have any bookmarks yet.</div>
                 <div class="row" ng-repeat="(key,value) in bookmarks" style="margin-bottom:10px;">
                     <div class="col-xs-2">
                         <a ng-click="loadBookmark(key)">
@@ -39,7 +39,8 @@
                         </a>
                     </div>
                     <div class="col-xs-10">
-                        <i class="fa fa-share-alt pull-right bookmark-button" aria-hidden="true" ng-click="shareBookmark(key)"></i>
+                        <!-- remove sharing, since messaging is too complex -->
+                        <!-- <i class="fa fa-share-alt pull-right bookmark-button" aria-hidden="true" ng-click="shareBookmark(key)"></i> -->
                         <i class="fa fa-trash-o pull-right bookmark-button" aria-hidden="true" ng-click="firebaseView.deleteBookmark(key)"></i>
                         <h4 class="media-heading" ng-click="loadBookmark(key)">{{value.annotation.title}}</h4>
                         {{value.annotation.description}}
